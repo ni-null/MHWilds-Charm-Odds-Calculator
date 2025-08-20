@@ -48,16 +48,30 @@ export default function AmuletList({
         <ul className='divide-y divide-gray-200'>
           {matchingAmulets.map((amulet, index) => {
             const amuletSkills = getSkillsFromAmulet(amulet)
-            const probability = amuletProbabilities[index]
+            // 所以 parseFloat 得到的是百分比數值。保留原顯示字串以維持小數位數格式。
+            const probability = parseFloat(amuletProbabilities[index]) || 0
+            const probabilityDisplay = amuletProbabilities[index] ?? probability.toFixed(4)
+            // 稀有度顏色對照
+            const rarityColorMap = {
+              "RARE[8]": "text-orange-600",
+              "RARE[7]": "text-purple-600",
+              "RARE[6]": "text-blue-800",
+              "RARE[5]": "text-green-600",
+            }
+            const rarityClass = rarityColorMap[amulet.Rarity] || "text-gray-800"
             return (
               <>
                 <li key={index} className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
                   <div className='flex flex-col min-w-[140px] mb-2 md:mb-0 md:mr-4'>
-                    <div className='text-lg font-semibold text-purple-600'>{amulet.Rarity}</div>
-                    <div className='text-base font-medium text-blue-600'>
-                      {t("amulet.probability")}: {probability}
+                    <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
+                    <div className='text-xs font-medium '>
+                      {t("amulet.probability")}: {probabilityDisplay}
                       {t("probability.percentage")}
                     </div>
+                    {probability > 0 && (
+                      // probability 是百分比 (p%), 換算成小數機率為 p/100，倒數為 1/(p/100) = 100/p
+                      <span className='ml-2 text-xs font-normal'>(約 1/{Math.round(100 / probability).toLocaleString()})</span>
+                    )}
                   </div>
                   <div className='flex-1'>
                     <div className='mb-1 text-base'>
