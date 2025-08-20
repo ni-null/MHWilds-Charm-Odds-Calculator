@@ -52,6 +52,8 @@
     "base": "基礎機率",
     "individual": "個別機率",
     "percentage": "%",
+    "charmTypeProb": "護石類型機率",
+    "approximately": "約",
     "calculation": {
       "title": "計算說明:",
       "formula": "機率 = 稀有度基礎機率 × (1/第一技能群組數量) × (1/第二技能群組數量) × (1/第三技能群組數量)",

@@ -52,6 +52,8 @@
     "base": "Base Probability",
     "individual": "Individual Probability",
     "percentage": "%",
+    "charmTypeProb": "Charm Type Probability",
+    "approximately": "Approximately",
     "calculation": {
       "title": "Calculation Formula:",
       "formula": "Probability = Rarity Base Probability × (1/First Skill Group Count) × (1/Second Skill Group Count) × (1/Third Skill Group Count)",

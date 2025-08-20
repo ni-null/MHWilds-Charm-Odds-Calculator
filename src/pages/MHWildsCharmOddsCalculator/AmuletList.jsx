@@ -40,7 +40,11 @@ export default function AmuletList({
             {t("common.total")}
             {t("amulet.probability")}: {totalProbability.toFixed(4)}
             {t("probability.percentage")}
-            {totalProbability > 0 && <span className='ml-2 text-lg font-normal'>(約 1/{Math.round(100 / totalProbability).toLocaleString()})</span>}
+            {totalProbability > 0 && (
+              <span className='ml-2 text-lg font-normal'>
+                ({t("probability.approximately")} 1/{Math.round(100 / totalProbability).toLocaleString()})
+              </span>
+            )}
           </div>
         </div>
       )}
@@ -71,7 +75,9 @@ export default function AmuletList({
                     </div>
                     {probability > 0 && (
                       // probability 是百分比 (p%), 換算成小數機率為 p/100，倒數為 1/(p/100) = 100/p
-                      <span className='ml-2 text-xs font-normal'>(約 1/{Math.round(100 / probability).toLocaleString()})</span>
+                      <span className='ml-2 text-xs font-normal'>
+                        ({t("probability.approximately")} 1/{Math.round(100 / probability).toLocaleString()})
+                      </span>
                     )}
                   </div>
                   <div className='flex-1'>
@@ -210,7 +216,7 @@ export default function AmuletList({
                               {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(2)}%)
                             </div>
                             <div className='mb-1 text-base'>
-                              護石類型機率: 1/{totalAmuletsOfRarity} = {amuletTypeProb.toPrecision(6)}
+                              {t("probability.charmTypeProb")}: 1/{totalAmuletsOfRarity} = {amuletTypeProb.toPrecision(6)}
                             </div>
                             <div className='mb-1 text-base'>
                               {t("probability.debug.skillGroups")}:{" "}
