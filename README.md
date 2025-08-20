@@ -10,16 +10,16 @@ A small tool for calculating skill probabilities and combination chances of Char
 
 ## Features
 
-- Display a list of available amulets and their skill combinations
+- Display a list of available Charms and their skill combinations
 - Calculate and present probability distributions across different rarities and numbers of skills
 - Multi-language support (Traditional Chinese / English)
 
 ---
 
-一個用來計算 Monster Hunter 系列中「護符（Charm）」的技能機率與組合機率的小工具。
+一個用來計算 Monster Hunter 系列中「護石（Charm）」的技能機率與組合機率的小工具。
 
 ## 主要功能
 
-- 顯示可選護符（Amulet）清單與其技能組合
+- 顯示可選護石（Charm）清單與其技能組合
 - 計算並顯示不同稀有度與技能數量下的機率分佈
 - 多語系支援（當前僅繁體中文 / 英文）
