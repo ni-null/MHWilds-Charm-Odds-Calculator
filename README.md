@@ -1,6 +1,6 @@
 # MHWilds Charm Odds Calculator
 
-A small frontend tool built with React + Vite for calculating charm (amulet) skill probabilities and combination odds used in Monster Hunter-style systems.
+A small tool for calculating skill probabilities and combination chances of Charms in Monster Hunter: Wilds.
 
 ## features
 
