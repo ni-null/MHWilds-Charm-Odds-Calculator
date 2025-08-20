@@ -9,6 +9,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
     { to: "/", label: t("navigation.home") },
     { to: "/skill-groups", label: t("navigation.skillGroups") },
     { to: "/charm-types", label: t("navigation.charmTypes") },
+    { to: "/info", label: t("navigation.info") },
   ]
 
   return (
@@ -89,7 +90,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
           <select
             value={i18n.language}
             onChange={(e) => i18n.changeLanguage(e.target.value)}
-            className='w-full p-3 text-sm text-yellow-200 transition-colors border rounded-lg shadow-inner bg-gray-800/80 border-yellow-600/40 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-yellow-400 hover:bg-gray-700/80'>
+            className='w-full p-3 text-sm text-yellow-200 transition-colors border rounded-lg shadow-inner cursor-pointer bg-gray-800/80 border-yellow-600/40 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-yellow-400 hover:bg-gray-700/80'>
             <option value='zhTW' className='bg-gray-800'>
               繁體中文
             </option>

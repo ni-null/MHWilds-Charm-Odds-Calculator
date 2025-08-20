@@ -5,7 +5,23 @@
     "mhwCalculator": "MHW Charm Calculator",
     "skillGroups": "Skill Groups",
     "charmTypes": "Charm Types",
-    "languageLabel": "Language"
+    "languageLabel": "Language",
+    "info": "Info"
+  },
+  "info": {
+    "title": "Info",
+    "datasource": {
+      "title": "Data Sources",
+      "description": "Below are the primary source data used and organized for this project (Google Sheets):",
+      "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
+      "note": "Note: The data is community-maintained and converted; it may contain manual edits or conversion errors. If you find issues, please report them or suggest fixes in the original data sheet."
+    },
+    "project": {
+      "title": "Project Repository",
+      "description": "The project source code and related resources are hosted on GitHub:",
+      "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
+      "encourage": "If you find this project helpful, please consider giving it a star on GitHub ⭐️ — it really encourages the maintainer!"
+    }
   },
   "rarity": "Rarity",
   "skill": "Skill",
@@ -41,6 +57,11 @@
       "formula": "Probability = Rarity Base Probability × (1/First Skill Group Count) × (1/Second Skill Group Count) × (1/Third Skill Group Count)",
       "rarityBase": "Rarity Base Probability: RARE[5]=59%, RARE[6]=27%, RARE[7]=11%, RARE[8]=3%",
       "groupCount": "Skill Group Count: Total number of available skills in that group"
+    },
+    "note": {
+      "title": "Note:",
+      "line1": "Current probability calculations are not guaranteed to be 100% accurate.",
+      "line2": "Results are for reference only."
     },
     "debug": {
       "title": "Probability Calculation Debug Info:",

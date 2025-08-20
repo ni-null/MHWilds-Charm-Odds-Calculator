@@ -55,6 +55,12 @@ export default function AmuletList({
             • {t("probability.calculation.rarityBase")}
             <br />• {t("probability.calculation.groupCount")}
           </div>
+          {/* 多國語系提示：使用 i18n 鍵 */}
+          <div className='mt-2 text-sm text-gray-700'>
+            <div className='font-semibold'>{t("probability.note.title")}</div>
+            <div>{t("probability.note.line1")}</div>
+            <div>{t("probability.note.line2")}</div>
+          </div>
         </div>
       </div>
 

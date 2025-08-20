@@ -5,7 +5,23 @@
     "mhwCalculator": "MHW 護石計算器",
     "skillGroups": "技能群組",
     "charmTypes": "護石種類",
-    "languageLabel": "語言 / Language"
+    "languageLabel": "語言 / Language",
+    "info": "資訊"
+  },
+  "info": {
+    "title": "資訊",
+    "datasource": {
+      "title": "資料來源",
+      "description": "以下為本專案主要使用與整理的原始資料（Google Sheets）：",
+      "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
+      "note": "注意：資料由社群整理與轉換，可能包含手動編輯或轉換錯誤。若發現問題，歡迎回報或在原始資料表提出修正建議。"
+    },
+    "project": {
+      "title": "專案資料夾",
+      "description": "本專案程式碼與相關資源已放在 GitHub：",
+      "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
+      "encourage": "如果你覺得這個專案有幫助，歡迎在 GitHub 上給個星星 ⭐️，這會是很大的鼓勵！"
+    }
   },
   "rarity": "稀有度",
   "skill": "技能",
@@ -41,6 +57,11 @@
       "formula": "機率 = 稀有度基礎機率 × (1/第一技能群組數量) × (1/第二技能群組數量) × (1/第三技能群組數量)",
       "rarityBase": "稀有度基礎機率: RARE[5]=59%, RARE[6]=27%, RARE[7]=11%, RARE[8]=3%",
       "groupCount": "技能群組數量: 該群組中所有可用技能的數量"
+    },
+    "note": {
+      "title": "注意：",
+      "line1": "目前的機率計算無法保證 100% 正確。",
+      "line2": "計算結果僅供參考。"
     },
     "debug": {
       "title": "機率計算除錯資訊：",

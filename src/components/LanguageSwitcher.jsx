@@ -19,7 +19,7 @@ const LanguageSwitcher = ({ className = "" }) => {
         <button
           key={language.code}
           onClick={() => changeLanguage(language.code)}
-          className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${
+          className={`px-3  py-1 text-sm font-medium rounded-md transition-colors ${
             i18n.language === language.code ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
           }`}>
           {language.name}

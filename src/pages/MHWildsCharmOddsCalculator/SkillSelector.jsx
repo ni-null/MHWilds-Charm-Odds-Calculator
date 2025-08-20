@@ -16,7 +16,7 @@ export default function SkillSelector({ selectedSkills, onSkillChange, getAvaila
             <select
               value={selectedSkills[slotIndex] || ""}
               onChange={(e) => onSkillChange(slotIndex, e.target.value)}
-              className='p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className='p-2 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500'
               disabled={slotIndex > 0 && !selectedSkills[slotIndex - 1]}>
               <option value=''>{t("skillSelector.selectSkill")}</option>
               {getAvailableSkills(slotIndex).map((skillKey) => {
