@@ -1,7 +1,7 @@
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 
-const repoName = "SPDX-Operation-Manual"
+const repoName = "MHWilds-Charm-Odds-Calculator"
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
