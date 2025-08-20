@@ -40,7 +40,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         <div className='flex items-center justify-center h-20 border-b border-yellow-500/30 bg-black/30'>
           <div className='flex flex-col items-center'>
             <span className='text-xl font-bold tracking-wider text-yellow-400 drop-shadow-lg'>MHWildsCharm</span>
-            <span className='text-sm font-medium tracking-widest text-yellow-300/80'>CALCULATOR</span>
+            <span className='text-sm font-medium tracking-widest text-yellow-300/80'>ODDS CALCULATOR</span>
           </div>
         </div>
         <nav className='flex-1 px-4 py-8 space-y-3'>
@@ -102,7 +102,22 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
         <div className='p-4 text-xs border-t text-yellow-400/70 border-yellow-500/20 bg-black/30 backdrop-blur-sm'>
           <div className='text-center'>
-            <div className='font-medium text-yellow-300'>© 2025 MHWildsCharmCalculator</div>
+            <a
+              href='https://github.com/ni-null/MHWilds-Charm-Odds-Calculator'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='inline-flex items-center gap-2 font-medium text-yellow-300 transition-colors hover:text-yellow-400'>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='18'
+                height='18'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                className='inline-block text-yellow-400 align-middle'>
+                <path d='M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.76-1.606-2.665-.304-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.52 11.52 0 0 1 3.003-.404c1.02.005 2.048.138 3.003.404 2.29-1.552 3.296-1.23 3.296-1.23.654 1.653.243 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.804 5.624-5.475 5.921.43.372.813 1.104.813 2.225 0 1.606-.015 2.898-.015 3.293 0 .32.216.694.825.576C20.565 21.796 24 17.297 24 12c0-6.63-5.37-12-12-12z' />
+              </svg>
+              MHWilds-Charm-Odds-Calculator
+            </a>
             <div className='text-yellow-500/60'>Built by Ninull</div>
           </div>
         </div>
