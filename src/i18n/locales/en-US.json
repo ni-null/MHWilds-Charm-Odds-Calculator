@@ -1,5 +1,5 @@
 {
-  "title": "Monster Hunter Wilds - Charm Skill Filter",
+  "title": "Charm Skill Filter",
   "navigation": {
     "home": "Home",
     "mhwCalculator": "MHW Charm Calculator",
@@ -55,7 +55,7 @@
     "calculation": {
       "title": "Calculation Formula:",
       "formula": "Probability = Rarity Base Probability × (1/First Skill Group Count) × (1/Second Skill Group Count) × (1/Third Skill Group Count)",
-      "rarityBase": "Rarity Base Probability: RARE[5]=59%, RARE[6]=27%, RARE[7]=11%, RARE[8]=3%",
+      "rarityBase": "Rarity Base Probability: ",
       "groupCount": "Skill Group Count: Total number of available skills in that group"
     },
     "note": {
@@ -84,7 +84,7 @@
     "count": ""
   },
   "charmTypes": {
-    "title": "Monster Hunter Wilds - Charm Types",
+    "title": "Charm Types",
     "stats": {
       "totalCharms": "Total Charms Types",
       "rarities": "Rarities",
@@ -97,7 +97,7 @@
     }
   },
   "skillGroups": {
-    "title": "Monster Hunter Wilds - Skill Groups",
+    "title": "Skill Groups",
     "totalGroups": "Skill Groups",
     "totalSkills": "Skill Entries",
     "uniqueSkills": "Unique Skills",

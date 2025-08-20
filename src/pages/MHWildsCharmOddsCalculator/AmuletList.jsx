@@ -44,26 +44,6 @@ export default function AmuletList({
         </div>
       )}
 
-      {/* 機率統計摘要 */}
-      <div className='p-4 mt-4 border border-green-200 rounded-lg bg-green-50'>
-        <div className='space-y-2 text-base text-green-800'>
-          <div>
-            <strong>{t("probability.calculation.title")}</strong>
-          </div>
-          <div>{t("probability.calculation.formula")}</div>
-          <div className='text-sm'>
-            • {t("probability.calculation.rarityBase")}
-            <br />• {t("probability.calculation.groupCount")}
-          </div>
-          {/* 多國語系提示：使用 i18n 鍵 */}
-          <div className='mt-2 text-sm text-gray-700'>
-            <div className='font-semibold'>{t("probability.note.title")}</div>
-            <div>{t("probability.note.line1")}</div>
-            <div>{t("probability.note.line2")}</div>
-          </div>
-        </div>
-      </div>
-
       {matchingAmulets.length > 0 ? (
         <ul className='divide-y divide-gray-200'>
           {matchingAmulets.map((amulet, index) => {
@@ -71,8 +51,8 @@ export default function AmuletList({
             const probability = amuletProbabilities[index]
             return (
               <>
-                <li key={index} className='flex flex-row items-center px-2 py-4 border-b md:gap-6'>
-                  <div className='flex flex-col min-w-[140px] mb-2 md:mb-0'>
+                <li key={index} className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
+                  <div className='flex flex-col min-w-[140px] mb-2 md:mb-0 md:mr-4'>
                     <div className='text-lg font-semibold text-purple-600'>{amulet.Rarity}</div>
                     <div className='text-base font-medium text-blue-600'>
                       {t("amulet.probability")}: {probability}
@@ -139,7 +119,8 @@ export default function AmuletList({
                       </span>
                     </div>
                   </div>
-                  <div className='flex flex-col items-end min-w-[80px]'>
+
+                  <div className='flex flex-col items-end md:items-end min-w-[80px] mt-2 md:mt-0 md:ml-4 w-full md:w-auto'>
                     <button
                       className='px-3 py-2 text-sm text-blue-600 border border-blue-200 rounded hover:bg-blue-50'
                       onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}>
@@ -159,11 +140,11 @@ export default function AmuletList({
                         const finalProb = baseProb * skillCombinationProb
                         return (
                           <>
-                            <div className='text-base font-semibold mb-2'>{t("probability.debug.title")}</div>
-                            <div className='text-base mb-1'>
+                            <div className='mb-2 text-base font-semibold'>{t("probability.debug.title")}</div>
+                            <div className='mb-1 text-base'>
                               {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(2)}%)
                             </div>
-                            <div className='text-base mb-1'>
+                            <div className='mb-1 text-base'>
                               {t("probability.debug.skillGroups")}:{" "}
                               {groups.map((g, i) => (
                                 <span key={i} className='mr-2'>
@@ -173,14 +154,14 @@ export default function AmuletList({
                                 </span>
                               ))}
                             </div>
-                            <div className='text-base mb-1'>
+                            <div className='mb-1 text-base'>
                               {t("probability.debug.skillCombProb")}: {skillCounts.map((count) => `1/${count}`).join(" × ")} ={" "}
                               {skillCombinationProb.toPrecision(6)}
                             </div>
-                            <div className='text-base mb-1'>
+                            <div className='mb-1 text-base'>
                               {t("probability.debug.finalProb")}: {baseProb} × {skillCombinationProb.toPrecision(6)} = {finalProb.toPrecision(8)}
                             </div>
-                            <div className='text-base mb-1'>
+                            <div className='mb-1 text-base'>
                               {t("probability.debug.finalPercentage")}: {(finalProb * 100).toFixed(4)}%
                             </div>
                             <div className='text-base'>
@@ -202,10 +183,39 @@ export default function AmuletList({
           })}
         </ul>
       ) : (
-        <div className='py-8 text-center text-gray-500 text-base'>
+        <div className='py-8 text-base text-center text-gray-500'>
           {selectedSkills.some(Boolean) ? t("amulet.noMatches") : t("amulet.selectSkills")}
         </div>
       )}
+
+      {/* 機率統計摘要 */}
+      <div className='p-4 mt-4 border border-green-200 rounded-lg bg-green-50'>
+        <div className='space-y-2 text-base text-green-800'>
+          <div>
+            <strong>{t("probability.calculation.title")}</strong>
+          </div>
+          <div>{t("probability.calculation.formula")}</div>
+          <div className='text-sm'>
+            <div className='font-medium'>{t("probability.calculation.rarityBase")}</div>
+            <div className='mt-1 font-mono text-sm'>
+              RARE[5]=59%
+              <br />
+              RARE[6]=27%
+              <br />
+              RARE[7]=11%
+              <br />
+              RARE[8]=3%
+            </div>
+            <div className='mt-2'>• {t("probability.calculation.groupCount")}</div>
+          </div>
+          {/* 多國語系提示：使用 i18n 鍵 */}
+          <div className='mt-2 text-sm text-gray-700'>
+            <div className='font-semibold'>{t("probability.note.title")}</div>
+            <div>{t("probability.note.line1")}</div>
+            <div>{t("probability.note.line2")}</div>
+          </div>
+        </div>
+      </div>
     </section>
   )
 }
