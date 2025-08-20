@@ -1,0 +1,1216 @@
+{
+  "SkillGroups": {
+    "Group1": {
+      "color": "#38761D",
+      "bgColor": "#D9EAD3",
+      "data": [
+        {
+          "SkillName": "Artillery",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Attack Boost",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Ballistics",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Blast Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Bludgeoner",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Charge Master",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Critical Draw",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Critical Element",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Critical Eye",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Critical Status",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Dragon Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Fire Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Focus",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Guard",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Guard Up",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Handicraft",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Horn Maestro",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Ice Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Load Shells",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Mind's Eye",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Offensive Guard",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Opening Shot",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Paralysis Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Poison Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Power Prolonger",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Protective Polish",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Punishing Draw",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Rapid Morph",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Razor Sharp",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Sleep Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Slugger",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Special Ammo Boost",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Speed Sharpening",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Stamina Thief",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Tetrad Shot",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Thunder Attack",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Water Attack",
+          "SkillLevel": 1
+        }
+      ]
+    },
+    "Group2": {
+      "color": "#CC0000",
+      "bgColor": "#F4CCCC",
+      "data": [
+        {
+          "SkillName": "Airborne",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Artillery",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Attack Boost",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Ballistics",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Blast Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Blast Functionality",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Bludgeoner",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Charge Master",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Charge Up",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Critical Draw",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Critical Element",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Critical Eye",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Critical Status",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Dragon Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Exhaust Functionality",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Fire Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Focus",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Guard",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Guard Up",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Handicraft",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Horn Maestro",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Ice Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Load Shells",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Mind's Eye",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Offensive Guard",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Opening Shot",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Paralysis Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Poison Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Poison Duration Up",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Poison Functionality",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Power Prolonger",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Protective Polish",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Punishing Draw",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Rapid Morph",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Razor Sharp",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Sleep Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Slugger",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Special Ammo Boost",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Speed Sharpening",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Stamina Thief",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Tetrad Shot",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Thunder Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Water Attack",
+          "SkillLevel": 2
+        }
+      ]
+    },
+    "Group3": {
+      "color": "#674EA7",
+      "bgColor": "#D9D2E9",
+      "data": [
+        {
+          "SkillName": "Artillery",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Attack Boost",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Ballistics",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Blast Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Bludgeoner",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Charge Master",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Critical Draw",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Critical Element",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Critical Eye",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Critical Status",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Dragon Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Fire Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Focus",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Guard",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Guard Up",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Handicraft",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Ice Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Master's Touch",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Mind's Eye",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Normal Shots",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Offensive Guard",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Opening Shot",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Para Functionality",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Paralysis Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Piercing Shots",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Poison Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Power Prolonger",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Protective Polish",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Punishing Draw",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Rapid Fire Up",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Rapid Morph",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Razor Sharp",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Sleep Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Sleep Functionality",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Slugger",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Spread/Power Shots",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Stamina Thief",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Tetrad Shot",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Thunder Attack",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Water Attack",
+          "SkillLevel": 3
+        }
+      ]
+    },
+    "Group4": {
+      "color": "#d3ac36",
+      "bgColor": "#FFF2CC",
+      "data": [
+        {
+          "SkillName": "Attack Boost",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Ballistics",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Blast Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Critical Boost",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Critical Element",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Critical Eye",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Dragon Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Fire Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Guard",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Guard Up",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Handicraft",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Ice Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Opening Shot",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Paralysis Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Poison Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Protective Polish",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Razor Sharp",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Sleep Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Tetrad Shot",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Thunder Attack",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Water Attack",
+          "SkillLevel": 2
+        }
+      ]
+    },
+    "Group5": {
+      "color": "#45818E",
+      "bgColor": "#D0E0E3",
+      "data": [
+        {
+          "SkillName": "Adaptability",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Antivirus",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Aquatic/Oilsilt Mobility",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Bind Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Blast Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Bleeding Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Bombardier",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Botanist",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Constitution",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Defense Boost",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Divine Blessing",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Dragon Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Fire Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Flinch Free",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Free Meal",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Geologist",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Hunger Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Ice Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Intimidator",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Iron Skin",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Item Prolonger",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Marathon Runner",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Paralysis Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Poison Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Quick Sheathe",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Recovery Speed",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Recovery Up",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Sleep Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Speed Eating",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Stench Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Stun Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Survival Expert",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Thunder Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Tremor Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Water Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Wide-Range",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Windproof",
+          "SkillLevel": 1
+        }
+      ]
+    },
+    "Group6": {
+      "color": "#E69138",
+      "bgColor": "#FCE5CD",
+      "data": [
+        {
+          "SkillName": "Adaptability",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Antivirus",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Aquatic/Oilsilt Mobility",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Bind Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Blast Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Bleeding Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Bombardier",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Botanist",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Constitution",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Defense Boost",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Divine Blessing",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Dragon Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Fire Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Flinch Free",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Free Meal",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Geologist",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Hunger Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Ice Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Intimidator",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Iron Skin",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Item Prolonger",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Marathon Runner",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Paralysis Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Poison Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Quick Sheathe",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Recovery Speed",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Recovery Up",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Sleep Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Speed Eating",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Stench Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Stun Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Survival Expert",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Thunder Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Tremor Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Water Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Wide-Range",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Windproof",
+          "SkillLevel": 2
+        }
+      ]
+    },
+    "Group7": {
+      "color": "#5B0F00",
+      "bgColor": "#E6B8AF",
+      "data": [
+        {
+          "SkillName": "Antivirus",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Bind Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Blast Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Bleeding Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Bombardier",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Botanist",
+          "SkillLevel": 4
+        },
+        {
+          "SkillName": "Constitution",
+          "SkillLevel": 4
+        },
+        {
+          "SkillName": "Defense Boost",
+          "SkillLevel": 4
+        },
+        {
+          "SkillName": "Divine Blessing",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Dragon Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Fire Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Flinch Free",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Free Meal",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Geologist",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Hunger Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Ice Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Intimidator",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Iron Skin",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Item Prolonger",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Marathon Runner",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Paralysis Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Poison Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Quick Sheathe",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Recovery Speed",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Recovery Up",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Sleep Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Speed Eating",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Stun Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Survival Expert",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Thunder Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Tremor Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Water Resistance",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Wide-Range",
+          "SkillLevel": 4
+        },
+        {
+          "SkillName": "Windproof",
+          "SkillLevel": 3
+        }
+      ]
+    },
+    "Group8": {
+      "color": "#6FA8DC",
+      "bgColor": "#CFE2F3",
+      "data": [
+        {
+          "SkillName": "Ambush",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Blight Resistance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Coalescence",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Counterstrike",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Earplugs",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Evade Extender",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Evade Window",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Heroics",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Maximum Might",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Mushroomancer",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Partbreaker",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Peak Performance",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Resentment",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Stamina Surge",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Tool Specialist",
+          "SkillLevel": 2
+        }
+      ]
+    },
+    "Group9": {
+      "color": "#C27BA0",
+      "bgColor": "#EAD1DC",
+      "data": [
+        {
+          "SkillName": "Ambush",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Blight Resistance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Coalescence",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Counterstrike",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Earplugs",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Evade Extender",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Evade Window",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Heroics",
+          "SkillLevel": 3
+        },
+        {
+          "SkillName": "Maximum Might",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Mushroomancer",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Partbreaker",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Peak Performance",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Resentment",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Stamina Surge",
+          "SkillLevel": 2
+        },
+        {
+          "SkillName": "Tool Specialist",
+          "SkillLevel": 3
+        }
+      ]
+    },
+    "Group10": {
+      "color": "#1155CC",
+      "bgColor": "#C9DAF8",
+      "data": [
+        {
+          "SkillName": "Adrenaline Rush",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Agitator",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Burst",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Convert Element",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Elemental Absorption",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Flayer",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Foray",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Latent Power",
+          "SkillLevel": 1
+        },
+        {
+          "SkillName": "Weakness Exploit",
+          "SkillLevel": 1
+        }
+      ]
+    }
+  }
+}
