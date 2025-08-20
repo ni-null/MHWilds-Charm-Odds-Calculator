@@ -113,21 +113,24 @@ export default function MHWPage() {
     return AmuletData.filter((amulet) => {
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
 
-      // 統計每個技能需要的數量
-      const skillCounts = {}
-      selectedSkillsFiltered.forEach((skillKey) => {
-        skillCounts[skillKey] = (skillCounts[skillKey] || 0) + 1
-      })
+      // 嘗試為每個選擇的技能分配槽位（不是群組號碼）
+      const usedSlots = []
 
-      // 檢查護石是否可以提供所有需要的技能
-      for (const [skillKey, requiredCount] of Object.entries(skillCounts)) {
+      for (const skillKey of selectedSkillsFiltered) {
         const skillGroups = skillToGroupMap[skillKey] || []
 
-        // 計算護石中有多少個群組可以提供這個技能
-        const availableCount = amuletGroups.filter((group) => skillGroups.includes(group)).length
+        // 找到一個未使用的槽位，且該槽位的群組可以提供此技能
+        let foundSlot = false
+        for (let slotIndex = 0; slotIndex < amuletGroups.length; slotIndex++) {
+          if (!usedSlots.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
+            usedSlots.push(slotIndex)
+            foundSlot = true
+            break
+          }
+        }
 
-        // 如果可用數量少於需要數量，則此護石不符合
-        if (availableCount < requiredCount) {
+        if (!foundSlot) {
+          // 如果找不到可用的槽位，此護石不符合
           return false
         }
       }
@@ -208,31 +211,30 @@ export default function MHWPage() {
       const amuletsOfSameRarity = AmuletData.filter((a) => a.Rarity === amulet.Rarity)
       const amuletTypeProb = 1 / amuletsOfSameRarity.length
 
-      // 統計每個技能需要的數量
-      const skillCounts = {}
-      selectedSkillsFiltered.forEach((skillKey) => {
-        skillCounts[skillKey] = (skillCounts[skillKey] || 0) + 1
-      })
-
       // 獲取護石的群組
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
 
-      // 計算技能組合機率：基於實際選擇的技能
+      // 計算技能組合機率：基於實際分配給每個技能的槽位
       let skillCombinationProb = 1
+      const usedSlots = []
 
-      for (const [skillKey, requiredCount] of Object.entries(skillCounts)) {
+      for (const skillKey of selectedSkillsFiltered) {
         const skillGroups = skillToGroupMap[skillKey] || []
 
-        // 找出護石中哪些群組可以提供這個技能
-        const availableGroups = amuletGroups.filter((group) => skillGroups.includes(group))
-
-        // 對於每個需要的技能副本，計算從可用群組中選擇的機率
-        for (let i = 0; i < requiredCount; i++) {
-          if (i < availableGroups.length) {
-            const groupNumber = availableGroups[i]
-            const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
-            skillCombinationProb *= 1 / skillCount
+        // 找到一個未使用的槽位，且該槽位的群組可以提供此技能
+        let assignedSlot = -1
+        for (let slotIndex = 0; slotIndex < amuletGroups.length; slotIndex++) {
+          if (!usedSlots.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
+            assignedSlot = slotIndex
+            usedSlots.push(slotIndex)
+            break
           }
+        }
+
+        if (assignedSlot !== -1) {
+          const groupNumber = amuletGroups[assignedSlot]
+          const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+          skillCombinationProb *= 1 / skillCount
         }
       }
 
