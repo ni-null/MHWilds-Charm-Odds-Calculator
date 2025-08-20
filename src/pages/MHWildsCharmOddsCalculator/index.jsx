@@ -113,11 +113,26 @@ export default function MHWPage() {
     return AmuletData.filter((amulet) => {
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
 
-      // 檢查護石是否可以包含所有選擇的技能
-      return selectedSkillsFiltered.every((skillKey) => {
-        const requiredGroups = skillToGroupMap[skillKey]
-        return requiredGroups.some((group) => amuletGroups.includes(group))
+      // 統計每個技能需要的數量
+      const skillCounts = {}
+      selectedSkillsFiltered.forEach((skillKey) => {
+        skillCounts[skillKey] = (skillCounts[skillKey] || 0) + 1
       })
+
+      // 檢查護石是否可以提供所有需要的技能
+      for (const [skillKey, requiredCount] of Object.entries(skillCounts)) {
+        const skillGroups = skillToGroupMap[skillKey] || []
+
+        // 計算護石中有多少個群組可以提供這個技能
+        const availableCount = amuletGroups.filter((group) => skillGroups.includes(group)).length
+
+        // 如果可用數量少於需要數量，則此護石不符合
+        if (availableCount < requiredCount) {
+          return false
+        }
+      }
+
+      return true
     })
   }, [selectedSkills, skillToGroupMap])
 
@@ -185,21 +200,46 @@ export default function MHWPage() {
   const calculateAmuletProbability = useCallback(
     (amulet) => {
       const baseProb = rarityBaseProbability[amulet.Rarity] || 0.01
+      const selectedSkillsFiltered = selectedSkills.filter(Boolean)
 
-      // 取得所有非null的群組
-      const groups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
+      if (selectedSkillsFiltered.length === 0) return baseProb
 
-      // 計算技能組合機率：考慮該稀有度下每個群組的技能數量
-      let skillCombinationProb = 1
-      groups.forEach((groupNumber) => {
-        const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
-        skillCombinationProb *= 1 / skillCount
+      // 計算該稀有度下護石類型的總數
+      const amuletsOfSameRarity = AmuletData.filter((a) => a.Rarity === amulet.Rarity)
+      const amuletTypeProb = 1 / amuletsOfSameRarity.length
+
+      // 統計每個技能需要的數量
+      const skillCounts = {}
+      selectedSkillsFiltered.forEach((skillKey) => {
+        skillCounts[skillKey] = (skillCounts[skillKey] || 0) + 1
       })
 
-      // 最終機率 = 基礎機率 × 技能組合機率
-      return baseProb * skillCombinationProb
+      // 獲取護石的群組
+      const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
+
+      // 計算技能組合機率：基於實際選擇的技能
+      let skillCombinationProb = 1
+
+      for (const [skillKey, requiredCount] of Object.entries(skillCounts)) {
+        const skillGroups = skillToGroupMap[skillKey] || []
+
+        // 找出護石中哪些群組可以提供這個技能
+        const availableGroups = amuletGroups.filter((group) => skillGroups.includes(group))
+
+        // 對於每個需要的技能副本，計算從可用群組中選擇的機率
+        for (let i = 0; i < requiredCount; i++) {
+          if (i < availableGroups.length) {
+            const groupNumber = availableGroups[i]
+            const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+            skillCombinationProb *= 1 / skillCount
+          }
+        }
+      }
+
+      // 最終機率 = 基礎機率 × 護石類型機率 × 技能組合機率
+      return baseProb * amuletTypeProb * skillCombinationProb
     },
-    [rarityBaseProbability, getGroupSkillCountForRarity]
+    [rarityBaseProbability, getGroupSkillCountForRarity, selectedSkills, skillToGroupMap]
   )
 
   // 計算匹配護石的機率分布

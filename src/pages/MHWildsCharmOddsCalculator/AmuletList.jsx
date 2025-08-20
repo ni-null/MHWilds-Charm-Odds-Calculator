@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import SkillGroupsData from "../../data/SkillGroups.json"
+import AmuletData from "../../data/Amulet.json"
 
 export default function AmuletList({
   matchingAmulets,
@@ -148,10 +149,60 @@ export default function AmuletList({
                       {/* 機率計算詳細步驟 */}
                       {(() => {
                         const baseProb = rarityBaseProbability[amulet.Rarity] || 0.01
-                        const groups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
-                        const skillCounts = groups.map((groupNumber) => getGroupSkillCountForRarity(groupNumber, amulet.Rarity))
-                        const skillCombinationProb = skillCounts.reduce((acc, count) => acc * (1 / count), 1)
-                        const finalProb = baseProb * skillCombinationProb
+                        const selectedSkillsFiltered = selectedSkills.filter(Boolean)
+
+                        if (selectedSkillsFiltered.length === 0) {
+                          return <div className='mb-2 text-base'>{t("probability.debug.noSkillsSelected")}</div>
+                        }
+
+                        // 計算該稀有度下護石類型的總數（從所有護石數據中計算）
+                        const totalAmuletsOfRarity = AmuletData.filter((a) => a.Rarity === amulet.Rarity).length
+                        const amuletTypeProb = 1 / totalAmuletsOfRarity
+
+                        // 統計每個技能需要的數量
+                        const skillCounts = {}
+                        selectedSkillsFiltered.forEach((skillKey) => {
+                          skillCounts[skillKey] = (skillCounts[skillKey] || 0) + 1
+                        })
+
+                        // 獲取護石的群組
+                        const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
+
+                        // 計算實際使用的群組和機率
+                        const usedGroups = []
+                        const usedSkillCounts = []
+                        let skillCombinationProb = 1
+
+                        for (const [skillKey, requiredCount] of Object.entries(skillCounts)) {
+                          // 找出護石中哪些群組可以提供這個技能
+                          const skillGroups = []
+                          // 簡化版本的skillToGroupMap查找
+                          for (const groupNum of amuletGroups) {
+                            const groupKey = `Group${groupNum}`
+                            if (SkillGroupsData.SkillGroups[groupKey]) {
+                              const hasSkill = SkillGroupsData.SkillGroups[groupKey].data.some(
+                                (skill) => `${skill.SkillName} Lv.${skill.SkillLevel}` === skillKey
+                              )
+                              if (hasSkill) {
+                                skillGroups.push(groupNum)
+                              }
+                            }
+                          }
+
+                          // 對於每個需要的技能副本，計算從可用群組中選擇的機率
+                          for (let i = 0; i < requiredCount; i++) {
+                            if (i < skillGroups.length) {
+                              const groupNumber = skillGroups[i]
+                              const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+                              skillCombinationProb *= 1 / skillCount
+                              usedGroups.push(groupNumber)
+                              usedSkillCounts.push(skillCount)
+                            }
+                          }
+                        }
+
+                        const finalProb = baseProb * amuletTypeProb * skillCombinationProb
+
                         return (
                           <>
                             <div className='mb-2 text-base font-semibold'>{t("probability.debug.title")}</div>
@@ -159,21 +210,25 @@ export default function AmuletList({
                               {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(2)}%)
                             </div>
                             <div className='mb-1 text-base'>
+                              護石類型機率: 1/{totalAmuletsOfRarity} = {amuletTypeProb.toPrecision(6)}
+                            </div>
+                            <div className='mb-1 text-base'>
                               {t("probability.debug.skillGroups")}:{" "}
-                              {groups.map((g, i) => (
+                              {usedGroups.map((g, i) => (
                                 <span key={i} className='mr-2'>
                                   {t("common.group")}
-                                  {g}: {skillCounts[i]}
+                                  {g}: {usedSkillCounts[i]}
                                   {t("probability.debug.skills")}
                                 </span>
                               ))}
                             </div>
                             <div className='mb-1 text-base'>
-                              {t("probability.debug.skillCombProb")}: {skillCounts.map((count) => `1/${count}`).join(" × ")} ={" "}
+                              {t("probability.debug.skillCombProb")}: {usedSkillCounts.map((count) => `1/${count}`).join(" × ")} ={" "}
                               {skillCombinationProb.toPrecision(6)}
                             </div>
                             <div className='mb-1 text-base'>
-                              {t("probability.debug.finalProb")}: {baseProb} × {skillCombinationProb.toPrecision(6)} = {finalProb.toPrecision(8)}
+                              {t("probability.debug.finalProb")}: {baseProb} × {amuletTypeProb.toPrecision(6)} × {skillCombinationProb.toPrecision(6)}{" "}
+                              = {finalProb.toPrecision(8)}
                             </div>
                             <div className='mb-1 text-base'>
                               {t("probability.debug.finalPercentage")}: {(finalProb * 100).toFixed(4)}%
