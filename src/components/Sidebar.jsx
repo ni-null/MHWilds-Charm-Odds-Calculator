@@ -6,7 +6,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
   const { t, i18n } = useTranslation()
 
   const navs = [
-    { to: "/", label: t("navigation.home") },
+    { to: "/", label: t("navigation.mhwCalculator") },
     { to: "/skill-groups", label: t("navigation.skillGroups") },
     { to: "/charm-types", label: t("navigation.charmTypes") },
     { to: "/info", label: t("navigation.info") },
