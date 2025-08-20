@@ -1,9 +1,16 @@
-# SPDX Operation Manual
+# MHWilds Charm Odds Calculator
 
-👉 [線上網頁 DEMO](https://ni-null.github.io/SPDX-Operation-Manual/)
+一個用來計算 Monster Hunter 系列中「護符（Charm）」的技能機率與組合機率的小工具。
 
-本專案提供 SPDX 軟體包清單操作手冊，並以 React + Vite 製作，由於臨時製作網頁不確定否有 BUG。
+## 主要功能
 
-## 專案簡介
+- 顯示可選護符（Amulet）清單與其技能組合
+- 計算並顯示不同稀有度與技能數量下的機率分佈
+- 多語系支援（當前僅繁體中文 / 英文）
 
-本專案旨在協助使用者理解與操作 SPDX（Software Package Data Exchange）格式的軟體包清單，提供圖形化網頁介面
+## 專案結構（摘要）
+
+- `src/`：應用程式原始碼
+- `src/pages/`：主要頁面與元件
+- `src/data/`：遊戲資料（如護符、技能群組與基礎機率）
+- `public/`：靜態資源
