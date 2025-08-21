@@ -182,45 +182,80 @@ export default function AmuletList({
                         const totalAmuletsOfRarity = AmuletData.filter((a) => a.Rarity === amulet.Rarity).length
                         const amuletTypeProb = 1 / totalAmuletsOfRarity
 
-                        // 統計每個技能需要的數量
-                        const skillCounts = {}
+                        // 統計每個技能在每個群組的需求
+                        const skillRequirements = {}
                         selectedSkillsFiltered.forEach((skillKey) => {
-                          skillCounts[skillKey] = (skillCounts[skillKey] || 0) + 1
+                          skillRequirements[skillKey] = (skillRequirements[skillKey] || 0) + 1
                         })
 
                         // 獲取護石的群組
                         const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
 
-                        // 計算實際使用的群組和機率
+                        // 計算實際使用的群組和機率 - 考慮已選擇技能的排除效應
                         const usedGroups = []
                         const usedSkillCounts = []
+                        const skillDrawDetails = [] // 記錄每次抽取的詳細信息
                         let skillCombinationProb = 1
+                        const selectedSkillsInGroup = {} // 記錄每個群組中已選擇的具體技能
 
-                        for (const [skillKey, requiredCount] of Object.entries(skillCounts)) {
-                          // 找出護石中哪些群組可以提供這個技能
-                          const skillGroups = []
-                          // 簡化版本的skillToGroupMap查找
-                          for (const groupNum of amuletGroups) {
-                            const groupKey = `Group${groupNum}`
-                            if (SkillGroupsData.SkillGroups[groupKey]) {
-                              const hasSkill = SkillGroupsData.SkillGroups[groupKey].data.some(
-                                (skill) => `${skill.SkillName} Lv.${skill.SkillLevel}` === skillKey
-                              )
-                              if (hasSkill) {
-                                skillGroups.push(groupNum)
+                        // 需要根據選擇的技能順序來計算，模擬實際分配過程
+                        const skillToGroupMap = {}
+                        // 建立技能到群組的映射（簡化版）
+                        for (const groupNum of amuletGroups) {
+                          const groupKey = `Group${groupNum}`
+                          if (SkillGroupsData.SkillGroups[groupKey]) {
+                            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+                              const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+                              if (!skillToGroupMap[skillKey]) {
+                                skillToGroupMap[skillKey] = []
                               }
+                              skillToGroupMap[skillKey].push(groupNum)
+                            })
+                          }
+                        }
+
+                        // 模擬技能分配過程
+                        const usedSlots = []
+                        for (const skillKey of selectedSkillsFiltered) {
+                          const skillGroups = skillToGroupMap[skillKey] || []
+
+                          // 找到一個未使用的槽位，且該槽位的群組可以提供此技能
+                          let assignedSlot = -1
+                          for (let slotIndex = 0; slotIndex < amuletGroups.length; slotIndex++) {
+                            if (!usedSlots.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
+                              assignedSlot = slotIndex
+                              usedSlots.push(slotIndex)
+                              break
                             }
                           }
 
-                          // 對於每個需要的技能副本，計算從可用群組中選擇的機率
-                          for (let i = 0; i < requiredCount; i++) {
-                            if (i < skillGroups.length) {
-                              const groupNumber = skillGroups[i]
-                              const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
-                              skillCombinationProb *= 1 / skillCount
-                              usedGroups.push(groupNumber)
-                              usedSkillCounts.push(skillCount)
+                          if (assignedSlot !== -1) {
+                            const groupNumber = amuletGroups[assignedSlot]
+                            const totalSkillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+
+                            // 計算該群組中已選擇的技能數量（排除當前技能本身）
+                            if (!selectedSkillsInGroup[groupNumber]) {
+                              selectedSkillsInGroup[groupNumber] = []
                             }
+                            const alreadySelectedCount = selectedSkillsInGroup[groupNumber].length
+                            const alreadySelectedSkills = [...selectedSkillsInGroup[groupNumber]] // 複製陣列以供顯示
+
+                            // 可用技能數量 = 總數 - 已選擇的不同技能數量
+                            const availableSkillCount = totalSkillCount - alreadySelectedCount
+                            skillCombinationProb *= 1 / availableSkillCount
+
+                            // 記錄這個技能已被選擇
+                            selectedSkillsInGroup[groupNumber].push(skillKey)
+
+                            usedGroups.push(groupNumber)
+                            usedSkillCounts.push(availableSkillCount)
+                            skillDrawDetails.push({
+                              skill: skillKey,
+                              group: groupNumber,
+                              total: totalSkillCount,
+                              alreadySelected: alreadySelectedSkills,
+                              available: availableSkillCount,
+                            })
                           }
                         }
 
@@ -243,12 +278,36 @@ export default function AmuletList({
                             </div>
                             <div className='mb-1 text-base'>
                               {t("probability.debug.skillGroups")}:{" "}
-                              {usedGroups.map((g, i) => (
-                                <span key={i} className='mr-2'>
-                                  {t("common.group")}
-                                  {g}: {usedSkillCounts[i]}
-                                  {t("probability.debug.skills")}
-                                </span>
+                              {skillDrawDetails.map((detail, i) => (
+                                <div key={i} className='ml-4 text-sm'>
+                                  <span className='font-medium'>
+                                    {t("common.group")}
+                                    {detail.group}: {detail.total}
+                                    {t("probability.debug.skills")}
+                                  </span>
+                                  {detail.alreadySelected.length > 0 && (
+                                    <span className='ml-2 text-gray-600'>
+                                      ({t("probability.debug.excluded")}:{" "}
+                                      {detail.alreadySelected
+                                        .map((skill) => {
+                                          const skillName = skill.split(" Lv.")[0]
+                                          const skillLevel = skill.split(" Lv.")[1]
+
+                                          if (i18n.language === "zhTW") {
+                                            const translatedName = t(`skillTranslations.${skillName}`, skillName)
+                                            const fullTranslatedName = `${translatedName} ${t("common.level")}${skillLevel}`
+                                            return fullTranslatedName.length > 15 ? fullTranslatedName.substring(0, 15) + "..." : fullTranslatedName
+                                          } else {
+                                            const shortName = skillName.length > 10 ? skillName.substring(0, 10) + "..." : skillName
+                                            return `${shortName} Lv.${skillLevel}`
+                                          }
+                                        })
+                                        .join(", ")}
+                                      )
+                                    </span>
+                                  )}
+                                  <span className='ml-2 text-green-600'> → {detail.available}</span>
+                                </div>
                               ))}
                             </div>
                             <div className='mb-1 text-base'>

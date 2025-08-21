@@ -79,7 +79,15 @@ export default function MHWPage() {
           })
         }
       })
-      return Array.from(new Set(skills.map((s) => s.key))).sort()
+      // 移除重複和其他位置已選擇的技能
+      const availableSkills = Array.from(new Set(skills.map((s) => s.key)))
+        .filter((skill) => {
+          // 排除其他位置已選擇的技能，但保留當前位置的技能
+          const otherSelectedSkills = selectedSkills.filter((s, index) => index !== slotIndex && s)
+          return !otherSelectedSkills.includes(skill)
+        })
+        .sort()
+      return availableSkills
     }
     if (slotIndex === 2) {
       // 依據前兩個選擇，找出所有護石 Skill3Group 可用技能
@@ -100,7 +108,15 @@ export default function MHWPage() {
           })
         }
       })
-      return Array.from(new Set(skills.map((s) => s.key))).sort()
+      // 移除重複和其他位置已選擇的技能
+      const availableSkills = Array.from(new Set(skills.map((s) => s.key)))
+        .filter((skill) => {
+          // 排除其他位置已選擇的技能，但保留當前位置的技能
+          const otherSelectedSkills = selectedSkills.filter((s, index) => index !== slotIndex && s)
+          return !otherSelectedSkills.includes(skill)
+        })
+        .sort()
+      return availableSkills
     }
     return []
   }
@@ -214,9 +230,10 @@ export default function MHWPage() {
       // 獲取護石的群組
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
 
-      // 計算技能組合機率：基於實際分配給每個技能的槽位
+      // 計算技能組合機率：考慮已選擇技能的排除效應
       let skillCombinationProb = 1
       const usedSlots = []
+      const selectedSkillsInGroup = {} // 記錄每個群組中已選擇的具體技能
 
       for (const skillKey of selectedSkillsFiltered) {
         const skillGroups = skillToGroupMap[skillKey] || []
@@ -233,8 +250,20 @@ export default function MHWPage() {
 
         if (assignedSlot !== -1) {
           const groupNumber = amuletGroups[assignedSlot]
-          const skillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
-          skillCombinationProb *= 1 / skillCount
+          const totalSkillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+
+          // 計算該群組中已選擇的技能數量（排除當前技能本身）
+          if (!selectedSkillsInGroup[groupNumber]) {
+            selectedSkillsInGroup[groupNumber] = []
+          }
+          const alreadySelectedCount = selectedSkillsInGroup[groupNumber].length
+
+          // 可用技能數量 = 總數 - 已選擇的不同技能數量
+          const availableSkillCount = totalSkillCount - alreadySelectedCount
+          skillCombinationProb *= 1 / availableSkillCount
+
+          // 記錄這個技能已被選擇
+          selectedSkillsInGroup[groupNumber].push(skillKey)
         }
       }
 

@@ -95,7 +95,8 @@
       "skills": "技能",
       "skillCombProb": "技能組合機率",
       "finalProb": "最終機率",
-      "finalPercentage": "最終百分比"
+      "finalPercentage": "最終百分比",
+      "excluded": "排除"
     }
   },
   "common": {
