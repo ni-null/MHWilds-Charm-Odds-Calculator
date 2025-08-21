@@ -251,14 +251,35 @@ export default function MHWPage() {
     const probabilities = {}
     matchingAmulets.forEach((amulet, index) => {
       const probability = calculateAmuletProbability(amulet)
-      // 轉換為百分比並保留適當的小數位數
-      if (probability >= 0.01) {
-        probabilities[index] = (probability * 100).toFixed(2)
-      } else if (probability >= 0.001) {
-        probabilities[index] = (probability * 100).toFixed(3)
+      const percentageProb = probability * 100
+
+      // 更智能的小數位數格式化，避免科學記號
+      let formattedProb
+      if (percentageProb >= 0.01) {
+        formattedProb = percentageProb.toFixed(4)
+      } else if (percentageProb >= 0.001) {
+        formattedProb = percentageProb.toFixed(6)
+      } else if (percentageProb >= 0.0001) {
+        formattedProb = percentageProb.toFixed(8)
       } else {
-        probabilities[index] = (probability * 100).toFixed(4)
+        // 對於非常小的數字，使用更多小數位數並移除尾隨的零
+        formattedProb = percentageProb.toFixed(12).replace(/\.?0+$/, "")
+        // 如果還是會變成科學記號，則使用 toPrecision
+        if (formattedProb.includes("e")) {
+          formattedProb = percentageProb.toPrecision(8)
+          if (formattedProb.includes("e")) {
+            // 手動格式化避免科學記號
+            const str = percentageProb.toString()
+            if (str.includes("e")) {
+              formattedProb = percentageProb.toFixed(15).replace(/\.?0+$/, "")
+            } else {
+              formattedProb = str
+            }
+          }
+        }
       }
+
+      probabilities[index] = formattedProb
     })
 
     return probabilities

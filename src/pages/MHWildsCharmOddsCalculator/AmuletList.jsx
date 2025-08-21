@@ -38,7 +38,24 @@ export default function AmuletList({
         <div className='p-3 bg-orange-100 border-2 border-orange-300 rounded'>
           <div className='text-xl font-bold text-orange-800'>
             {t("common.total")}
-            {t("amulet.probability")}: {totalProbability.toFixed(4)}
+            {t("amulet.probability")}:{" "}
+            {(() => {
+              // 智能格式化總機率，避免科學記號
+              if (totalProbability >= 0.01) {
+                return totalProbability.toFixed(4)
+              } else if (totalProbability >= 0.001) {
+                return totalProbability.toFixed(6)
+              } else if (totalProbability >= 0.0001) {
+                return totalProbability.toFixed(8)
+              } else {
+                // 對於非常小的數字，使用更多小數位數
+                const formatted = totalProbability.toFixed(12).replace(/\.?0+$/, "")
+                if (formatted.includes("e")) {
+                  return totalProbability.toFixed(15).replace(/\.?0+$/, "")
+                }
+                return formatted
+              }
+            })()}
             {t("probability.percentage")}
             {totalProbability > 0 && (
               <span className='ml-2 text-lg font-normal'>
@@ -216,7 +233,13 @@ export default function AmuletList({
                               {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(2)}%)
                             </div>
                             <div className='mb-1 text-base'>
-                              {t("probability.charmTypeProb")}: 1/{totalAmuletsOfRarity} = {amuletTypeProb.toPrecision(6)}
+                              {t("probability.charmTypeProb")}: 1/{totalAmuletsOfRarity} ={" "}
+                              {(() => {
+                                const prob = amuletTypeProb
+                                if (prob >= 0.001) return prob.toFixed(8)
+                                else if (prob >= 0.0001) return prob.toFixed(10)
+                                else return prob.toFixed(12).replace(/\.?0+$/, "")
+                              })()}
                             </div>
                             <div className='mb-1 text-base'>
                               {t("probability.debug.skillGroups")}:{" "}
@@ -230,14 +253,46 @@ export default function AmuletList({
                             </div>
                             <div className='mb-1 text-base'>
                               {t("probability.debug.skillCombProb")}: {usedSkillCounts.map((count) => `1/${count}`).join(" × ")} ={" "}
-                              {skillCombinationProb.toPrecision(6)}
+                              {(() => {
+                                const prob = skillCombinationProb
+                                if (prob >= 0.001) return prob.toFixed(8)
+                                else if (prob >= 0.0001) return prob.toFixed(10)
+                                else return prob.toFixed(12).replace(/\.?0+$/, "")
+                              })()}
                             </div>
                             <div className='mb-1 text-base'>
-                              {t("probability.debug.finalProb")}: {baseProb} × {amuletTypeProb.toPrecision(6)} × {skillCombinationProb.toPrecision(6)}{" "}
-                              = {finalProb.toPrecision(8)}
+                              {t("probability.debug.finalProb")}: {baseProb} ×{" "}
+                              {(() => {
+                                const prob = amuletTypeProb
+                                if (prob >= 0.001) return prob.toFixed(8)
+                                else if (prob >= 0.0001) return prob.toFixed(10)
+                                else return prob.toFixed(12).replace(/\.?0+$/, "")
+                              })()}{" "}
+                              ×{" "}
+                              {(() => {
+                                const prob = skillCombinationProb
+                                if (prob >= 0.001) return prob.toFixed(8)
+                                else if (prob >= 0.0001) return prob.toFixed(10)
+                                else return prob.toFixed(12).replace(/\.?0+$/, "")
+                              })()}{" "}
+                              ={" "}
+                              {(() => {
+                                const prob = finalProb
+                                if (prob >= 0.001) return prob.toFixed(8)
+                                else if (prob >= 0.0001) return prob.toFixed(10)
+                                else return prob.toFixed(15).replace(/\.?0+$/, "")
+                              })()}
                             </div>
                             <div className='mb-1 text-base'>
-                              {t("probability.debug.finalPercentage")}: {(finalProb * 100).toFixed(4)}%
+                              {t("probability.debug.finalPercentage")}:{" "}
+                              {(() => {
+                                const percentageProb = finalProb * 100
+                                if (percentageProb >= 0.01) return percentageProb.toFixed(6)
+                                else if (percentageProb >= 0.001) return percentageProb.toFixed(8)
+                                else if (percentageProb >= 0.0001) return percentageProb.toFixed(10)
+                                else return percentageProb.toFixed(12).replace(/\.?0+$/, "")
+                              })()}
+                              %
                             </div>
                             <div className='text-base'>
                               {t("amulet.slotCombinations")}:{" "}
