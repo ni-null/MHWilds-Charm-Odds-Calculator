@@ -196,7 +196,7 @@ export default function AmuletList({
                         const usedSkillCounts = []
                         const skillDrawDetails = [] // 記錄每次抽取的詳細信息
                         let skillCombinationProb = 1
-                        const selectedSkillsInGroup = {} // 記錄每個群組中已選擇的具體技能
+                        const selectedSkillBaseNamesInGroup = {} // 記錄每個群組中已選擇的技能基礎名稱
 
                         // 需要根據選擇的技能順序來計算，模擬實際分配過程
                         const skillToGroupMap = {}
@@ -233,19 +233,42 @@ export default function AmuletList({
                             const groupNumber = amuletGroups[assignedSlot]
                             const totalSkillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
 
-                            // 計算該群組中已選擇的技能數量（排除當前技能本身）
-                            if (!selectedSkillsInGroup[groupNumber]) {
-                              selectedSkillsInGroup[groupNumber] = []
+                            // 計算該群組中已選擇的技能基礎名稱
+                            if (!selectedSkillBaseNamesInGroup[groupNumber]) {
+                              selectedSkillBaseNamesInGroup[groupNumber] = new Set()
                             }
-                            const alreadySelectedCount = selectedSkillsInGroup[groupNumber].length
-                            const alreadySelectedSkills = [...selectedSkillsInGroup[groupNumber]] // 複製陣列以供顯示
 
-                            // 可用技能數量 = 總數 - 已選擇的不同技能數量
-                            const availableSkillCount = totalSkillCount - alreadySelectedCount
+                            // 獲取當前技能的基礎名稱
+                            const currentSkillBaseName = skillKey.split(" Lv.")[0]
+
+                            // 計算需要排除的技能數量和已選技能列表（用於顯示）
+                            const groupKey = `Group${groupNumber}`
+                            let excludedSkillCount = 0
+                            const excludedSkillBaseNames = new Set() // 用於記錄被排除的技能基礎名稱
+
+                            if (SkillGroupsData.SkillGroups[groupKey]) {
+                              // 收集所有已選擇的技能基礎名稱（來自所有群組）
+                              const allSelectedBaseNames = new Set()
+                              Object.values(selectedSkillBaseNamesInGroup).forEach((baseNameSet) => {
+                                baseNameSet.forEach((baseName) => allSelectedBaseNames.add(baseName))
+                              })
+
+                              // 計算該群組中所有與已選技能基礎名稱相同的技能數量
+                              allSelectedBaseNames.forEach((baseName) => {
+                                const sameBaseNameSkills = SkillGroupsData.SkillGroups[groupKey].data.filter((skill) => skill.SkillName === baseName)
+                                if (sameBaseNameSkills.length > 0) {
+                                  excludedSkillCount += sameBaseNameSkills.length
+                                  excludedSkillBaseNames.add(baseName)
+                                }
+                              })
+                            }
+
+                            // 可用技能數量 = 總數 - 需要排除的技能數量
+                            const availableSkillCount = totalSkillCount - excludedSkillCount
                             skillCombinationProb *= 1 / availableSkillCount
 
-                            // 記錄這個技能已被選擇
-                            selectedSkillsInGroup[groupNumber].push(skillKey)
+                            // 記錄這個技能的基礎名稱已被選擇
+                            selectedSkillBaseNamesInGroup[groupNumber].add(currentSkillBaseName)
 
                             usedGroups.push(groupNumber)
                             usedSkillCounts.push(availableSkillCount)
@@ -253,7 +276,7 @@ export default function AmuletList({
                               skill: skillKey,
                               group: groupNumber,
                               total: totalSkillCount,
-                              alreadySelected: alreadySelectedSkills,
+                              excludedBaseNames: Array.from(excludedSkillBaseNames), // 轉換為陣列以便顯示
                               available: availableSkillCount,
                             })
                           }
@@ -286,28 +309,22 @@ export default function AmuletList({
                                     {t("common.group")}
                                     {detail.group}: {detail.total}
                                     {t("probability.debug.skills")}
+                                    {detail.excludedBaseNames.length > 0 && (
+                                      <span className='ml-2 text-gray-600'>
+                                        ({t("probability.debug.excluded")}:{" "}
+                                        {detail.excludedBaseNames
+                                          .map((skillBaseName) => {
+                                            if (i18n.language === "zhTW") {
+                                              return t(`skillTranslations.${skillBaseName}`, skillBaseName)
+                                            } else {
+                                              return skillBaseName
+                                            }
+                                          })
+                                          .join(", ")}
+                                        )
+                                      </span>
+                                    )}
                                   </span>
-                                  {detail.alreadySelected.length > 0 && (
-                                    <span className='ml-2 text-gray-600'>
-                                      ({t("probability.debug.excluded")}:{" "}
-                                      {detail.alreadySelected
-                                        .map((skill) => {
-                                          const skillName = skill.split(" Lv.")[0]
-                                          const skillLevel = skill.split(" Lv.")[1]
-
-                                          if (i18n.language === "zhTW") {
-                                            const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                                            const fullTranslatedName = `${translatedName} ${t("common.level")}${skillLevel}`
-                                            return fullTranslatedName.length > 15 ? fullTranslatedName.substring(0, 15) + "..." : fullTranslatedName
-                                          } else {
-                                            const shortName = skillName.length > 10 ? skillName.substring(0, 10) + "..." : skillName
-                                            return `${shortName} Lv.${skillLevel}`
-                                          }
-                                        })
-                                        .join(", ")}
-                                      )
-                                    </span>
-                                  )}
                                   <span className='ml-2 text-green-600'> → {detail.available}</span>
                                 </div>
                               ))}

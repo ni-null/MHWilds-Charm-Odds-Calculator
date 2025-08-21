@@ -61,7 +61,7 @@ export default function MHWPage() {
       return getSkillsByGroup("Skill1Group")
     }
     if (slotIndex === 1) {
-      // 依據第一個選擇，找出所有護石 Skill2Group 可用技能
+      // 技能2只受技能1影響，不受技能3影響
       if (!selectedSkills[0]) return []
       // 找出所有護石 Skill1Group 包含第一個技能的 Skill2Group
       const firstSkillGroups = skillToGroupMap[selectedSkills[0]]
@@ -79,22 +79,36 @@ export default function MHWPage() {
           })
         }
       })
-      // 移除重複和其他位置已選擇的技能
+      // 只排除技能1的相同技能，不考慮技能3
       const availableSkills = Array.from(new Set(skills.map((s) => s.key)))
         .filter((skill) => {
-          // 排除其他位置已選擇的技能，但保留當前位置的技能
-          const otherSelectedSkills = selectedSkills.filter((s, index) => index !== slotIndex && s)
-          return !otherSelectedSkills.includes(skill)
+          const skillBaseName = skill.split(" Lv.")[0]
+          // 只排除技能1的相同技能基礎名稱
+          if (selectedSkills[0]) {
+            const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
+            return skillBaseName !== skill1BaseName
+          }
+          return true
         })
         .sort()
       return availableSkills
     }
     if (slotIndex === 2) {
-      // 依據前兩個選擇，找出所有護石 Skill3Group 可用技能
-      if (!selectedSkills[0] || !selectedSkills[1]) return []
+      // 技能3受技能1和技能2影響
+      if (!selectedSkills[0]) return []
+
+      let amulets = []
       const firstSkillGroups = skillToGroupMap[selectedSkills[0]]
-      const secondSkillGroups = skillToGroupMap[selectedSkills[1]]
-      const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
+
+      if (selectedSkills[1]) {
+        // 如果技能2也有選擇，需要同時滿足技能1和技能2的條件
+        const secondSkillGroups = skillToGroupMap[selectedSkills[1]]
+        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
+      } else {
+        // 如果只有技能1，找出所有包含技能1的護石
+        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
+      }
+
       const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
       const skills = []
       groupNumbers.forEach((groupNumber) => {
@@ -108,12 +122,24 @@ export default function MHWPage() {
           })
         }
       })
-      // 移除重複和其他位置已選擇的技能
+      // 排除技能1和技能2的相同技能基礎名稱
       const availableSkills = Array.from(new Set(skills.map((s) => s.key)))
         .filter((skill) => {
-          // 排除其他位置已選擇的技能，但保留當前位置的技能
-          const otherSelectedSkills = selectedSkills.filter((s, index) => index !== slotIndex && s)
-          return !otherSelectedSkills.includes(skill)
+          const skillBaseName = skill.split(" Lv.")[0]
+
+          // 排除技能1的相同技能基礎名稱
+          if (selectedSkills[0]) {
+            const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
+            if (skillBaseName === skill1BaseName) return false
+          }
+
+          // 排除技能2的相同技能基礎名稱
+          if (selectedSkills[1]) {
+            const skill2BaseName = selectedSkills[1].split(" Lv.")[0]
+            if (skillBaseName === skill2BaseName) return false
+          }
+
+          return true
         })
         .sort()
       return availableSkills
@@ -159,12 +185,98 @@ export default function MHWPage() {
     const newSelectedSkills = [...selectedSkills]
     newSelectedSkills[slotIndex] = skillKey || null
 
-    // 清除後面的選擇
-    for (let i = slotIndex + 1; i < 3; i++) {
-      newSelectedSkills[i] = null
+    // 當新選擇為空時，清除後面的選擇
+    if (!skillKey) {
+      for (let i = slotIndex + 1; i < 3; i++) {
+        newSelectedSkills[i] = null
+      }
+    } else {
+      // 當修改技能時，需要驗證後續技能是否仍然有效
+      for (let i = slotIndex + 1; i < 3; i++) {
+        if (newSelectedSkills[i]) {
+          // 檢查技能i是否仍然在可用選項中
+          const availableSkillsForSlot = getAvailableSkillsForValidation(i, newSelectedSkills)
+          if (!availableSkillsForSlot.includes(newSelectedSkills[i])) {
+            // 如果不再有效，清除該技能及後續技能
+            for (let j = i; j < 3; j++) {
+              newSelectedSkills[j] = null
+            }
+            break
+          }
+        }
+      }
     }
 
     setSelectedSkills(newSelectedSkills)
+  }
+
+  // 用於驗證的輔助函數，根據給定的技能組合計算可用技能
+  const getAvailableSkillsForValidation = (slotIndex, skillsArray) => {
+    if (slotIndex === 0) {
+      return getSkillsByGroup("Skill1Group")
+    }
+    if (slotIndex === 1) {
+      if (!skillsArray[0]) return []
+      const firstSkillGroups = skillToGroupMap[skillsArray[0]]
+      const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
+      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill2Group).filter((g) => g !== null)))
+      const skills = []
+      groupNumbers.forEach((groupNumber) => {
+        const groupKey = `Group${groupNumber}`
+        if (SkillGroupsData.SkillGroups[groupKey]) {
+          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+            skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`)
+          })
+        }
+      })
+      return Array.from(new Set(skills)).filter((skill) => {
+        const skillBaseName = skill.split(" Lv.")[0]
+        if (skillsArray[0]) {
+          const skill1BaseName = skillsArray[0].split(" Lv.")[0]
+          return skillBaseName !== skill1BaseName
+        }
+        return true
+      })
+    }
+    if (slotIndex === 2) {
+      if (!skillsArray[0]) return []
+      let amulets = []
+      const firstSkillGroups = skillToGroupMap[skillsArray[0]]
+
+      if (skillsArray[1]) {
+        const secondSkillGroups = skillToGroupMap[skillsArray[1]]
+        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
+      } else {
+        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
+      }
+
+      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
+      const skills = []
+      groupNumbers.forEach((groupNumber) => {
+        const groupKey = `Group${groupNumber}`
+        if (SkillGroupsData.SkillGroups[groupKey]) {
+          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+            skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`)
+          })
+        }
+      })
+      return Array.from(new Set(skills)).filter((skill) => {
+        const skillBaseName = skill.split(" Lv.")[0]
+
+        if (skillsArray[0]) {
+          const skill1BaseName = skillsArray[0].split(" Lv.")[0]
+          if (skillBaseName === skill1BaseName) return false
+        }
+
+        if (skillsArray[1]) {
+          const skill2BaseName = skillsArray[1].split(" Lv.")[0]
+          if (skillBaseName === skill2BaseName) return false
+        }
+
+        return true
+      })
+    }
+    return []
   }
 
   // 取得技能所在的群組資訊
@@ -233,7 +345,7 @@ export default function MHWPage() {
       // 計算技能組合機率：考慮已選擇技能的排除效應
       let skillCombinationProb = 1
       const usedSlots = []
-      const selectedSkillsInGroup = {} // 記錄每個群組中已選擇的具體技能
+      const selectedSkillBaseNamesInGroup = {} // 記錄每個群組中已選擇的技能基礎名稱
 
       for (const skillKey of selectedSkillsFiltered) {
         const skillGroups = skillToGroupMap[skillKey] || []
@@ -252,18 +364,37 @@ export default function MHWPage() {
           const groupNumber = amuletGroups[assignedSlot]
           const totalSkillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
 
-          // 計算該群組中已選擇的技能數量（排除當前技能本身）
-          if (!selectedSkillsInGroup[groupNumber]) {
-            selectedSkillsInGroup[groupNumber] = []
+          // 計算該群組中已選擇的技能基礎名稱數量
+          if (!selectedSkillBaseNamesInGroup[groupNumber]) {
+            selectedSkillBaseNamesInGroup[groupNumber] = new Set()
           }
-          const alreadySelectedCount = selectedSkillsInGroup[groupNumber].length
 
-          // 可用技能數量 = 總數 - 已選擇的不同技能數量
-          const availableSkillCount = totalSkillCount - alreadySelectedCount
+          // 獲取當前技能的基礎名稱
+          const currentSkillBaseName = skillKey.split(" Lv.")[0]
+
+          // 計算需要排除的技能數量（該群組中與已選技能基礎名稱相同的所有技能）
+          const groupKey = `Group${groupNumber}`
+          let excludedSkillCount = 0
+          if (SkillGroupsData.SkillGroups[groupKey]) {
+            // 收集所有已選擇的技能基礎名稱（來自所有群組）
+            const allSelectedBaseNames = new Set()
+            Object.values(selectedSkillBaseNamesInGroup).forEach((baseNameSet) => {
+              baseNameSet.forEach((baseName) => allSelectedBaseNames.add(baseName))
+            })
+
+            // 計算該群組中所有與已選技能基礎名稱相同的技能數量
+            allSelectedBaseNames.forEach((baseName) => {
+              const sameBaseNameSkills = SkillGroupsData.SkillGroups[groupKey].data.filter((skill) => skill.SkillName === baseName)
+              excludedSkillCount += sameBaseNameSkills.length
+            })
+          }
+
+          // 可用技能數量 = 總數 - 需要排除的技能數量
+          const availableSkillCount = totalSkillCount - excludedSkillCount
           skillCombinationProb *= 1 / availableSkillCount
 
-          // 記錄這個技能已被選擇
-          selectedSkillsInGroup[groupNumber].push(skillKey)
+          // 記錄這個技能的基礎名稱已被選擇
+          selectedSkillBaseNamesInGroup[groupNumber].add(currentSkillBaseName)
         }
       }
 
