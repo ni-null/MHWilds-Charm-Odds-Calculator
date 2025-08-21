@@ -265,9 +265,11 @@ export default function AmuletList({
                           <>
                             <div className='mb-2 text-base font-semibold'>{t("probability.debug.title")}</div>
                             <div className='mb-1 text-base'>
+                              {amulet.Rarity}
                               {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(2)}%)
                             </div>
                             <div className='mb-1 text-base'>
+                              {amulet.Rarity}
                               {t("probability.charmTypeProb")}: 1/{totalAmuletsOfRarity} ={" "}
                               {(() => {
                                 const prob = amuletTypeProb
