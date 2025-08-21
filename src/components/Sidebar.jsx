@@ -81,7 +81,6 @@ const Sidebar = ({ isOpen, onToggle }) => {
             )
           })}
         </nav>
-
         {/* 語言選擇器 */}
         <div className='px-4 py-4 border-t border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <label className='block mb-3 text-sm font-semibold tracking-wide text-yellow-300'>
@@ -98,6 +97,14 @@ const Sidebar = ({ isOpen, onToggle }) => {
               English
             </option>
           </select>
+        </div>
+
+        {/* 版本資訊區域 */}
+        <div className='px-4 py-2 text-xs border-t text-yellow-400/60 border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
+          <div className='space-y-1 text-center'>
+            <div className='text-yellow-400/60'>{t("version.logic")} 1.2</div>
+            <div className='text-yellow-400/60'>{t("version.data")} 20250813</div>
+          </div>
         </div>
 
         <div className='p-4 text-xs border-t text-yellow-400/70 border-yellow-500/20 bg-black/30 backdrop-blur-sm'>

@@ -406,6 +406,8 @@ export default function AmuletList({
               <div>{t("probability.calculation.explanation.step3")}</div>
               <div>{t("probability.calculation.explanation.step4")}</div>
               <div>{t("probability.calculation.explanation.step5")}</div>
+              <div>{t("probability.calculation.explanation.step6")}</div>
+              <div>{t("probability.calculation.explanation.step7")}</div>
             </div>
           </div>
 
@@ -428,6 +430,8 @@ export default function AmuletList({
               <div>{t("probability.note.line1")}</div>
               <div>{t("probability.note.line2")}</div>
               <div>{t("probability.note.line3")}</div>
+              <div>{t("probability.note.line4")}</div>
+              <div>{t("probability.note.line5")}</div>
             </div>
           </div>
         </div>
