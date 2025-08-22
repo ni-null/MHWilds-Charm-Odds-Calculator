@@ -92,8 +92,8 @@ const CharmTypePage = () => {
               </div>
             </div>
 
-            <div className='mb-6 p-4 bg-white rounded-lg border border-gray-200'>
-              <h3 className='text-sm font-semibold text-gray-800 mb-1'>{t("charmTypes.notes.title")}</h3>
+            <div className='p-4 mb-6 bg-white border border-gray-200 rounded-lg'>
+              <h3 className='mb-1 text-sm font-semibold text-gray-800'>{t("charmTypes.notes.title")}</h3>
               <p className='text-sm text-gray-600'>{t("charmTypes.notes.rareSame")}</p>
               <p className='text-sm text-gray-600'>{t("charmTypes.notes.rare8FirstSlot")}</p>
             </div>
@@ -125,7 +125,7 @@ const CharmTypePage = () => {
                               </div>
                             </DialogTrigger>
 
-                            <DialogContent>
+                            <DialogContent className='w-full max-w-4xl'>
                               <DialogHeader>
                                 <DialogTitle>
                                   {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
