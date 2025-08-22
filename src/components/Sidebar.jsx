@@ -113,12 +113,12 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* 版本資訊區域 */}
         <div className='px-4 py-2 text-xs border-t text-yellow-400/60 border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <div className='space-y-1 text-center'>
-              <div className='text-yellow-400/60'>{t("version.logic")} 1.2</div>
-              <div className='text-yellow-400/60'>{t("version.data")} 20250813</div>
-              <div className='text-yellow-400/60'>
-                {buildLabel}: {buildTime ?? unknownLabel}
-              </div>
+            <div className='text-yellow-400/60'>{t("version.logic")} 1.2</div>
+            <div className='text-yellow-400/60'>{t("version.data")} 20250813</div>
+            <div className='text-yellow-400/60'>
+              {buildLabel}: {buildTime ?? unknownLabel}
             </div>
+          </div>
         </div>
 
         <div className='p-4 text-xs border-t text-yellow-400/70 border-yellow-500/20 bg-black/30 backdrop-blur-sm'>

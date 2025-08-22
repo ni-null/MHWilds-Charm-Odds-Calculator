@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button"
 
 export default function SkillSelector() {
   const { t, i18n } = useTranslation()
-  const [searches, setSearches] = React.useState(["", "", ""])
+  // Per-slot search inputs are local to each Select to avoid parent re-renders
+  // remounting the Input in the SelectContent and causing focus loss.
   const { selectedSkills, setSelectedSkills } = useMhwStore()
 
   // 建立技能(含等級)到群組號的映射（只需在此組件內部）
@@ -156,80 +157,112 @@ export default function SkillSelector() {
           const shouldShow = i === 0 ? available : selectedSkills[i - 1] && available
           if (!shouldShow) return null
 
-          return (
-            <div className='flex flex-col' key={i}>
-              <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label>
-              <Select
-                value={selectedSkills[i] ?? ""}
-                onValueChange={(value) => {
-                  // update store
-                  const copy = [...selectedSkills]
-                  const isClear = value === "__clear__" || value === ""
-                  // Set cleared value to empty string so Select shows placeholder (library expects "" to clear)
-                  copy[i] = isClear ? "" : value
-                  // clear subsequent slots if cleared
-                  if (isClear) {
-                    for (let j = i + 1; j < 3; j++) copy[j] = ""
-                  }
-                  setSelectedSkills(copy)
-                  setSearches((prev) => {
-                    const copy = [...prev]
-                    copy[i] = ""
-                    return copy
-                  })
-                }}>
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder={t("skillSelector.selectSkill")} />
-                </SelectTrigger>
-                <SelectContent>
-                  <Input
-                    type='text'
-                    value={searches[i]}
-                    onChange={(e) =>
-                      setSearches((prev) => {
-                        const copy = [...prev]
-                        copy[i] = e.target.value
-                        return copy
-                      })
+          const SkillSelectSlot = () => {
+            const [localSearch, setLocalSearch] = React.useState("")
+
+            const selectedValue = selectedSkills[i]
+            let selectedDisplay = ""
+            if (selectedValue) {
+              const selName = selectedValue.split(" Lv.")[0]
+              const selLevel = selectedValue.split(" Lv.")[1] || ""
+              const translatedSel = t(`skillTranslations.${selName}`, selName)
+              selectedDisplay = i18n.language === "zhTW" ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
+            }
+
+            return (
+              <div className='flex flex-col' key={i}>
+                <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label>
+                <Select
+                  value={selectedSkills[i] ?? ""}
+                  onValueChange={(value) => {
+                    const copy = [...selectedSkills]
+                    const isClear = value === "__clear__" || value === ""
+                    copy[i] = isClear ? "" : value
+                    if (isClear) {
+                      for (let j = i + 1; j < 3; j++) copy[j] = ""
                     }
-                    onKeyDown={(e) => e.stopPropagation()}
-                    placeholder={t("skillSelector.searchSkill")}
-                    className='w-full mb-2'
-                  />
-                  {/* Default option to clear the selection */}
-                  <SelectItem key={`clear-${i}`} value='__clear__'>
-                    {t("skillSelector.clearSelection", "Clear selection")}
-                  </SelectItem>
-                  {getAvailableSkills(i)
-                    .filter((skillKey) => {
-                      const skillName = skillKey.split(" Lv.")[0]
-                      const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                      return (
-                        skillKey.toLowerCase().includes(searches[i].toLowerCase()) || translatedName.toLowerCase().includes(searches[i].toLowerCase())
-                      )
-                    })
-                    .map((skillKey) => {
-                      const skillName = skillKey.split(" Lv.")[0]
-                      const skillLevel = skillKey.split(" Lv.")[1]
-                      const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                      const displayName = i18n.language === "zhTW" ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
-                      const groupInfo = getSkillGroupInfo(skillKey)
-                      return (
-                        <SelectItem key={skillKey} value={skillKey}>
-                          {displayName}
-                          <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
-                        </SelectItem>
-                      )
-                    })}
-                </SelectContent>
-              </Select>
-              {selectedSkills[i] && (
-                <p className='mt-1 text-xs text-gray-600'>
-                  {t("skillSelector.groupInfo")}: {getSkillGroupInfo(selectedSkills[i])}
-                </p>
-              )}
-            </div>
-          )
+                    setSelectedSkills(copy)
+                    // clear local search when selection changes
+                    setLocalSearch("")
+                  }}>
+                  <SelectTrigger className='w-full'>
+                    <SelectValue placeholder={t("skillSelector.selectSkill")}>{selectedDisplay || undefined}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent side='bottom' position='popper'>
+                    {/* search input (keep ref to control focus/blur) */}
+                    <Input
+                      ref={React.createRef()}
+                      type='text'
+                      value={localSearch}
+                      onChange={(e) => setLocalSearch(e.target.value)}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
+                      placeholder={t("skillSelector.searchSkill")}
+                      className='w-full mb-2'
+                    />
+
+                    <SelectItem key={`clear-${i}`} value='__clear__'>
+                      {t("skillSelector.clearSelection", "Clear selection")}
+                    </SelectItem>
+
+                    {/* Custom-rendered search results to avoid interaction conflicts with Radix SelectItem */}
+                    <div className='flex flex-col gap-1 max-h-48 overflow-auto p-1'>
+                      {getAvailableSkills(i)
+                        .filter((skillKey) => {
+                          const skillName = skillKey.split(" Lv.")[0]
+                          const translatedName = t(`skillTranslations.${skillName}`, skillName)
+                          return (
+                            skillKey.toLowerCase().includes(localSearch.toLowerCase()) ||
+                            translatedName.toLowerCase().includes(localSearch.toLowerCase())
+                          )
+                        })
+                        .map((skillKey) => {
+                          const skillName = skillKey.split(" Lv.")[0]
+                          const skillLevel = skillKey.split(" Lv.")[1]
+                          const translatedName = t(`skillTranslations.${skillName}`, skillName)
+                          const displayName = i18n.language === "zhTW" ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
+                          const groupInfo = getSkillGroupInfo(skillKey)
+                          return (
+                            <button
+                              key={`custom-${skillKey}`}
+                              type='button'
+                              className='text-left px-2 py-1 rounded hover:bg-gray-100'
+                              onPointerDown={(e) => e.preventDefault()} /* prevent blur */
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                const copy = [...selectedSkills]
+                                copy[i] = skillKey
+                                for (let j = i + 1; j < 3; j++) copy[j] = ""
+                                setSelectedSkills(copy)
+                                setLocalSearch("")
+                                // blur active element to close keyboard/focus (safe check)
+                                if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+                                  document.activeElement.blur()
+                                }
+                              }}>
+                              <div>
+                                {displayName}
+                                <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
+                              </div>
+                            </button>
+                          )
+                        })}
+                    </div>
+                  </SelectContent>
+                </Select>
+                {selectedSkills[i] && (
+                  <p className='mt-1 text-xs text-gray-600'>
+                    {t("skillSelector.groupInfo")}: {getSkillGroupInfo(selectedSkills[i])}
+                  </p>
+                )}
+              </div>
+            )
+          }
+
+          return <SkillSelectSlot key={`${i}-${selectedSkills[i]}`} />
         })}
       </div>
       <div className='flex justify-end'>
@@ -238,7 +271,8 @@ export default function SkillSelector() {
           size='sm'
           onClick={() => {
             setSelectedSkills(["", "", ""])
-            setSearches(["", "", ""])
+            // local searches are per-slot; resetting selectedSkills will remount slots
+            // which clears their internal localSearch state.
           }}>
           {t("skillSelector.reset", "Reset")}
         </Button>
