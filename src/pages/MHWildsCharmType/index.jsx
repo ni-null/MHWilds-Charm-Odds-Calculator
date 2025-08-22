@@ -6,6 +6,7 @@ import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
+import SkillGroupsData from "../../data/SkillGroups.json"
 import { Button } from "@/components/ui/button"
 const CharmTypePage = () => {
   const { t } = useTranslation()
@@ -110,52 +111,59 @@ const CharmTypePage = () => {
                     </div>
                     <div className='p-4'>
                       <div className='space-y-2'>
-                        {charms.map((charm, index) => (
-                          <Dialog key={index}>
-                            <DialogTrigger asChild>
-                              <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
-                                <div className='mb-2 text-sm font-medium text-gray-800'>
-                                  {t("charmTypes.labels.skillGroups")}:{" "}
-                                  {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null).join(", ")}
+                        {charms.map((charm, index) => {
+                          const comboCount = charm.combinationCount
+
+                          return (
+                            <Dialog key={index}>
+                              <DialogTrigger asChild>
+                                <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
+                                  <div className='mb-2 text-sm font-medium text-gray-800'>
+                                    {t("charmTypes.labels.skillGroups")}:{" "}
+                                    {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null).join(", ")}
+                                  </div>
+                                  <div className='text-xs text-gray-600'>
+                                    {t("charmTypes.labels.slotCombinations")}:{" "}
+                                    {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
+                                  </div>
+                                  <div className='mt-2 text-sm text-gray-700'>
+                                    組合數量: <span className='font-semibold'>{comboCount}</span>
+                                  </div>
                                 </div>
-                                <div className='text-xs text-gray-600'>
-                                  {t("charmTypes.labels.slotCombinations")}:{" "}
-                                  {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
+                              </DialogTrigger>
+
+                              <DialogContent className='w-full max-w-4xl'>
+                                <DialogHeader>
+                                  <DialogTitle>
+                                    {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
+                                      ? t("charmTypes.dialog.title")
+                                      : getSkillTranslation("Select skills")}
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
+                                      ? t("charmTypes.dialog.description")
+                                      : getSkillTranslation("Choose one skill per group for this charm")}
+                                  </DialogDescription>
+                                </DialogHeader>
+
+                                <div className='space-y-4'>
+                                  <CharmSkillsDialogContent
+                                    charm={charm}
+                                    getSkillTranslation={getSkillTranslation}
+                                    getGroupTranslation={getGroupTranslation}
+                                    t={t}
+                                  />
                                 </div>
-                              </div>
-                            </DialogTrigger>
 
-                            <DialogContent className='w-full max-w-4xl'>
-                              <DialogHeader>
-                                <DialogTitle>
-                                  {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
-                                    ? t("charmTypes.dialog.title")
-                                    : getSkillTranslation("Select skills")}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
-                                    ? t("charmTypes.dialog.description")
-                                    : getSkillTranslation("Choose one skill per group for this charm")}
-                                </DialogDescription>
-                              </DialogHeader>
-
-                              <div className='space-y-4'>
-                                <CharmSkillsDialogContent
-                                  charm={charm}
-                                  getSkillTranslation={getSkillTranslation}
-                                  getGroupTranslation={getGroupTranslation}
-                                  t={t}
-                                />
-                              </div>
-
-                              <DialogFooter>
-                                <DialogClose asChild>
-                                  <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
-                                </DialogClose>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        ))}
+                                <DialogFooter>
+                                  <DialogClose asChild>
+                                    <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
+                                  </DialogClose>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>
