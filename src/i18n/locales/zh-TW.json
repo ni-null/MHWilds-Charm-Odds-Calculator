@@ -130,6 +130,11 @@
       "description": "為此護石從每個群組中選擇一項技能",
       "noSkillGroups": "無技能群組",
       "unknownGroup": "未知 {{group}}"
+    },
+    "notes": {
+      "title": "說明",
+      "rareSame": "RARE[7] 與 RARE[8] 的技能群組相同，差別在裝飾品插槽。",
+      "rare8FirstSlot": "RARE[8] 的第一個插槽為武器插槽。"
     }
   },
   "actions": {

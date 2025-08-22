@@ -130,6 +130,11 @@
       "description": "Choose one skill per group for this charm",
       "noSkillGroups": "No skill groups",
       "unknownGroup": "Unknown {{group}}"
+    },
+    "notes": {
+      "title": "Notes",
+      "rareSame": "RARE[7] and RARE[8] share the same skill groups; they differ only in decoration slots.",
+      "rare8FirstSlot": "For RARE[8], the first slot is a weapon slot."
     }
   },
   "actions": {

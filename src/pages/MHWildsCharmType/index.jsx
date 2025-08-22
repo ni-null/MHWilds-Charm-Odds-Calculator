@@ -92,6 +92,12 @@ const CharmTypePage = () => {
               </div>
             </div>
 
+            <div className='mb-6 p-4 bg-white rounded-lg border border-gray-200'>
+              <h3 className='text-sm font-semibold text-gray-800 mb-1'>{t("charmTypes.notes.title")}</h3>
+              <p className='text-sm text-gray-600'>{t("charmTypes.notes.rareSame")}</p>
+              <p className='text-sm text-gray-600'>{t("charmTypes.notes.rare8FirstSlot")}</p>
+            </div>
+
             {/* 護石種類展示 */}
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {Object.entries(charmAnalysis.rarityGroups)
