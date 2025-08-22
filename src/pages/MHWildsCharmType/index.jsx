@@ -6,7 +6,7 @@ import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
-
+import { Button } from "@/components/ui/button"
 const CharmTypePage = () => {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
@@ -150,9 +150,7 @@ const CharmTypePage = () => {
 
                               <DialogFooter>
                                 <DialogClose asChild>
-                                  <button className='px-3 py-1 ml-auto text-sm text-white bg-blue-600 rounded hover:bg-blue-700'>
-                                    {t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}
-                                  </button>
+                                  <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
                                 </DialogClose>
                               </DialogFooter>
                             </DialogContent>

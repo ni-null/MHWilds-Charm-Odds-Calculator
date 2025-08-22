@@ -141,7 +141,7 @@ export default function AmuletList({
                         return match ? (
                           <span
                             key={skillIndex}
-                            className='px-2 py-1 ml-2 text-sm rounded'
+                            className='inline-block px-2 py-1 ml-2 text-sm rounded whitespace-nowrap'
                             style={{ backgroundColor: bgColor, color: textColor, fontWeight: "bold" }}>
                             {displayName}
                           </span>

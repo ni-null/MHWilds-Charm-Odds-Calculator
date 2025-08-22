@@ -14,7 +14,7 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
 
       <Tabs defaultValue={defaultTab}>
         <div className='overflow-x-auto'>
-          <TabsList className='flex justify-start w-full gap-2 px-1'>
+          <TabsList className='flex justify-start w-full gap-2 px-3 py-7'>
             {groups.map((groupKey) => (
               <TabsTrigger key={groupKey} value={groupKey} className='flex-shrink-0 text-base lg:text-lg'>
                 {getGroupTranslation(groupKey)}
@@ -27,7 +27,7 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
           const groupData = skillGroupsData.SkillGroups[groupKey]
           if (!groupData)
             return (
-              <div key={idx} className='p-2 text-sm text-gray-600'>
+              <div key={idx} className='p-2 text-sm text-gray-600 '>
                 {t("charmTypes.dialog.unknownGroup", { group: groupKey })}
               </div>
             )
@@ -39,11 +39,11 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
                 <span className='text-xs text-gray-500'> {groupData.data.length} </span>
               </div>
               {/* 大螢幕顯示更多欄位 */}
-              <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2'>
+              <div className='grid grid-cols-2 gap-2 lg:grid-cols-3 xl:grid-cols-4'>
                 {groupData.data.map((skill, i) => (
                   <button
                     key={i}
-                    className='px-2 py-1 overflow-hidden text-sm lg:text-base text-left truncate bg-gray-100 rounded hover:bg-gray-200 whitespace-nowrap'>
+                    className='px-2 py-1 overflow-hidden text-sm text-left truncate bg-gray-100 rounded lg:text-base hover:bg-gray-200 whitespace-nowrap'>
                     <span className='inline-block align-middle'>{getSkillTranslation(skill.SkillName)}</span>
                     <span className='ml-1 text-[10px] text-gray-500'>Lv.{skill.SkillLevel}</span>
                   </button>
