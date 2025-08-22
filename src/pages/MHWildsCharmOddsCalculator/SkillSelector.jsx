@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import useMhwStore from "../../store/mhwStore"
 import AmuletData from "../../data/Amulet.json"
@@ -6,6 +6,7 @@ import SkillGroupsData from "../../data/SkillGroups.json"
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 export default function SkillSelector() {
   const { t, i18n } = useTranslation()
@@ -40,75 +41,108 @@ export default function SkillSelector() {
     return Array.from(new Set(skills)).sort()
   }
 
-  const getAvailableSkills = (slotIndex) => {
-    if (slotIndex === 0) return getSkillsByGroup("Skill1Group")
+  const getAvailableSkills = useCallback(
+    (slotIndex) => {
+      if (slotIndex === 0) return getSkillsByGroup("Skill1Group")
 
-    if (slotIndex === 1) {
-      if (!selectedSkills[0]) return []
-      const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
-      const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill2Group).filter((g) => g !== null)))
-      const skills = []
-      groupNumbers.forEach((groupNumber) => {
-        const groupKey = `Group${groupNumber}`
-        if (SkillGroupsData.SkillGroups[groupKey]) {
-          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`))
-        }
-      })
-      return Array.from(new Set(skills))
-        .filter((skill) => {
-          const skillBaseName = skill.split(" Lv.")[0]
-          if (selectedSkills[0]) {
-            const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
-            return skillBaseName !== skill1BaseName
+      if (slotIndex === 1) {
+        if (!selectedSkills[0]) return []
+        const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
+        const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
+        const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill2Group).filter((g) => g !== null)))
+        const skills = []
+        groupNumbers.forEach((groupNumber) => {
+          const groupKey = `Group${groupNumber}`
+          if (SkillGroupsData.SkillGroups[groupKey]) {
+            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`))
           }
-          return true
         })
-        .sort()
-    }
-
-    if (slotIndex === 2) {
-      if (!selectedSkills[0]) return []
-      let amulets = []
-      const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
-      if (selectedSkills[1]) {
-        const secondSkillGroups = skillToGroupMap[selectedSkills[1]] || []
-        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
-      } else {
-        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
+        return Array.from(new Set(skills))
+          .filter((skill) => {
+            const skillBaseName = skill.split(" Lv.")[0]
+            if (selectedSkills[0]) {
+              const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
+              return skillBaseName !== skill1BaseName
+            }
+            return true
+          })
+          .sort()
       }
 
-      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
-      const skills = []
-      groupNumbers.forEach((groupNumber) => {
-        const groupKey = `Group${groupNumber}`
-        if (SkillGroupsData.SkillGroups[groupKey]) {
-          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`))
+      if (slotIndex === 2) {
+        if (!selectedSkills[0]) return []
+        let amulets = []
+        const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
+        if (selectedSkills[1]) {
+          const secondSkillGroups = skillToGroupMap[selectedSkills[1]] || []
+          amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
+        } else {
+          amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
         }
-      })
-      return Array.from(new Set(skills))
-        .filter((skill) => {
-          const skillBaseName = skill.split(" Lv.")[0]
-          if (selectedSkills[0]) {
-            const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
-            if (skillBaseName === skill1BaseName) return false
-          }
-          if (selectedSkills[1]) {
-            const skill2BaseName = selectedSkills[1].split(" Lv.")[0]
-            if (skillBaseName === skill2BaseName) return false
-          }
-          return true
-        })
-        .sort()
-    }
 
-    return []
-  }
+        const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
+        const skills = []
+        groupNumbers.forEach((groupNumber) => {
+          const groupKey = `Group${groupNumber}`
+          if (SkillGroupsData.SkillGroups[groupKey]) {
+            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`))
+          }
+        })
+        return Array.from(new Set(skills))
+          .filter((skill) => {
+            const skillBaseName = skill.split(" Lv.")[0]
+            if (selectedSkills[0]) {
+              const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
+              if (skillBaseName === skill1BaseName) return false
+            }
+            if (selectedSkills[1]) {
+              const skill2BaseName = selectedSkills[1].split(" Lv.")[0]
+              if (skillBaseName === skill2BaseName) return false
+            }
+            return true
+          })
+          .sort()
+      }
+
+      return []
+    },
+    [selectedSkills, skillToGroupMap]
+  )
 
   const getSkillGroupInfo = (skillKey) => {
     const groups = skillToGroupMap[skillKey]
     return groups ? groups.join(", ") : "Unknown"
   }
+
+  const selected0 = selectedSkills[0]
+  const selected1 = selectedSkills[1]
+
+  // Ensure downstream selected skills remain valid when earlier selections change.
+  useEffect(() => {
+    // Validate slots 1 and 2 (indexes 1 and 2)
+    {
+      const copy = [...selectedSkills]
+      let changed = false
+
+      for (let i = 1; i < 3; i++) {
+        if (copy[i]) {
+          const available = getAvailableSkills(i)
+          if (!available.includes(copy[i])) {
+            // clear this and any subsequent selections
+            for (let j = i; j < 3; j++) {
+              if (copy[j] !== "") {
+                copy[j] = ""
+                changed = true
+              }
+            }
+            break
+          }
+        }
+      }
+
+      if (changed) setSelectedSkills(copy)
+    }
+  }, [getAvailableSkills, setSelectedSkills, selected0, selected1, selectedSkills])
 
   return (
     <section className='w-full p-10 mb-8 bg-white rounded-xl'>
@@ -197,6 +231,17 @@ export default function SkillSelector() {
             </div>
           )
         })}
+      </div>
+      <div className='flex justify-end'>
+        <Button
+          variant='outline'
+          size='sm'
+          onClick={() => {
+            setSelectedSkills(["", "", ""])
+            setSearches(["", "", ""])
+          }}>
+          {t("skillSelector.reset", "Reset")}
+        </Button>
       </div>
     </section>
   )
