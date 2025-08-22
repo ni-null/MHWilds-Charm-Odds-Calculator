@@ -7,145 +7,33 @@ import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import SkillSelector from "./SkillSelector"
 import AmuletList from "./AmuletList"
+import useMhwStore from "../../store/mhwStore"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 
 export default function MHWPage() {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
-  const [selectedSkills, setSelectedSkills] = useState([null, null, null])
+  // selectedSkills moved to zustand store to avoid prop drilling
+  const { selectedSkills } = useMhwStore()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen)
   }
 
-  // 建立技能(含等級)到群組號的映射
+  // 建立技能(含等級)到群組號的映射（供頁面其他計算使用）
   const skillToGroupMap = useMemo(() => {
     const map = {}
     Object.keys(SkillGroupsData.SkillGroups).forEach((groupKey) => {
       const groupNumber = parseInt(groupKey.replace("Group", ""))
       SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-        // 建立包含等級的技能鍵值
         const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
-        if (!map[skillKey]) {
-          map[skillKey] = []
-        }
+        if (!map[skillKey]) map[skillKey] = []
         map[skillKey].push(groupNumber)
       })
     })
     return map
   }, [])
-
-  // 取得所有護石 Skill1Group/Skill2Group/Skill3Group 對應群組的技能
-  const getSkillsByGroup = (groupField) => {
-    const groupNumbers = Array.from(new Set(AmuletData.map((a) => a[groupField]).filter((g) => g !== null)))
-    const skills = []
-    groupNumbers.forEach((groupNumber) => {
-      const groupKey = `Group${groupNumber}`
-      if (SkillGroupsData.SkillGroups[groupKey]) {
-        SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-          skills.push({
-            key: `${skill.SkillName} Lv.${skill.SkillLevel}`,
-            group: groupNumber,
-          })
-        })
-      }
-    })
-    // 移除重複
-    return Array.from(new Set(skills.map((s) => s.key))).sort()
-  }
-
-  // 根據已選擇的技能篩選可用技能
-  const getAvailableSkills = (slotIndex) => {
-    if (slotIndex === 0) {
-      return getSkillsByGroup("Skill1Group")
-    }
-    if (slotIndex === 1) {
-      // 技能2只受技能1影響，不受技能3影響
-      if (!selectedSkills[0]) return []
-      // 找出所有護石 Skill1Group 包含第一個技能的 Skill2Group
-      const firstSkillGroups = skillToGroupMap[selectedSkills[0]]
-      const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill2Group).filter((g) => g !== null)))
-      const skills = []
-      groupNumbers.forEach((groupNumber) => {
-        const groupKey = `Group${groupNumber}`
-        if (SkillGroupsData.SkillGroups[groupKey]) {
-          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-            skills.push({
-              key: `${skill.SkillName} Lv.${skill.SkillLevel}`,
-              group: groupNumber,
-            })
-          })
-        }
-      })
-      // 只排除技能1的相同技能，不考慮技能3
-      const availableSkills = Array.from(new Set(skills.map((s) => s.key)))
-        .filter((skill) => {
-          const skillBaseName = skill.split(" Lv.")[0]
-          // 只排除技能1的相同技能基礎名稱
-          if (selectedSkills[0]) {
-            const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
-            return skillBaseName !== skill1BaseName
-          }
-          return true
-        })
-        .sort()
-      return availableSkills
-    }
-    if (slotIndex === 2) {
-      // 技能3受技能1和技能2影響
-      if (!selectedSkills[0]) return []
-
-      let amulets = []
-      const firstSkillGroups = skillToGroupMap[selectedSkills[0]]
-
-      if (selectedSkills[1]) {
-        // 如果技能2也有選擇，需要同時滿足技能1和技能2的條件
-        const secondSkillGroups = skillToGroupMap[selectedSkills[1]]
-        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
-      } else {
-        // 如果只有技能1，找出所有包含技能1的護石
-        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-      }
-
-      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
-      const skills = []
-      groupNumbers.forEach((groupNumber) => {
-        const groupKey = `Group${groupNumber}`
-        if (SkillGroupsData.SkillGroups[groupKey]) {
-          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-            skills.push({
-              key: `${skill.SkillName} Lv.${skill.SkillLevel}`,
-              group: groupNumber,
-            })
-          })
-        }
-      })
-      // 排除技能1和技能2的相同技能基礎名稱
-      const availableSkills = Array.from(new Set(skills.map((s) => s.key)))
-        .filter((skill) => {
-          const skillBaseName = skill.split(" Lv.")[0]
-
-          // 排除技能1的相同技能基礎名稱
-          if (selectedSkills[0]) {
-            const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
-            if (skillBaseName === skill1BaseName) return false
-          }
-
-          // 排除技能2的相同技能基礎名稱
-          if (selectedSkills[1]) {
-            const skill2BaseName = selectedSkills[1].split(" Lv.")[0]
-            if (skillBaseName === skill2BaseName) return false
-          }
-
-          return true
-        })
-        .sort()
-      return availableSkills
-    }
-    return []
-  }
 
   // 根據選擇的技能篩選護石
   const matchingAmulets = useMemo(() => {
@@ -181,131 +69,7 @@ export default function MHWPage() {
     })
   }, [selectedSkills, skillToGroupMap])
 
-  const handleSkillChange = (slotIndex, skillKey) => {
-    const newSelectedSkills = [...selectedSkills]
-    newSelectedSkills[slotIndex] = skillKey || null
-
-    // 當新選擇為空時，清除後面的選擇
-    if (!skillKey) {
-      for (let i = slotIndex + 1; i < 3; i++) {
-        newSelectedSkills[i] = null
-      }
-    } else {
-      // 當修改技能時，需要驗證後續技能是否仍然有效
-      for (let i = slotIndex + 1; i < 3; i++) {
-        if (newSelectedSkills[i]) {
-          // 檢查技能i是否仍然在可用選項中
-          const availableSkillsForSlot = getAvailableSkillsForValidation(i, newSelectedSkills)
-          if (!availableSkillsForSlot.includes(newSelectedSkills[i])) {
-            // 如果不再有效，清除該技能及後續技能
-            for (let j = i; j < 3; j++) {
-              newSelectedSkills[j] = null
-            }
-            break
-          }
-        }
-      }
-    }
-
-    setSelectedSkills(newSelectedSkills)
-  }
-
-  // 用於驗證的輔助函數，根據給定的技能組合計算可用技能
-  const getAvailableSkillsForValidation = (slotIndex, skillsArray) => {
-    if (slotIndex === 0) {
-      return getSkillsByGroup("Skill1Group")
-    }
-    if (slotIndex === 1) {
-      if (!skillsArray[0]) return []
-      const firstSkillGroups = skillToGroupMap[skillsArray[0]]
-      const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill2Group).filter((g) => g !== null)))
-      const skills = []
-      groupNumbers.forEach((groupNumber) => {
-        const groupKey = `Group${groupNumber}`
-        if (SkillGroupsData.SkillGroups[groupKey]) {
-          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-            skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`)
-          })
-        }
-      })
-      return Array.from(new Set(skills)).filter((skill) => {
-        const skillBaseName = skill.split(" Lv.")[0]
-        if (skillsArray[0]) {
-          const skill1BaseName = skillsArray[0].split(" Lv.")[0]
-          return skillBaseName !== skill1BaseName
-        }
-        return true
-      })
-    }
-    if (slotIndex === 2) {
-      if (!skillsArray[0]) return []
-      let amulets = []
-      const firstSkillGroups = skillToGroupMap[skillsArray[0]]
-
-      if (skillsArray[1]) {
-        const secondSkillGroups = skillToGroupMap[skillsArray[1]]
-        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
-      } else {
-        amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-      }
-
-      const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
-      const skills = []
-      groupNumbers.forEach((groupNumber) => {
-        const groupKey = `Group${groupNumber}`
-        if (SkillGroupsData.SkillGroups[groupKey]) {
-          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-            skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`)
-          })
-        }
-      })
-      return Array.from(new Set(skills)).filter((skill) => {
-        const skillBaseName = skill.split(" Lv.")[0]
-
-        if (skillsArray[0]) {
-          const skill1BaseName = skillsArray[0].split(" Lv.")[0]
-          if (skillBaseName === skill1BaseName) return false
-        }
-
-        if (skillsArray[1]) {
-          const skill2BaseName = skillsArray[1].split(" Lv.")[0]
-          if (skillBaseName === skill2BaseName) return false
-        }
-
-        return true
-      })
-    }
-    return []
-  }
-
-  // 取得技能所在的群組資訊
-  const getSkillGroupInfo = (skillKey) => {
-    const groups = skillToGroupMap[skillKey]
-    return groups ? groups.join(", ") : "Unknown"
-  }
-
   // 根據護石群組取得可能的技能
-  const getSkillsFromAmulet = (amulet) => {
-    const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
-    const possibleSkills = []
-
-    amuletGroups.forEach((groupNumber) => {
-      const groupKey = `Group${groupNumber}`
-      if (SkillGroupsData.SkillGroups[groupKey]) {
-        SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-          const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
-          possibleSkills.push({
-            name: skillKey,
-            group: groupNumber,
-            isSelected: selectedSkills.includes(skillKey),
-          })
-        })
-      }
-    })
-
-    return possibleSkills
-  }
 
   // 稀有度基礎機率設定
   const rarityBaseProbability = RarityBaseProbabilityData
@@ -457,19 +221,12 @@ export default function MHWPage() {
               <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 lg:block'>{t("title")}</h1>
             </div>
 
-            <SkillSelector
-              selectedSkills={selectedSkills}
-              onSkillChange={handleSkillChange}
-              getAvailableSkills={getAvailableSkills}
-              getSkillGroupInfo={getSkillGroupInfo}
-            />
+            <SkillSelector />
 
             <AmuletList
               matchingAmulets={matchingAmulets}
               amuletProbabilities={amuletProbabilities}
               rarityBaseProbability={rarityBaseProbability}
-              selectedSkills={selectedSkills}
-              getSkillsFromAmulet={getSkillsFromAmulet}
               getGroupSkillCountForRarity={getGroupSkillCountForRarity}
             />
           </div>

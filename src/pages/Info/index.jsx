@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
-import { Button } from "@/components/ui/button"
 
 const InfoPage = () => {
   const { t } = useTranslation()

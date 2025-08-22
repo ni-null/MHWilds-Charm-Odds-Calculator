@@ -2,17 +2,34 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import SkillGroupsData from "../../data/SkillGroups.json"
 import AmuletData from "../../data/Amulet.json"
+import useMhwStore from "../../store/mhwStore"
 
-export default function AmuletList({
-  matchingAmulets,
-  amuletProbabilities,
-  rarityBaseProbability,
-  selectedSkills,
-  getSkillsFromAmulet,
-  getGroupSkillCountForRarity,
-}) {
+export default function AmuletList({ matchingAmulets, amuletProbabilities, rarityBaseProbability, getGroupSkillCountForRarity }) {
   const [expandedIndex, setExpandedIndex] = useState(null)
   const { t, i18n } = useTranslation()
+  const { selectedSkills } = useMhwStore()
+
+  // 根據護石群組取得可能的技能（AmuletList 自行管理，不再由外部傳入）
+  const getSkillsFromAmulet = (amulet) => {
+    const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
+    const possibleSkills = []
+
+    amuletGroups.forEach((groupNumber) => {
+      const groupKey = `Group${groupNumber}`
+      if (SkillGroupsData.SkillGroups[groupKey]) {
+        SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+          const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+          possibleSkills.push({
+            name: skillKey,
+            group: groupNumber,
+            isSelected: selectedSkills.includes(skillKey),
+          })
+        })
+      }
+    })
+
+    return possibleSkills
+  }
 
   // 計算總機率和按稀有度分組的機率
   const rarityProbabilities = {}
