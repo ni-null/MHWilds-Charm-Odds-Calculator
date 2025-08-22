@@ -28,86 +28,139 @@ export default function SkillSelector() {
     return map
   }, [])
 
-  const getSkillsByGroup = (groupField) => {
-    const groupNumbers = Array.from(new Set(AmuletData.map((a) => a[groupField]).filter((g) => g !== null)))
-    const skills = []
-    groupNumbers.forEach((groupNumber) => {
-      const groupKey = `Group${groupNumber}`
-      if (SkillGroupsData.SkillGroups[groupKey]) {
-        SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-          skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`)
-        })
-      }
+  // 獲取所有技能（過濾重複）
+  const getAllUniqueSkills = useMemo(() => {
+    const allSkills = new Set()
+    Object.keys(SkillGroupsData.SkillGroups).forEach((groupKey) => {
+      SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+        allSkills.add(`${skill.SkillName} Lv.${skill.SkillLevel}`)
+      })
     })
-    return Array.from(new Set(skills)).sort()
-  }
+    return Array.from(allSkills).sort()
+  }, [])
 
   const getAvailableSkills = useCallback(
     (slotIndex) => {
-      if (slotIndex === 0) return getSkillsByGroup("Skill1Group")
+      if (slotIndex === 0) {
+        // 第一個 select：列出所有技能（過濾重複）
+        return getAllUniqueSkills
+      }
 
       if (slotIndex === 1) {
+        // 第二個 select：根據第一個技能找出可能的護石組合中的其他技能
         if (!selectedSkills[0]) return []
+
         const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
-        const amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-        const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill2Group).filter((g) => g !== null)))
-        const skills = []
-        groupNumbers.forEach((groupNumber) => {
-          const groupKey = `Group${groupNumber}`
-          if (SkillGroupsData.SkillGroups[groupKey]) {
-            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`))
+        const firstSkillBaseName = selectedSkills[0].split(" Lv.")[0]
+        const possibleSkills = new Set()
+
+        // 找出包含第一個技能組別的所有護石
+        AmuletData.forEach((amulet) => {
+          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+
+          // 檢查護石是否包含第一個技能的組別
+          const hasFirstSkillGroup = firstSkillGroups.some((group) => amuletGroups.includes(group))
+
+          if (hasFirstSkillGroup) {
+            // 為第一個技能分配一個槽位
+            let assignedSlotIndex = -1
+            for (let i = 0; i < amuletGroups.length; i++) {
+              if (firstSkillGroups.includes(amuletGroups[i])) {
+                assignedSlotIndex = i
+                break
+              }
+            }
+
+            // 收集剩餘槽位的技能
+            amuletGroups.forEach((groupNumber, slotIndex) => {
+              if (slotIndex !== assignedSlotIndex) {
+                const groupKey = `Group${groupNumber}`
+                if (SkillGroupsData.SkillGroups[groupKey]) {
+                  SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+                    const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+                    const skillBaseName = skill.SkillName
+
+                    // 排除與第一個技能相同基礎名稱的技能
+                    if (skillBaseName !== firstSkillBaseName) {
+                      possibleSkills.add(skillKey)
+                    }
+                  })
+                }
+              }
+            })
           }
         })
-        return Array.from(new Set(skills))
-          .filter((skill) => {
-            const skillBaseName = skill.split(" Lv.")[0]
-            if (selectedSkills[0]) {
-              const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
-              return skillBaseName !== skill1BaseName
-            }
-            return true
-          })
-          .sort()
+
+        return Array.from(possibleSkills).sort()
       }
 
       if (slotIndex === 2) {
+        // 第三個 select：同時考慮第一和第二個技能
         if (!selectedSkills[0]) return []
-        let amulets = []
-        const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
-        if (selectedSkills[1]) {
-          const secondSkillGroups = skillToGroupMap[selectedSkills[1]] || []
-          amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group) && secondSkillGroups.includes(a.Skill2Group))
-        } else {
-          amulets = AmuletData.filter((a) => firstSkillGroups.includes(a.Skill1Group))
-        }
 
-        const groupNumbers = Array.from(new Set(amulets.map((a) => a.Skill3Group).filter((g) => g !== null)))
-        const skills = []
-        groupNumbers.forEach((groupNumber) => {
-          const groupKey = `Group${groupNumber}`
-          if (SkillGroupsData.SkillGroups[groupKey]) {
-            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => skills.push(`${skill.SkillName} Lv.${skill.SkillLevel}`))
+        const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
+        const secondSkillGroups = selectedSkills[1] ? skillToGroupMap[selectedSkills[1]] || [] : []
+        const firstSkillBaseName = selectedSkills[0].split(" Lv.")[0]
+        const secondSkillBaseName = selectedSkills[1] ? selectedSkills[1].split(" Lv.")[0] : null
+        const possibleSkills = new Set()
+
+        // 找出同時包含第一個技能和（可選）第二個技能組別的護石
+        AmuletData.forEach((amulet) => {
+          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+
+          // 嘗試為已選技能分配槽位
+          const usedSlotIndexes = []
+
+          // 為第一個技能分配槽位
+          let firstAssigned = false
+          for (let i = 0; i < amuletGroups.length; i++) {
+            if (!usedSlotIndexes.includes(i) && firstSkillGroups.includes(amuletGroups[i])) {
+              usedSlotIndexes.push(i)
+              firstAssigned = true
+              break
+            }
           }
-        })
-        return Array.from(new Set(skills))
-          .filter((skill) => {
-            const skillBaseName = skill.split(" Lv.")[0]
-            if (selectedSkills[0]) {
-              const skill1BaseName = selectedSkills[0].split(" Lv.")[0]
-              if (skillBaseName === skill1BaseName) return false
+
+          if (!firstAssigned) return // 無法分配第一個技能，跳過此護石
+
+          // 如果有第二個技能，嘗試分配槽位
+          if (selectedSkills[1]) {
+            let secondAssigned = false
+            for (let i = 0; i < amuletGroups.length; i++) {
+              if (!usedSlotIndexes.includes(i) && secondSkillGroups.includes(amuletGroups[i])) {
+                usedSlotIndexes.push(i)
+                secondAssigned = true
+                break
+              }
             }
-            if (selectedSkills[1]) {
-              const skill2BaseName = selectedSkills[1].split(" Lv.")[0]
-              if (skillBaseName === skill2BaseName) return false
+            if (!secondAssigned) return // 無法分配第二個技能，跳過此護石
+          }
+
+          // 收集剩餘槽位的技能
+          amuletGroups.forEach((groupNumber, slotIndex) => {
+            if (!usedSlotIndexes.includes(slotIndex)) {
+              const groupKey = `Group${groupNumber}`
+              if (SkillGroupsData.SkillGroups[groupKey]) {
+                SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+                  const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+                  const skillBaseName = skill.SkillName
+
+                  // 排除與已選技能相同基礎名稱的技能
+                  if (skillBaseName !== firstSkillBaseName && skillBaseName !== secondSkillBaseName) {
+                    possibleSkills.add(skillKey)
+                  }
+                })
+              }
             }
-            return true
           })
-          .sort()
+        })
+
+        return Array.from(possibleSkills).sort()
       }
 
       return []
     },
-    [selectedSkills, skillToGroupMap]
+    [selectedSkills, skillToGroupMap, getAllUniqueSkills]
   )
 
   const getSkillGroupInfo = (skillKey) => {
