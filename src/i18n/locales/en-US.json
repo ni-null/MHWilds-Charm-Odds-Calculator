@@ -33,7 +33,8 @@
     "skill2": "Skill 2",
     "skill3": "Skill 3",
     "selectSkill": "-- Select skill --",
-    "clearSelection": "-- Clear selection --",
+  "clearSelection": "-- Clear selection --",
+  "reset": "Reset",
     "groupInfo": "Group",
     "searchSkill": "Search skill..."
   },

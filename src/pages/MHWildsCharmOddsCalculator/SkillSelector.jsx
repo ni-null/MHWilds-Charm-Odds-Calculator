@@ -166,98 +166,129 @@ export default function SkillSelector() {
               const selName = selectedValue.split(" Lv.")[0]
               const selLevel = selectedValue.split(" Lv.")[1] || ""
               const translatedSel = t(`skillTranslations.${selName}`, selName)
-              selectedDisplay = i18n.language === "zhTW" ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
+              const groupInfo = getSkillGroupInfo(selectedValue)
+              const groupText = i18n.language === "zhTW" ? `（${groupInfo}）` : ` (${groupInfo})`
+              selectedDisplay =
+                i18n.language === "zhTW" ? `${translatedSel} ${t("common.level")}${selLevel}${groupText}` : `${selectedValue}${groupText}`
             }
 
             return (
               <div className='flex flex-col' key={i}>
                 <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label>
-                <Select
-                  value={selectedSkills[i] ?? ""}
-                  onValueChange={(value) => {
-                    const copy = [...selectedSkills]
-                    const isClear = value === "__clear__" || value === ""
-                    copy[i] = isClear ? "" : value
-                    if (isClear) {
+                <div className='flex items-center gap-2'>
+                  <Select
+                    value={selectedSkills[i] ?? ""}
+                    onValueChange={(value) => {
+                      const copy = [...selectedSkills]
+                      const isClear = value === "__clear__" || value === ""
+                      copy[i] = isClear ? "" : value
+                      if (isClear) {
+                        for (let j = i + 1; j < 3; j++) copy[j] = ""
+                      }
+                      setSelectedSkills(copy)
+                      // clear local search when selection changes
+                      setLocalSearch("")
+                    }}>
+                    <SelectTrigger className='w-full'>
+                      <SelectValue placeholder={t("skillSelector.selectSkill")}>{selectedDisplay || undefined}</SelectValue>
+                    </SelectTrigger>
+                    <SelectContent side='bottom' position='popper'>
+                      {/* search input with inline clear icon */}
+                      <div className='flex items-center gap-2 mb-2'>
+                        <Input
+                          ref={React.createRef()}
+                          type='text'
+                          value={localSearch}
+                          onChange={(e) => setLocalSearch(e.target.value)}
+                          onKeyDown={(e) => e.stopPropagation()}
+                          onPointerDown={(e) => e.stopPropagation()}
+                          onMouseDown={(e) => e.stopPropagation()}
+                          onClick={(e) => e.stopPropagation()}
+                          placeholder={t("skillSelector.searchSkill")}
+                          className='flex-1'
+                        />
+                        <button
+                          type='button'
+                          aria-label={t("skillSelector.clearSelection", "Clear selection")}
+                          className='p-1 text-sm rounded hover:bg-gray-100'
+                          onMouseDown={(e) => e.preventDefault()} /* prevent blur */
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            const copy = [...selectedSkills]
+                            copy[i] = ""
+                            for (let j = i + 1; j < 3; j++) copy[j] = ""
+                            setSelectedSkills(copy)
+                            setLocalSearch("")
+                          }}>
+                          ×
+                        </button>
+                      </div>
+
+                      {/* Custom-rendered search results to avoid interaction conflicts with Radix SelectItem */}
+                      <div className='flex flex-col gap-1 p-1 overflow-auto max-h-48 md:max-h-96'>
+                        {getAvailableSkills(i)
+                          .filter((skillKey) => {
+                            const skillName = skillKey.split(" Lv.")[0]
+                            const translatedName = t(`skillTranslations.${skillName}`, skillName)
+                            return (
+                              skillKey.toLowerCase().includes(localSearch.toLowerCase()) ||
+                              translatedName.toLowerCase().includes(localSearch.toLowerCase())
+                            )
+                          })
+                          .map((skillKey) => {
+                            const skillName = skillKey.split(" Lv.")[0]
+                            const skillLevel = skillKey.split(" Lv.")[1]
+                            const translatedName = t(`skillTranslations.${skillName}`, skillName)
+                            const displayName = i18n.language === "zhTW" ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
+                            const groupInfo = getSkillGroupInfo(skillKey)
+                            return (
+                              <button
+                                key={`custom-${skillKey}`}
+                                type='button'
+                                className='px-2 py-1 text-left rounded hover:bg-gray-100'
+                                onPointerDown={(e) => e.preventDefault()} /* prevent blur */
+                                onMouseDown={(e) => e.preventDefault()}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  const copy = [...selectedSkills]
+                                  copy[i] = skillKey
+                                  for (let j = i + 1; j < 3; j++) copy[j] = ""
+                                  setSelectedSkills(copy)
+                                  setLocalSearch("")
+                                  // blur active element to close keyboard/focus (safe check)
+                                  if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+                                    document.activeElement.blur()
+                                  }
+                                }}>
+                                <div>
+                                  {displayName}
+                                  <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
+                                </div>
+                              </button>
+                            )
+                          })}
+                      </div>
+                    </SelectContent>
+                  </Select>
+
+                  {/* clear button placed to the right of each Select */}
+                  <button
+                    type='button'
+                    aria-label={t("skillSelector.clearSelection", "Clear selection")}
+                    className='px-3 py-2 rounded bg-gray-50 hover:bg-gray-100'
+                    onMouseDown={(e) => e.preventDefault()} /* prevent focus loss */
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      const copy = [...selectedSkills]
+                      copy[i] = ""
                       for (let j = i + 1; j < 3; j++) copy[j] = ""
-                    }
-                    setSelectedSkills(copy)
-                    // clear local search when selection changes
-                    setLocalSearch("")
-                  }}>
-                  <SelectTrigger className='w-full'>
-                    <SelectValue placeholder={t("skillSelector.selectSkill")}>{selectedDisplay || undefined}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent side='bottom' position='popper'>
-                    {/* search input (keep ref to control focus/blur) */}
-                    <Input
-                      ref={React.createRef()}
-                      type='text'
-                      value={localSearch}
-                      onChange={(e) => setLocalSearch(e.target.value)}
-                      onKeyDown={(e) => e.stopPropagation()}
-                      onPointerDown={(e) => e.stopPropagation()}
-                      onMouseDown={(e) => e.stopPropagation()}
-                      onClick={(e) => e.stopPropagation()}
-                      placeholder={t("skillSelector.searchSkill")}
-                      className='w-full mb-2'
-                    />
-
-                    <SelectItem key={`clear-${i}`} value='__clear__'>
-                      {t("skillSelector.clearSelection", "Clear selection")}
-                    </SelectItem>
-
-                    {/* Custom-rendered search results to avoid interaction conflicts with Radix SelectItem */}
-                    <div className='flex flex-col gap-1 max-h-48 overflow-auto p-1'>
-                      {getAvailableSkills(i)
-                        .filter((skillKey) => {
-                          const skillName = skillKey.split(" Lv.")[0]
-                          const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                          return (
-                            skillKey.toLowerCase().includes(localSearch.toLowerCase()) ||
-                            translatedName.toLowerCase().includes(localSearch.toLowerCase())
-                          )
-                        })
-                        .map((skillKey) => {
-                          const skillName = skillKey.split(" Lv.")[0]
-                          const skillLevel = skillKey.split(" Lv.")[1]
-                          const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                          const displayName = i18n.language === "zhTW" ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
-                          const groupInfo = getSkillGroupInfo(skillKey)
-                          return (
-                            <button
-                              key={`custom-${skillKey}`}
-                              type='button'
-                              className='text-left px-2 py-1 rounded hover:bg-gray-100'
-                              onPointerDown={(e) => e.preventDefault()} /* prevent blur */
-                              onMouseDown={(e) => e.preventDefault()}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                const copy = [...selectedSkills]
-                                copy[i] = skillKey
-                                for (let j = i + 1; j < 3; j++) copy[j] = ""
-                                setSelectedSkills(copy)
-                                setLocalSearch("")
-                                // blur active element to close keyboard/focus (safe check)
-                                if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
-                                  document.activeElement.blur()
-                                }
-                              }}>
-                              <div>
-                                {displayName}
-                                <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
-                              </div>
-                            </button>
-                          )
-                        })}
-                    </div>
-                  </SelectContent>
-                </Select>
-                {selectedSkills[i] && (
-                  <p className='mt-1 text-xs text-gray-600'>
-                    {t("skillSelector.groupInfo")}: {getSkillGroupInfo(selectedSkills[i])}
-                  </p>
-                )}
+                      setSelectedSkills(copy)
+                      setLocalSearch("")
+                    }}>
+                    ×
+                  </button>
+                </div>
+                {/* group info now shown inline in the SelectValue */}
               </div>
             )
           }

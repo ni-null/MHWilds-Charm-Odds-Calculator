@@ -33,7 +33,8 @@
     "skill2": "技能 2",
     "skill3": "技能 3",
     "selectSkill": "-- 選擇技能 --",
-    "clearSelection": "-- 清除選擇 --",
+  "clearSelection": "-- 清除選擇 --",
+  "reset": "重設",
     "groupInfo": "群組",
     "searchSkill": "搜尋技能..."
   },
