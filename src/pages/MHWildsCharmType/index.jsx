@@ -4,12 +4,31 @@ import AmuletData from "../../data/Amulet.json"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
 
 const CharmTypePage = () => {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
-  const [searchTerm, setSearchTerm] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  // 翻譯技能名稱的函數（複用 SkillGroups 頁面的邏輯）
+  const getSkillTranslation = React.useCallback(
+    (skillName) => {
+      const translation = t(`skillTranslations.${skillName}`)
+      return translation !== `skillTranslations.${skillName}` ? translation : skillName
+    },
+    [t]
+  )
+
+  const getGroupTranslation = React.useCallback(
+    (groupKey) => {
+      const groupNumber = groupKey.toLowerCase()
+      const translation = t(`skillGroups.${groupNumber}`)
+      return translation !== `skillGroups.${groupNumber}` ? translation : groupKey
+    },
+    [t]
+  )
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen)
@@ -46,18 +65,6 @@ const CharmTypePage = () => {
       totalCharms: AmuletData.length,
     }
   }, [])
-
-  // 篩選護石
-  const filteredCharms = useMemo(() => {
-    if (!searchTerm) return AmuletData
-
-    return AmuletData.filter((amulet) => {
-      return (
-        amulet.Rarity.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        amulet.PossibleSlotCombos.some((combo) => combo.join("-").includes(searchTerm))
-      )
-    })
-  }, [searchTerm])
 
   return (
     <div className='flex min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50'>
@@ -98,15 +105,52 @@ const CharmTypePage = () => {
                     <div className='p-4'>
                       <div className='space-y-2'>
                         {charms.map((charm, index) => (
-                          <div key={index} className='p-3 border rounded bg-gray-50'>
-                            <div className='mb-2 text-sm font-medium text-gray-800'>
-                              {t("charmTypes.labels.skillGroups")}:{" "}
-                              {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null).join(", ")}
-                            </div>
-                            <div className='text-xs text-gray-600'>
-                              {t("charmTypes.labels.slotCombinations")}: {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
-                            </div>
-                          </div>
+                          <Dialog key={index}>
+                            <DialogTrigger asChild>
+                              <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
+                                <div className='mb-2 text-sm font-medium text-gray-800'>
+                                  {t("charmTypes.labels.skillGroups")}:{" "}
+                                  {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null).join(", ")}
+                                </div>
+                                <div className='text-xs text-gray-600'>
+                                  {t("charmTypes.labels.slotCombinations")}:{" "}
+                                  {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
+                                </div>
+                              </div>
+                            </DialogTrigger>
+
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>
+                                  {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
+                                    ? t("charmTypes.dialog.title")
+                                    : getSkillTranslation("Select skills")}
+                                </DialogTitle>
+                                <DialogDescription>
+                                  {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
+                                    ? t("charmTypes.dialog.description")
+                                    : getSkillTranslation("Choose one skill per group for this charm")}
+                                </DialogDescription>
+                              </DialogHeader>
+
+                              <div className='space-y-4'>
+                                <CharmSkillsDialogContent
+                                  charm={charm}
+                                  getSkillTranslation={getSkillTranslation}
+                                  getGroupTranslation={getGroupTranslation}
+                                  t={t}
+                                />
+                              </div>
+
+                              <DialogFooter>
+                                <DialogClose asChild>
+                                  <button className='px-3 py-1 ml-auto text-sm text-white bg-blue-600 rounded hover:bg-blue-700'>
+                                    {t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}
+                                  </button>
+                                </DialogClose>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
                         ))}
                       </div>
                     </div>

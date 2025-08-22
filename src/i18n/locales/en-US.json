@@ -124,7 +124,16 @@
     "labels": {
       "skillGroups": "Skill Groups",
       "slotCombinations": "Slot Combinations"
+    },
+    "dialog": {
+      "title": "Select skills",
+      "description": "Choose one skill per group for this charm",
+      "noSkillGroups": "No skill groups",
+      "unknownGroup": "Unknown {{group}}"
     }
+  },
+  "actions": {
+    "close": "Close"
   },
   "skillGroups": {
     "title": "Skill Groups",

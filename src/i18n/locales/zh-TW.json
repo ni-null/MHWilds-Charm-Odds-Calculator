@@ -124,7 +124,16 @@
     "labels": {
       "skillGroups": "技能群組",
       "slotCombinations": "插槽組合"
+    },
+    "dialog": {
+      "title": "選擇技能",
+      "description": "為此護石從每個群組中選擇一項技能",
+      "noSkillGroups": "無技能群組",
+      "unknownGroup": "未知 {{group}}"
     }
+  },
+  "actions": {
+    "close": "關閉"
   },
   "skillGroups": {
     "title": "技能群組",
