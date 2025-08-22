@@ -33,7 +33,9 @@
     "skill2": "Skill 2",
     "skill3": "Skill 3",
     "selectSkill": "-- Select skill --",
-    "groupInfo": "Group"
+    "clearSelection": "-- Clear selection --",
+    "groupInfo": "Group",
+    "searchSkill": "Search skill..."
   },
   "amulet": {
     "list": "Charm List",

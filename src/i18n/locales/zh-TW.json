@@ -33,7 +33,9 @@
     "skill2": "技能 2",
     "skill3": "技能 3",
     "selectSkill": "-- 選擇技能 --",
-    "groupInfo": "群組"
+    "clearSelection": "-- 清除選擇 --",
+    "groupInfo": "群組",
+    "searchSkill": "搜尋技能..."
   },
   "amulet": {
     "list": "護石列表",

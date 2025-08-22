@@ -83,7 +83,9 @@ export default function AmuletList({
             const rarityClass = rarityColorMap[amulet.Rarity] || "text-gray-800"
             return (
               <>
-                <li key={index} className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
+                <li
+                  key={`${amulet.Rarity}-${amulet.Name}-${index}`}
+                  className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
                   <div className='flex flex-col min-w-[140px] mb-2 md:mb-0 md:mr-4'>
                     <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
                     <div className='text-xs font-medium '>
