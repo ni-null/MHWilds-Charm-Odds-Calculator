@@ -2,6 +2,7 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
 
 export default function SkillSelector({ selectedSkills, onSkillChange, getAvailableSkills, getSkillGroupInfo }) {
   const { t, i18n } = useTranslation()
@@ -30,12 +31,15 @@ export default function SkillSelector({ selectedSkills, onSkillChange, getAvaila
                 <SelectValue placeholder={t("skillSelector.selectSkill")} />
               </SelectTrigger>
               <SelectContent>
-                <input
+                <Input
                   type='text'
                   value={search1}
                   onChange={(e) => setSearch1(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onFocus={(e) => e.stopPropagation()}
                   placeholder={t("skillSelector.searchSkill")}
-                  className='w-full px-2 py-1 mb-2 text-sm border rounded'
+                  className='w-full mb-2'
                 />
                 {getAvailableSkills(0)
                   .filter((skillKey) => {
@@ -79,12 +83,15 @@ export default function SkillSelector({ selectedSkills, onSkillChange, getAvaila
                 <SelectValue placeholder={t("skillSelector.selectSkill")} />
               </SelectTrigger>
               <SelectContent>
-                <input
+                <Input
                   type='text'
                   value={search2}
                   onChange={(e) => setSearch2(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onFocus={(e) => e.stopPropagation()}
                   placeholder={t("skillSelector.searchSkill")}
-                  className='w-full px-2 py-1 mb-2 text-sm border rounded'
+                  className='w-full mb-2'
                 />
                 {getAvailableSkills(1)
                   .filter((skillKey) => {
@@ -128,12 +135,15 @@ export default function SkillSelector({ selectedSkills, onSkillChange, getAvaila
                 <SelectValue placeholder={t("skillSelector.selectSkill")} />
               </SelectTrigger>
               <SelectContent>
-                <input
+                <Input
                   type='text'
                   value={search3}
                   onChange={(e) => setSearch3(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onFocus={(e) => e.stopPropagation()}
                   placeholder={t("skillSelector.searchSkill")}
-                  className='w-full px-2 py-1 mb-2 text-sm border rounded'
+                  className='w-full mb-2'
                 />
                 {getAvailableSkills(2)
                   .filter((skillKey) => {
