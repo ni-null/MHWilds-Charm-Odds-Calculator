@@ -4,6 +4,17 @@ import { useTranslation } from "react-i18next"
 const Sidebar = ({ isOpen, onToggle }) => {
   const location = useLocation()
   const { t, i18n } = useTranslation()
+  // 由 Vite 注入的環境變數（在 CI/CD pipeline 裡設定 VITE_BUILD_TIME）
+  const buildTimeRaw = import.meta.env.VITE_BUILD_TIME || import.meta.env.VITE_BUILD_TIMESTAMP || null
+  const buildLabel = t("version.buildTime", { defaultValue: "Build Time" })
+  const unknownLabel = t("version.unknown", { defaultValue: "N/A" })
+  const buildTime = buildTimeRaw
+    ? (() => {
+        const parsed = Date.parse(buildTimeRaw)
+        if (!isNaN(parsed)) return new Date(parsed).toLocaleString(i18n.language === "zhTW" ? "zh-TW" : "en-US")
+        return buildTimeRaw
+      })()
+    : null
 
   const navs = [
     { to: "/", label: t("navigation.mhwCalculator") },
@@ -102,9 +113,12 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* 版本資訊區域 */}
         <div className='px-4 py-2 text-xs border-t text-yellow-400/60 border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <div className='space-y-1 text-center'>
-            <div className='text-yellow-400/60'>{t("version.logic")} 1.2</div>
-            <div className='text-yellow-400/60'>{t("version.data")} 20250813</div>
-          </div>
+              <div className='text-yellow-400/60'>{t("version.logic")} 1.2</div>
+              <div className='text-yellow-400/60'>{t("version.data")} 20250813</div>
+              <div className='text-yellow-400/60'>
+                {buildLabel}: {buildTime ?? unknownLabel}
+              </div>
+            </div>
         </div>
 
         <div className='p-4 text-xs border-t text-yellow-400/70 border-yellow-500/20 bg-black/30 backdrop-blur-sm'>
