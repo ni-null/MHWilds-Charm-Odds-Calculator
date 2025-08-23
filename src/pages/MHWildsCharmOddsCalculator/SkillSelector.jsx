@@ -12,7 +12,7 @@ export default function SkillSelector() {
   const { t, i18n } = useTranslation()
   // inline placeholder SVG used when skill icon fails to load
   const SKILL_PLACEHOLDER_SVG =
-    'data:image/svg+xml;utf8,' +
+    "data:image/svg+xml;utf8," +
     encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>" +
         "<rect fill='%23efefef' width='100%' height='100%'/>" +
@@ -234,28 +234,28 @@ export default function SkillSelector() {
               const groupText = useFullwidthParens ? `（${groupInfo}）` : ` (${groupInfo})`
 
               // Render a small icon (if available) plus the name
-              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName)}.png`
+              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName.replace(/\//g, '-'))}.png`
               const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
 
               selectedDisplay = (
                 <div className='flex items-center gap-2'>
-                      <img
-                        src={imgSrc}
-                        alt={selName}
-                        style={{ width: 20, height: 20, objectFit: "contain" }}
-                          onError={(e) => {
-                          try {
-                            if (!e || !e.currentTarget) return
-                            const el = e.currentTarget
-                            // avoid replacing if already placeholder
-                            if (el.src && el.src.indexOf('data:image/svg+xml') === -1) {
-                              el.src = SKILL_PLACEHOLDER_SVG
-                            }
-                          } catch {
-                            /* swallow */
-                          }
-                        }}
-                      />
+                  <img
+                    src={imgSrc}
+                    alt={selName}
+                    style={{ width: 20, height: 20, objectFit: "contain" }}
+                    onError={(e) => {
+                      try {
+                        if (!e || !e.currentTarget) return
+                        const el = e.currentTarget
+                        // avoid replacing if already placeholder
+                        if (el.src && el.src.indexOf("data:image/svg+xml") === -1) {
+                          el.src = SKILL_PLACEHOLDER_SVG
+                        }
+                      } catch {
+                        /* swallow */
+                      }
+                    }}
+                  />
                   <span>{nameNode}</span>
                   <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>{groupText}</span>
                 </div>
@@ -353,14 +353,14 @@ export default function SkillSelector() {
                                 }}>
                                 <div className='flex items-center gap-2'>
                                   <img
-                                    src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName)}.png`}
+                                    src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, '-'))}.png`}
                                     alt={skillName}
                                     style={{ width: 20, height: 20, objectFit: "contain", marginRight: 8 }}
                                     onError={(e) => {
                                       try {
                                         if (!e || !e.currentTarget) return
                                         const el = e.currentTarget
-                                        if (el.src && el.src.indexOf('data:image/svg+xml') === -1) {
+                                        if (el.src && el.src.indexOf("data:image/svg+xml") === -1) {
                                           el.src = SKILL_PLACEHOLDER_SVG
                                         }
                                       } catch {
