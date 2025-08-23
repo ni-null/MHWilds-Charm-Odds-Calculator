@@ -220,11 +220,11 @@ export default function SkillSelector() {
               const selLevel = selectedValue.split(" Lv.")[1] || ""
               const translatedSel = t(`skillTranslations.${selName}`, selName)
               const groupInfo = getSkillGroupInfo(selectedValue)
-              const groupText = i18n.language && i18n.language.startsWith("zh") ? `（${groupInfo}）` : ` (${groupInfo})`
-              selectedDisplay =
-                i18n.language && i18n.language.startsWith("zh")
-                  ? `${translatedSel} ${t("common.level")}${selLevel}${groupText}`
-                  : `${selectedValue}${groupText}`
+              // show fullwidth parentheses for zh and jaJP locales
+              const useFullwidthParens = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
+              const groupText = useFullwidthParens ? `（${groupInfo}）` : ` (${groupInfo})`
+              // show translated skill name for zh and jaJP, fall back to the raw skillKey otherwise
+              selectedDisplay = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}${groupText}` : `${selectedValue}${groupText}`
             }
 
             return (
@@ -294,8 +294,8 @@ export default function SkillSelector() {
                             const skillName = skillKey.split(" Lv.")[0]
                             const skillLevel = skillKey.split(" Lv.")[1]
                             const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                            const displayName =
-                              i18n.language && i18n.language.startsWith("zh") ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
+                            const useFullwidth = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
+                            const displayName = useFullwidth ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
                             const groupInfo = getSkillGroupInfo(skillKey)
                             return (
                               <button

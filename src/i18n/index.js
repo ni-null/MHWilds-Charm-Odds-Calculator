@@ -4,6 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector"
 import zhTW from "./locales/zh-TW.json"
 import zhCN from "./locales/zh-CN.json"
 import enUS from "./locales/en-US.json"
+import jaJP from "./locales/ja-JP.json"
 
 i18n
   .use(LanguageDetector)
@@ -18,6 +19,9 @@ i18n
       },
       enUS: {
         translation: enUS,
+      },
+      jaJP: {
+        translation: jaJP,
       },
     },
     fallbackLng: "enUS", // 預設回退語言為英文
