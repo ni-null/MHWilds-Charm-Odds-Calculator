@@ -213,7 +213,7 @@ export default function SkillSelector() {
         {t("skillSelector.title")} {t("skillSelector.maxSkills")}
       </h2>
 
-      <div className='grid grid-cols-1 gap-4 mb-6 md:grid-cols-3'>
+      <div className='grid grid-cols-1 gap-4 mb-6 xl:grid-cols-3'>
         {[0, 1, 2].map((i) => {
           const available = getAvailableSkills(i).length > 0
           const shouldShow = i === 0 ? available : selectedSkills[i - 1] && available
@@ -234,7 +234,7 @@ export default function SkillSelector() {
               const groupText = useFullwidthParens ? `（${groupInfo}）` : ` (${groupInfo})`
 
               // Render a small icon (if available) plus the name
-              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName.replace(/\//g, '-'))}.png`
+              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName.replace(/\//g, "-"))}.png`
               const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
 
               selectedDisplay = (
@@ -242,7 +242,7 @@ export default function SkillSelector() {
                   <img
                     src={imgSrc}
                     alt={selName}
-                    style={{ width: 20, height: 20, objectFit: "contain" }}
+                    style={{ width: 28, height: 28, objectFit: "contain" }}
                     onError={(e) => {
                       try {
                         if (!e || !e.currentTarget) return
@@ -279,7 +279,7 @@ export default function SkillSelector() {
                       // clear local search when selection changes
                       setLocalSearch("")
                     }}>
-                    <SelectTrigger className='w-full'>
+                    <SelectTrigger className='w-full px-4 text-lg h-14'>
                       <SelectValue placeholder={t("skillSelector.selectSkill")}>{selectedDisplay || undefined}</SelectValue>
                     </SelectTrigger>
                     <SelectContent side='bottom' position='popper'>
@@ -353,9 +353,9 @@ export default function SkillSelector() {
                                 }}>
                                 <div className='flex items-center gap-2'>
                                   <img
-                                    src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, '-'))}.png`}
+                                    src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, "-"))}.png`}
                                     alt={skillName}
-                                    style={{ width: 20, height: 20, objectFit: "contain", marginRight: 8 }}
+                                    style={{ width: 24, height: 24, objectFit: "contain", marginRight: 8 }}
                                     onError={(e) => {
                                       try {
                                         if (!e || !e.currentTarget) return
@@ -384,7 +384,7 @@ export default function SkillSelector() {
                   <button
                     type='button'
                     aria-label={t("skillSelector.clearSelection", "Clear selection")}
-                    className='px-3 py-2 rounded bg-gray-50 hover:bg-gray-100'
+                    className='px-4 py-3 text-lg rounded h-14 bg-gray-50 hover:bg-gray-100'
                     onMouseDown={(e) => e.preventDefault()} /* prevent focus loss */
                     onClick={(e) => {
                       e.stopPropagation()

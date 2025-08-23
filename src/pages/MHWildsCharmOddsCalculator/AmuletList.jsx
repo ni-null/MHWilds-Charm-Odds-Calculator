@@ -9,6 +9,16 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
   const { t, i18n } = useTranslation()
   const { selectedSkills } = useMhwStore()
 
+  // inline placeholder SVG used when skill icon fails to load
+  const SKILL_PLACEHOLDER_SVG =
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(
+      "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>" +
+        "<rect fill='%23efefef' width='100%' height='100%'/>" +
+        "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23999'>?" +
+        "</text></svg>"
+    )
+
   // 根據護石群組取得可能的技能（AmuletList 自行管理，不再由外部傳入）
   const getSkillsFromAmulet = (amulet) => {
     const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
@@ -158,8 +168,27 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                         return match ? (
                           <span
                             key={skillIndex}
-                            className='inline-block px-2 py-1 ml-2 text-sm rounded whitespace-nowrap'
+                            className='inline-flex items-center gap-1 px-2 py-1 ml-2 text-sm rounded whitespace-nowrap'
                             style={{ backgroundColor: bgColor, color: textColor, fontWeight: "bold" }}>
+                            <img
+                              src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(
+                                match.name.split(" Lv.")[0].replace(/\//g, "-")
+                              )}.png`}
+                              alt={match.name.split(" Lv.")[0]}
+                              style={{ width: 16, height: 16, objectFit: "contain" }}
+                              onError={(e) => {
+                                try {
+                                  if (!e || !e.currentTarget) return
+                                  const el = e.currentTarget
+                                  // avoid replacing if already placeholder
+                                  if (el.src && el.src.indexOf("data:image/svg+xml") === -1) {
+                                    el.src = SKILL_PLACEHOLDER_SVG
+                                  }
+                                } catch {
+                                  /* swallow */
+                                }
+                              }}
+                            />
                             {displayName}
                           </span>
                         ) : null
