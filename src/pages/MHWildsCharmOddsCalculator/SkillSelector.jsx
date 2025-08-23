@@ -234,7 +234,7 @@ export default function SkillSelector() {
               const groupText = useFullwidthParens ? `（${groupInfo}）` : ` (${groupInfo})`
 
               // Render a small icon (if available) plus the name
-              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName)}.png`
+              const imgSrc = `/image/skills/${encodeURIComponent(selName)}.png`
               const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
 
               selectedDisplay = (
@@ -353,7 +353,7 @@ export default function SkillSelector() {
                                 }}>
                                 <div className='flex items-center gap-2'>
                                   <img
-                                    src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName)}.png`}
+                                    src={`/image/skills/${encodeURIComponent(skillName)}.png`}
                                     alt={skillName}
                                     style={{ width: 20, height: 20, objectFit: "contain", marginRight: 8 }}
                                     onError={(e) => {
