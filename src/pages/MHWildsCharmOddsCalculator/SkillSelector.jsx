@@ -242,7 +242,7 @@ export default function SkillSelector() {
                   <img
                     src={imgSrc}
                     alt={selName}
-                    className='w-5 h-5 md:w-7 md:h-7 object-contain'
+                    className='object-contain w-5 h-5 md:w-7 md:h-7'
                     onError={(e) => {
                       try {
                         if (!e || !e.currentTarget) return
@@ -355,7 +355,7 @@ export default function SkillSelector() {
                                   <img
                                     src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, "-"))}.png`}
                                     alt={skillName}
-                                    className='w-5 h-5 md:w-6 md:h-6 object-contain mr-2'
+                                    className='object-contain w-5 h-5 mr-2 md:w-6 md:h-6'
                                     onError={(e) => {
                                       try {
                                         if (!e || !e.currentTarget) return

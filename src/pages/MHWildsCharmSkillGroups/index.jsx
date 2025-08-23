@@ -11,6 +11,16 @@ const SkillGroupsPage = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
+  // inline placeholder SVG used when skill icon fails to load
+  const SKILL_PLACEHOLDER_SVG =
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(
+      "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>" +
+        "<rect fill='%23efefef' width='100%' height='100%'/>" +
+        "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23999'>?" +
+        "</text></svg>"
+    )
+
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen)
   }
@@ -145,7 +155,26 @@ const SkillGroupsPage = () => {
                     <div className='space-y-1 overflow-y-auto max-h-48'>
                       {groupData.data.map((skill, index) => (
                         <div key={index} className='flex justify-between items-center py-1.5 px-2 bg-white bg-opacity-70 rounded text-xs'>
-                          <span className='font-medium text-gray-800 truncate'>{getSkillTranslation(skill.SkillName)}</span>
+                          <div className='flex items-center gap-2 flex-1 min-w-0'>
+                            <img
+                              src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skill.SkillName.replace(/\//g, "-"))}.png`}
+                              alt={skill.SkillName}
+                              className='w-4 h-4 object-contain flex-shrink-0'
+                              onError={(e) => {
+                                try {
+                                  if (!e || !e.currentTarget) return
+                                  const el = e.currentTarget
+                                  // avoid replacing if already placeholder
+                                  if (el.src && el.src.indexOf("data:image/svg+xml") === -1) {
+                                    el.src = SKILL_PLACEHOLDER_SVG
+                                  }
+                                } catch {
+                                  /* swallow */
+                                }
+                              }}
+                            />
+                            <span className='font-medium text-gray-800 truncate'>{getSkillTranslation(skill.SkillName)}</span>
+                          </div>
                           <span
                             className='text-xs font-bold px-2 py-0.5 rounded-full text-white flex-shrink-0 ml-2'
                             style={{ backgroundColor: groupData.color }}>
