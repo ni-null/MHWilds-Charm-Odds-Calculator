@@ -108,6 +108,18 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
               "RARE[5]": "text-green-600",
             }
             const rarityClass = rarityColorMap[amulet.Rarity] || "text-gray-800"
+            // prepare sorted selected skills according to this amulet's group order
+            const selectedSkillsFilteredForRender = selectedSkills.filter(Boolean)
+            const amuletGroupsForSort = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null && g !== undefined)
+            const sortedSelectedSkills = selectedSkillsFilteredForRender.slice().sort((a, b) => {
+              const ma = amuletSkills.find((s) => s.name === a)
+              const mb = amuletSkills.find((s) => s.name === b)
+              const ia = ma ? amuletGroupsForSort.indexOf(ma.group) : Number.POSITIVE_INFINITY
+              const ib = mb ? amuletGroupsForSort.indexOf(mb.group) : Number.POSITIVE_INFINITY
+              if (ia === ib) return 0
+              return ia - ib
+            })
+
             return (
               <>
                 <li
@@ -132,18 +144,26 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                       <span className='ml-2'>
                         {[amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group]
                           .filter((g) => g !== null && g !== undefined)
-                          .map((g, i) => (
-                            <span key={i} className='mr-2'>
-                              {t("common.group")}
-                              {g}
-                            </span>
-                          ))}
+                          .map((g, i) => {
+                            const groupKey = `Group${g}`
+                            const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
+                            const bg = gd.color || "#6b7280"
+                            const text = "#ffffff"
+                            return (
+                              <span
+                                key={i}
+                                className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-2'
+                                style={{ backgroundColor: bg, color: text }}>
+                                {g}
+                              </span>
+                            )
+                          })}
                       </span>
                     </div>
                     <div className='mb-1 text-base'>
                       <span className='font-medium'>{t("amulet.matchingSkills")}:</span>
                       {selectedSkills.filter(Boolean).length === 0 && <span className='ml-2 text-sm text-gray-500'>{t("common.none")}</span>}
-                      {selectedSkills.filter(Boolean).map((skillKey, skillIndex) => {
+                      {sortedSelectedSkills.map((skillKey, skillIndex) => {
                         const match = amuletSkills.find((s) => s.name === skillKey)
                         let displayName = skillKey
                         let bgColor = "#e0e0e0"
@@ -168,14 +188,14 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                         return match ? (
                           <span
                             key={skillIndex}
-                            className='inline-flex items-center gap-1 px-2 py-1 ml-2 text-sm rounded whitespace-nowrap'
+                            className='inline-flex items-center gap-1 mt-2 px-2 py-0.5 ml-2 text-base rounded whitespace-nowrap'
                             style={{ backgroundColor: bgColor, color: textColor, fontWeight: "bold" }}>
                             <img
                               src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(
                                 match.name.split(" Lv.")[0].replace(/\//g, "-")
                               )}.png`}
                               alt={match.name.split(" Lv.")[0]}
-                              style={{ width: 16, height: 16, objectFit: "contain" }}
+                              style={{ width: 22, height: 22, objectFit: "contain" }}
                               onError={(e) => {
                                 try {
                                   if (!e || !e.currentTarget) return

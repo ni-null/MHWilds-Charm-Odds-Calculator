@@ -137,17 +137,24 @@ const SkillGroupsPage = () => {
                   className='overflow-hidden rounded-lg shadow-lg'
                   style={{
                     backgroundColor: groupData.bgColor,
-                    border: `3px solid ${groupData.color}`,
+                    border: `3px solid ${groupData.bgColor}`,
                   }}>
                   {/* 群組標題 */}
                   <div
                     className='px-4 py-3'
                     style={{
-                      backgroundColor: groupData.color,
-                      color: "#ffffff",
+                      backgroundColor: groupData.bgColor,
+                      color: groupData.color,
                     }}>
-                    <h2 className='text-lg font-bold'>{getGroupTranslation(groupKey)}</h2>
-                    <p className='text-xs opacity-90 text-white/90'>{t("skillGroups.skillCount", { count: groupData.data.length })}</p>
+                    <h2 className='text-xl font-bold'>{getGroupTranslation(groupKey)}</h2>
+                    <p
+                      className='font-bold text-md opacity-90 text-white/90'
+                      style={{
+                        backgroundColor: groupData.bgColor,
+                        color: groupData.color,
+                      }}>
+                      {t("skillGroups.skillCount", { count: groupData.data.length })}
+                    </p>
                   </div>
 
                   {/* 技能預覽 */}
@@ -176,7 +183,7 @@ const SkillGroupsPage = () => {
                             <span className='text-base font-bold text-gray-800 truncate md:text-lg'>{getSkillTranslation(skill.SkillName)}</span>
                           </div>
                           <span
-                            className='text-sm font-bold px-2 py-0.5 rounded-full text-white flex-shrink-0 ml-2'
+                            className='text-sm font-bold px-2 py-0.5 rounded-full opacity-60 text-white flex-shrink-0 ml-2'
                             style={{ backgroundColor: groupData.color }}>
                             Lv.{skill.SkillLevel}
                           </span>
