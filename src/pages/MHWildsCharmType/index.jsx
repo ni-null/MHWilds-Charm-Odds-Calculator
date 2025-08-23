@@ -114,9 +114,9 @@ const CharmTypePage = () => {
             </div>
 
             <div className='p-4 mb-6 bg-white border border-gray-200 rounded-lg'>
-              <h3 className='mb-1 text-sm font-semibold text-gray-800'>{t("charmTypes.notes.title")}</h3>
-              <p className='text-sm text-gray-600'>{t("charmTypes.notes.rareSame")}</p>
-              <p className='text-sm text-gray-600'>{t("charmTypes.notes.rare8FirstSlot")}</p>
+              <h3 className='mb-1 font-semibold text-gray-800'>{t("charmTypes.notes.title")}</h3>
+              <p className='text-gray-600 '>{t("charmTypes.notes.rareSame")}</p>
+              <p className='text-gray-600 '>{t("charmTypes.notes.rare8FirstSlot")}</p>
             </div>
 
             {/* 護石種類展示 */}
@@ -137,13 +137,11 @@ const CharmTypePage = () => {
                   <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
                     <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
                       <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
-                      <p className='text-sm text-gray-600'>{t("charmTypes.charmsCount", { count: charms.length })}</p>
-                      <p className='text-sm text-gray-600'>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
-                      {formattedProbPct && (
-                        <p className='text-sm text-gray-600'>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>
-                      )}
+                      <p className='text-gray-600 '>{t("charmTypes.charmsCount", { count: charms.length })}</p>
+                      <p className='text-gray-600 '>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
+                      {formattedProbPct && <p className='text-gray-600 '>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>}
                       {raritySlotList && raritySlotList.length > 0 && (
-                        <p className='mt-2 text-sm text-gray-600'>
+                        <p className='mt-2 text-gray-600'>
                           {t("charmTypes.header.slotCombinations") ? t("charmTypes.header.slotCombinations") + ": " : "Slot combinations: "}
                           {raritySlotList.map((c) => `[${c.split("-").join(", ")}]`).join(" ")}
                         </p>
@@ -159,26 +157,26 @@ const CharmTypePage = () => {
                             <Dialog key={index}>
                               <DialogTrigger asChild>
                                 <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
-                                  <div className='mb-2 text-sm font-medium text-gray-800'>
+                                  <div className='mb-2 font-medium text-gray-800'>
                                     {t("charmTypes.labels.skillGroups")}:{" "}
                                     {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group]
                                       .filter((g) => g !== null)
                                       .map((g, idx) => {
                                         const groupKey = typeof g === "number" ? `Group${g}` : `${g}`
                                         const gd = (skillGroupsData.SkillGroups && skillGroupsData.SkillGroups[groupKey]) || {}
-                                        const bg = gd.color || "#6b7280"
+
                                         return (
                                           <span
                                             key={`${groupKey}-${idx}`}
-                                            className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-1'
-                                            style={{ backgroundColor: bg, color: "#ffffff" }}>
+                                            className='inline-block px-2 py-0.5 mr-1 font-medium rounded'
+                                            style={{ backgroundColor: gd.bgColor, color: gd.Color }}>
                                             {g}
                                           </span>
                                         )
                                       })}
                                   </div>
                                   {/* slot combinations moved to rarity header (shown once) */}
-                                  <div className='mt-2 text-sm text-gray-700'>
+                                  <div className='mt-2 text-gray-700'>
                                     {t("charmTypes.labels.combinationCount")}: <span className='font-semibold'>{formattedComboCount}</span>
                                   </div>
                                 </div>
