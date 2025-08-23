@@ -131,7 +131,8 @@
     "charmsCount": "{{count}} 個の護石",
     "labels": {
       "skillGroups": "スキルグループ",
-      "slotCombinations": "スロット組み合わせ"
+      "slotCombinations": "スロット組み合わせ",
+      "combinationCount": "コンビネーション数"
     },
     "dialog": {
       "title": "スキルを選択",

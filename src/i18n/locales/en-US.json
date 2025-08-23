@@ -131,7 +131,8 @@
     "charmsCount": "{{count}} charms",
     "labels": {
       "skillGroups": "Skill Groups",
-      "slotCombinations": "Slot Combinations"
+      "slotCombinations": "Slot Combinations",
+      "combinationCount": "Combination Count"
     },
     "dialog": {
       "title": "Select skills",

@@ -46,17 +46,13 @@ const InfoPage = () => {
 
                   <div className='p-4 mt-6 bg-white rounded-lg shadow sm:p-6 sm:mt-10'>
                     <h2 className='mb-2 text-lg font-semibold text-gray-700'>{t("info.calculation.title") || "機率計算"}</h2>
-                    <p className='mb-4 text-sm text-gray-600 sm:text-base'>
-                      {t("info.calculation.description") || "本專案使用以下機率計算公式："}
-                    </p>
+                    <p className='mb-4 text-sm text-gray-600 sm:text-base'>{t("info.calculation.description") || "本專案使用以下機率計算公式："}</p>
                     <div className='p-4 mb-4 text-sm bg-gray-50 rounded-lg sm:text-base font-mono'>
                       <div className='text-center'>
                         {t("info.calculation.formula") || "P(特定護石) = P(稀有度) × P(模板 | 稀有度) × P(技能組合 | 模板)"}
                       </div>
                     </div>
-                    <p className='mb-4 text-sm text-gray-600 sm:text-base'>
-                      {t("info.calculation.reference") || "參考資料："}
-                    </p>
+                    <p className='mb-4 text-sm text-gray-600 sm:text-base'>{t("info.calculation.reference") || "參考資料："}</p>
                     <a
                       href='https://www.gamersky.com/handbook/202508/1979751.shtml'
                       target='_blank'

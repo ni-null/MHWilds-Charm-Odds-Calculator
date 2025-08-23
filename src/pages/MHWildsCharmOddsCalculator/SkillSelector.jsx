@@ -384,7 +384,7 @@ export default function SkillSelector() {
                   <button
                     type='button'
                     aria-label={t("skillSelector.clearSelection", "Clear selection")}
-                    className='h-10 px-3 py-2 text-base rounded md:h-14 md:px-4 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
+                    className='h-10 px-4 py-2 text-base rounded md:h-14 md:px-5 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
                     onMouseDown={(e) => e.preventDefault()} /* prevent focus loss */
                     onClick={(e) => {
                       e.stopPropagation()

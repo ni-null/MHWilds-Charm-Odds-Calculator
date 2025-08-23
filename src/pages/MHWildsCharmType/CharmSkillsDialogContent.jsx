@@ -25,11 +25,18 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
       <Tabs defaultValue={defaultTab}>
         <div className='overflow-x-auto'>
           <TabsList className='flex justify-start w-full gap-2 px-3 py-7'>
-            {groups.map((groupKey) => (
-              <TabsTrigger key={groupKey} value={groupKey} className='flex-shrink-0 text-base lg:text-lg'>
-                {getGroupTranslation(groupKey)}
-              </TabsTrigger>
-            ))}
+            {groups.map((groupKey) => {
+              const g = skillGroupsData.SkillGroups[groupKey] || {}
+              return (
+                <TabsTrigger
+                  key={groupKey}
+                  value={groupKey}
+                  className='flex-shrink-0 text-base lg:text-lg rounded px-3 py-1'
+                  style={{ backgroundColor: g.color || undefined, color: "#ffffff" }}>
+                  {getGroupTranslation(groupKey)}
+                </TabsTrigger>
+              )
+            })}
           </TabsList>
         </div>
 
@@ -44,9 +51,11 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
 
           return (
             <TabsContent key={groupKey} value={groupKey} className='p-2 border rounded'>
-              <div className='flex items-center justify-between mb-2 text-base font-medium' style={{ color: groupData.color }}>
+              <div
+                className='flex items-center justify-between mb-2 text-base font-medium px-2 py-1 rounded'
+                style={{ backgroundColor: groupData.color, color: "#ffffff" }}>
                 <span className='truncate'>{getGroupTranslation(groupKey)}</span>
-                <span className='text-xs text-gray-500'> {groupData.data.length} </span>
+                <span className='text-xs text-white/90'> {groupData.data.length} </span>
               </div>
               {/* 大螢幕顯示更多欄位 */}
               <div className='grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3'>

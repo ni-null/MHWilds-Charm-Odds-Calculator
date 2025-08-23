@@ -147,7 +147,7 @@ const SkillGroupsPage = () => {
                       color: "#ffffff",
                     }}>
                     <h2 className='text-lg font-bold'>{getGroupTranslation(groupKey)}</h2>
-                    <p className='text-xs opacity-90'>{t("skillGroups.skillCount", { count: groupData.data.length })}</p>
+                    <p className='text-xs opacity-90 text-white/90'>{t("skillGroups.skillCount", { count: groupData.data.length })}</p>
                   </div>
 
                   {/* 技能預覽 */}

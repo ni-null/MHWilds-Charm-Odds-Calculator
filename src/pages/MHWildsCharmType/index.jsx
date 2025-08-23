@@ -6,7 +6,7 @@ import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
-import SkillGroupsData from "../../data/SkillGroups.json"
+import skillGroupsData from "../../data/SkillGroups.json"
 import { Button } from "@/components/ui/button"
 const CharmTypePage = () => {
   const { t } = useTranslation()
@@ -120,14 +120,28 @@ const CharmTypePage = () => {
                                 <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
                                   <div className='mb-2 text-sm font-medium text-gray-800'>
                                     {t("charmTypes.labels.skillGroups")}:{" "}
-                                    {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null).join(", ")}
+                                    {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group]
+                                      .filter((g) => g !== null)
+                                      .map((g, idx) => {
+                                        const groupKey = typeof g === "number" ? `Group${g}` : `${g}`
+                                        const gd = (skillGroupsData.SkillGroups && skillGroupsData.SkillGroups[groupKey]) || {}
+                                        const bg = gd.color || "#6b7280"
+                                        return (
+                                          <span
+                                            key={`${groupKey}-${idx}`}
+                                            className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-1'
+                                            style={{ backgroundColor: bg, color: "#ffffff" }}>
+                                            {g}
+                                          </span>
+                                        )
+                                      })}
                                   </div>
                                   <div className='text-xs text-gray-600'>
                                     {t("charmTypes.labels.slotCombinations")}:{" "}
                                     {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
                                   </div>
                                   <div className='mt-2 text-sm text-gray-700'>
-                                    組合數量: <span className='font-semibold'>{comboCount}</span>
+                                    {t("charmTypes.labels.combinationCount")}: <span className='font-semibold'>{comboCount}</span>
                                   </div>
                                 </div>
                               </DialogTrigger>

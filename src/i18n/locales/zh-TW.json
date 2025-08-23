@@ -131,7 +131,8 @@
     "charmsCount": "{{count}} 個護石",
     "labels": {
       "skillGroups": "技能群組",
-      "slotCombinations": "插槽組合"
+      "slotCombinations": "插槽組合",
+      "combinationCount": "組合數量"
     },
     "dialog": {
       "title": "選擇技能",
