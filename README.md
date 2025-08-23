@@ -4,9 +4,11 @@
 
 A small tool for calculating skill probabilities and combination chances of Charms in Monster Hunter: Wilds.
 
-<img width="1920" height="989" alt="Snipaste_2025-08-20_15-17-19" src="https://github.com/user-attachments/assets/d5b35333-015f-4a07-8095-a031d7d76eaf" />
+<img width="1882" height="896" alt="Snipaste_2025-08-23_19-57-50" src="https://github.com/user-attachments/assets/4ed972fc-58da-4613-9e7a-af260d48f50c" />
 
-<img width="1894" height="989" alt="Snipaste_2025-08-20_15-17-46" src="https://github.com/user-attachments/assets/c382b7c6-f0ef-496c-9ddb-713c4704c1e5" />
+
+<img width="1896" height="888" alt="Snipaste_2025-08-23_19-57-58" src="https://github.com/user-attachments/assets/8cbf7a01-6b22-4ea8-ac63-45059b618691" />
+
 
 ## Features
 
