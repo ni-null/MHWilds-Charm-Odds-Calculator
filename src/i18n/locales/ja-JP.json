@@ -129,6 +129,10 @@
       "slotCombinations": "スロット組み合わせ"
     },
     "charmsCount": "{{count}} 個の護石",
+    "header": {
+      "totalCombos": "合計コンビネーション：{{count}}",
+      "baseProbability": "基礎確率：{{pct}}"
+    },
     "labels": {
       "skillGroups": "スキルグループ",
       "slotCombinations": "スロット組み合わせ",

@@ -129,6 +129,10 @@
       "slotCombinations": "Slot Combinations"
     },
     "charmsCount": "{{count}} charms",
+    "header": {
+      "totalCombos": "Total combos: {{count}}",
+      "baseProbability": "Base probability: {{pct}}"
+    },
     "labels": {
       "skillGroups": "Skill Groups",
       "slotCombinations": "Slot Combinations",

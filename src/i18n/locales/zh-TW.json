@@ -129,6 +129,10 @@
       "slotCombinations": "插槽組合"
     },
     "charmsCount": "{{count}} 個護石",
+    "header": {
+      "totalCombos": "總組合數：{{count}}",
+      "baseProbability": "基礎命中機率：{{pct}}"
+    },
     "labels": {
       "skillGroups": "技能群組",
       "slotCombinations": "插槽組合",
