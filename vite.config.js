@@ -6,14 +6,14 @@ import { dirname, resolve } from "path"
 
 const repoName = "MHWilds-Charm-Odds-Calculator"
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   plugins: [react()],
   resolve: {
     alias: {
       "@": resolve(dirname(fileURLToPath(import.meta.url)), "src"),
     },
   },
-  base: mode === "development" ? "/" : `/${repoName}/`,
+  base: `/${repoName}/`,
   build: {
     outDir: "docs",
     emptyOutDir: true,
