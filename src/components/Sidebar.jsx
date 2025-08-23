@@ -11,7 +11,12 @@ const Sidebar = ({ isOpen, onToggle }) => {
   const buildTime = buildTimeRaw
     ? (() => {
         const parsed = Date.parse(buildTimeRaw)
-        if (!isNaN(parsed)) return new Date(parsed).toLocaleString(i18n.language === "zhTW" ? "zh-TW" : "en-US")
+        if (!isNaN(parsed)) {
+          // 根據目前語言選擇合適的地區顯示
+          if (i18n.language === "zhTW") return new Date(parsed).toLocaleString("zh-TW")
+          if (i18n.language === "zhCN") return new Date(parsed).toLocaleString("zh-CN")
+          return new Date(parsed).toLocaleString("en-US")
+        }
         return buildTimeRaw
       })()
     : null
@@ -95,7 +100,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* 語言選擇器 */}
         <div className='px-4 py-4 border-t border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <label className='block mb-3 text-sm font-semibold tracking-wide text-yellow-300'>
-            {i18n.language === "zhTW" ? "語言 / Language" : t("navigation.languageLabel")}
+            {i18n.language && i18n.language.startsWith("zh") ? "語言 / Language" : t("navigation.languageLabel")}
           </label>
           <select
             value={i18n.language}
@@ -103,6 +108,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
             className='w-full p-3 text-sm text-yellow-200 transition-colors border rounded-lg shadow-inner cursor-pointer bg-gray-800/80 border-yellow-600/40 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-yellow-400 hover:bg-gray-700/80'>
             <option value='zhTW' className='bg-gray-800'>
               繁體中文
+            </option>
+            <option value='zhCN' className='bg-gray-800'>
+              简体中文
             </option>
             <option value='enUS' className='bg-gray-800'>
               English

@@ -2,6 +2,7 @@ import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import zhTW from "./locales/zh-TW.json"
+import zhCN from "./locales/zh-CN.json"
 import enUS from "./locales/en-US.json"
 
 i18n
@@ -11,6 +12,9 @@ i18n
     resources: {
       zhTW: {
         translation: zhTW,
+      },
+      zhCN: {
+        translation: zhCN,
       },
       enUS: {
         translation: enUS,
@@ -33,7 +37,11 @@ i18n
       convertDetectedLanguage: (lng) => {
         // 處理瀏覽器語言代碼到我們的語言代碼的映射
         if (lng.startsWith("zh")) {
-          // zh, zh-TW, zh-CN, zh-HK 等都映射到 zhTW
+          // 根據子語言判斷簡繁：包含 cn 或 hans 視為簡體（zhCN），包含 tw/hk 或 hant 視為繁體（zhTW）
+          const lower = lng.toLowerCase()
+          if (lower.includes("cn") || lower.includes("hans")) return "zhCN"
+          if (lower.includes("tw") || lower.includes("hk") || lower.includes("hant")) return "zhTW"
+          // 預設回退到繁體 (維持既有預設行為)
           return "zhTW"
         }
         if (lng.startsWith("en")) {

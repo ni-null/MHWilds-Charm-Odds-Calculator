@@ -149,7 +149,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                             }
                           }
                         }
-                        if (i18n.language === "zhTW" && match) {
+                        if (i18n.language && i18n.language.startsWith("zh") && match) {
                           const skillName = match.name.split(" Lv.")[0]
                           const skillLevel = match.name.split(" Lv.")[1]
                           const translatedName = t(`skillTranslations.${skillName}`, skillName)
@@ -333,7 +333,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                                         ({t("probability.debug.excluded")}:{" "}
                                         {detail.excludedBaseNames
                                           .map((skillBaseName) => {
-                                            if (i18n.language === "zhTW") {
+                                            if (i18n.language && i18n.language.startsWith("zh")) {
                                               return t(`skillTranslations.${skillBaseName}`, skillBaseName)
                                             } else {
                                               return skillBaseName

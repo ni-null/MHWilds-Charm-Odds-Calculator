@@ -220,9 +220,11 @@ export default function SkillSelector() {
               const selLevel = selectedValue.split(" Lv.")[1] || ""
               const translatedSel = t(`skillTranslations.${selName}`, selName)
               const groupInfo = getSkillGroupInfo(selectedValue)
-              const groupText = i18n.language === "zhTW" ? `（${groupInfo}）` : ` (${groupInfo})`
+              const groupText = i18n.language && i18n.language.startsWith("zh") ? `（${groupInfo}）` : ` (${groupInfo})`
               selectedDisplay =
-                i18n.language === "zhTW" ? `${translatedSel} ${t("common.level")}${selLevel}${groupText}` : `${selectedValue}${groupText}`
+                i18n.language && i18n.language.startsWith("zh")
+                  ? `${translatedSel} ${t("common.level")}${selLevel}${groupText}`
+                  : `${selectedValue}${groupText}`
             }
 
             return (
@@ -292,7 +294,8 @@ export default function SkillSelector() {
                             const skillName = skillKey.split(" Lv.")[0]
                             const skillLevel = skillKey.split(" Lv.")[1]
                             const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                            const displayName = i18n.language === "zhTW" ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
+                            const displayName =
+                              i18n.language && i18n.language.startsWith("zh") ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
                             const groupInfo = getSkillGroupInfo(skillKey)
                             return (
                               <button
