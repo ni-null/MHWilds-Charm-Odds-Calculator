@@ -12,7 +12,7 @@
     "title": "Info",
     "datasource": {
       "title": "Data Sources",
-      "description": "Below are the primary source data used and organized for this project (Google Sheets):",
+      "description": "Below are the primary source data used and organized for this project (Google Sheets), all Chinese and English data available online originates from this sheet:",
       "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
       "note": "Note: The data is community-maintained and converted; it may contain manual edits or conversion errors. If you find issues, please report them or suggest fixes in the original data sheet."
     },
@@ -21,6 +21,13 @@
       "description": "The project source code and related resources are hosted on GitHub:",
       "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
       "encourage": "If you find this project helpful, please consider giving it a star on GitHub ⭐️ — it really encourages the maintainer!"
+    },
+    "calculation": {
+      "title": "Probability Calculation",
+      "description": "This project uses the following probability calculation formula:",
+      "formula": "P(Specific Charm) = P(Rarity) × P(Template | Rarity) × P(Skill Combination | Template)",
+      "reference": "Reference:",
+      "referenceLink": "Gamersky - rongchingl Guide"
     }
   },
   "rarity": "Rarity",

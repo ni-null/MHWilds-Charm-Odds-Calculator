@@ -12,7 +12,7 @@
     "title": "信息",
     "datasource": {
       "title": "数据来源",
-      "description": "以下为本项目主要使用与整理的原始数据（Google Sheets）：",
+      "description": "以下为本项目主要使用与整理的原始数据（Google Sheets），网络上所有中英文资料都是出自这张表：",
       "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
       "note": "注意：数据由社区整理与转换，可能包含手动编辑或转换错误。若发现问题，欢迎回报或在原始数据表提出修正建议。"
     },
@@ -21,6 +21,13 @@
       "description": "本项目代码与相关资源已放在 GitHub：",
       "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
       "encourage": "如果你觉得这个项目有帮助，欢迎在 GitHub 上点个星 ⭐️，这会是很大的鼓励！"
+    },
+    "calculation": {
+      "title": "概率计算",
+      "description": "本项目使用以下概率计算公式：",
+      "formula": "P(特定护石) = P(稀有度) × P(模板 | 稀有度) × P(技能组合 | 模板)",
+      "reference": "参考资料：",
+      "referenceLink": "游民星空 - rongchingl 攻略"
     }
   },
   "rarity": "稀有度",

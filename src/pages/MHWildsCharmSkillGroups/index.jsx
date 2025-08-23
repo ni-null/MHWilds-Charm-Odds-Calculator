@@ -155,11 +155,11 @@ const SkillGroupsPage = () => {
                     <div className='space-y-1 overflow-y-auto max-h-48'>
                       {groupData.data.map((skill, index) => (
                         <div key={index} className='flex justify-between items-center py-1.5 px-2 bg-white bg-opacity-70 rounded text-xs'>
-                          <div className='flex items-center gap-2 flex-1 min-w-0'>
+                          <div className='flex items-center flex-1 min-w-0 gap-2'>
                             <img
                               src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skill.SkillName.replace(/\//g, "-"))}.png`}
                               alt={skill.SkillName}
-                              className='w-4 h-4 object-contain flex-shrink-0'
+                              className='flex-shrink-0 object-contain w-4 h-4'
                               onError={(e) => {
                                 try {
                                   if (!e || !e.currentTarget) return

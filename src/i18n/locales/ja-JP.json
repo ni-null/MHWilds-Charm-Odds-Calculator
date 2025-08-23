@@ -12,7 +12,7 @@
     "title": "情報",
     "datasource": {
       "title": "データソース",
-      "description": "以下は本プロジェクトで主に使用・整理した元データです（Google Sheets）：",
+      "description": "以下は本プロジェクトで主に使用・整理した元データです（Google Sheets），ネット上のすべての中英文データはこの表に由来します：",
       "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
       "note": "注意：データはコミュニティによる保守・変換で、人為的編集や変換ミスを含む可能性があります。問題を見つけたら報告や修正提案をお願いします。"
     },
@@ -21,6 +21,13 @@
       "description": "このプロジェクトのソースコードと関連リソースは GitHub にホストされています：",
       "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
       "encourage": "このプロジェクトが役に立ったら、ぜひ GitHub でスターをお願いします ⭐️ — メンテナの励みになります！"
+    },
+    "calculation": {
+      "title": "確率計算",
+      "description": "本プロジェクトでは以下の確率計算公式を使用しています：",
+      "formula": "P(特定の護石) = P(レアリティ) × P(テンプレート | レアリティ) × P(スキル組み合わせ | テンプレート)",
+      "reference": "参考資料：",
+      "referenceLink": "遊民星空 - rongchingl ガイド"
     }
   },
   "rarity": "レアリティ",

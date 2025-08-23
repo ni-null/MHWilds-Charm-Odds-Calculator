@@ -51,9 +51,7 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
               {/* 大螢幕顯示更多欄位 */}
               <div className='grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3'>
                 {groupData.data.map((skill, i) => (
-                  <button
-                    key={i}
-                    className='flex items-center gap-2 px-3 py-2 text-sm text-left bg-gray-100 rounded lg:text-base hover:bg-gray-200'>
+                  <button key={i} className='flex items-center gap-2 px-3 py-2 text-sm text-left bg-gray-100 rounded lg:text-base hover:bg-gray-200'>
                     <img
                       src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skill.SkillName.replace(/\//g, "-"))}.png`}
                       alt={skill.SkillName}
