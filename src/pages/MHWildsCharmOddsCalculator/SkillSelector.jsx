@@ -10,6 +10,15 @@ import { Button } from "@/components/ui/button"
 
 export default function SkillSelector() {
   const { t, i18n } = useTranslation()
+  // inline placeholder SVG used when skill icon fails to load
+  const SKILL_PLACEHOLDER_SVG =
+    'data:image/svg+xml;utf8,' +
+    encodeURIComponent(
+      "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>" +
+        "<rect fill='%23efefef' width='100%' height='100%'/>" +
+        "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23999'>?" +
+        "</text></svg>"
+    )
   // Per-slot search inputs are local to each Select to avoid parent re-renders
   // remounting the Input in the SelectContent and causing focus loss.
   const { selectedSkills, setSelectedSkills } = useMhwStore()
@@ -223,8 +232,34 @@ export default function SkillSelector() {
               // show fullwidth parentheses for zh and jaJP locales
               const useFullwidthParens = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
               const groupText = useFullwidthParens ? `（${groupInfo}）` : ` (${groupInfo})`
-              // show translated skill name for zh and jaJP, fall back to the raw skillKey otherwise
-              selectedDisplay = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}${groupText}` : `${selectedValue}${groupText}`
+
+              // Render a small icon (if available) plus the name
+              const imgSrc = `/image/skills/${encodeURIComponent(selName)}.png`
+              const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
+
+              selectedDisplay = (
+                <div className='flex items-center gap-2'>
+                      <img
+                        src={imgSrc}
+                        alt={selName}
+                        style={{ width: 20, height: 20, objectFit: "contain" }}
+                          onError={(e) => {
+                          try {
+                            if (!e || !e.currentTarget) return
+                            const el = e.currentTarget
+                            // avoid replacing if already placeholder
+                            if (el.src && el.src.indexOf('data:image/svg+xml') === -1) {
+                              el.src = SKILL_PLACEHOLDER_SVG
+                            }
+                          } catch {
+                            /* swallow */
+                          }
+                        }}
+                      />
+                  <span>{nameNode}</span>
+                  <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>{groupText}</span>
+                </div>
+              )
             }
 
             return (
@@ -316,9 +351,27 @@ export default function SkillSelector() {
                                     document.activeElement.blur()
                                   }
                                 }}>
-                                <div>
-                                  {displayName}
-                                  <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
+                                <div className='flex items-center gap-2'>
+                                  <img
+                                    src={`/image/skills/${encodeURIComponent(skillName)}.png`}
+                                    alt={skillName}
+                                    style={{ width: 20, height: 20, objectFit: "contain", marginRight: 8 }}
+                                    onError={(e) => {
+                                      try {
+                                        if (!e || !e.currentTarget) return
+                                        const el = e.currentTarget
+                                        if (el.src && el.src.indexOf('data:image/svg+xml') === -1) {
+                                          el.src = SKILL_PLACEHOLDER_SVG
+                                        }
+                                      } catch {
+                                        /* swallow */
+                                      }
+                                    }}
+                                  />
+                                  <div>
+                                    {displayName}
+                                    <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
+                                  </div>
                                 </div>
                               </button>
                             )
