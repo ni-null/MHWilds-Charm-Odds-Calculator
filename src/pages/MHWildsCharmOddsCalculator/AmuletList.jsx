@@ -62,7 +62,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
 
       {/* 總機率顯示 */}
       {matchingAmulets.length > 0 && (
-        <div className='p-3 bg-orange-100 border-2 border-orange-300 rounded'>
+        <div className='p-3 bg-orange-100 rounded'>
           <div className='text-xl font-bold text-orange-800'>
             {t("common.total")}
             {t("amulet.probability")}:{" "}
