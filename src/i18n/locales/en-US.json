@@ -131,7 +131,8 @@
     "charmsCount": "{{count}} charms",
     "header": {
       "totalCombos": "Total combos: {{count}}",
-      "baseProbability": "Base probability: {{pct}}"
+      "baseProbability": "Base probability: {{pct}}",
+      "slotCombinations": "Slot combinations"
     },
     "labels": {
       "skillGroups": "Skill Groups",

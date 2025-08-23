@@ -121,88 +121,106 @@ const CharmTypePage = () => {
 
             {/* 護石種類展示 */}
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-              {rarityEntries.map(({ rarity, charms, formattedTotalCombos, formattedProbPct }) => (
-                <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
-                  <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
-                    <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
-                    <p className='text-sm text-gray-600'>{t("charmTypes.charmsCount", { count: charms.length })}</p>
-                    <p className='text-sm text-gray-600'>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
-                    {formattedProbPct && <p className='text-sm text-gray-600'>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>}
-                  </div>
-                  <div className='p-4'>
-                    <div className='space-y-2'>
-                      {charms.map((charm, index) => {
-                        const comboCount = charm.combinationCount
-                        const formattedComboCount = (comboCount || 0).toLocaleString()
+              {rarityEntries.map((entry) => {
+                const { rarity, charms, formattedTotalCombos, formattedProbPct } = entry
+                // compute slot combinations that appear only in this rarity's charms
+                const raritySlotSet = new Set()
+                charms.forEach((ch) => {
+                  if (ch.PossibleSlotCombos && Array.isArray(ch.PossibleSlotCombos)) {
+                    ch.PossibleSlotCombos.forEach((combo) => {
+                      if (Array.isArray(combo)) raritySlotSet.add(combo.join("-"))
+                    })
+                  }
+                })
+                const raritySlotList = Array.from(raritySlotSet).sort()
+                return (
+                  <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
+                    <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
+                      <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
+                      <p className='text-sm text-gray-600'>{t("charmTypes.charmsCount", { count: charms.length })}</p>
+                      <p className='text-sm text-gray-600'>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
+                      {formattedProbPct && (
+                        <p className='text-sm text-gray-600'>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>
+                      )}
+                      {raritySlotList && raritySlotList.length > 0 && (
+                        <p className='mt-2 text-sm text-gray-600'>
+                          {t("charmTypes.header.slotCombinations") ? t("charmTypes.header.slotCombinations") + ": " : "Slot combinations: "}
+                          {raritySlotList.map((c) => `[${c.split("-").join(", ")}]`).join(" ")}
+                        </p>
+                      )}
+                    </div>
+                    <div className='p-4'>
+                      <div className='space-y-2'>
+                        {charms.map((charm, index) => {
+                          const comboCount = charm.combinationCount
+                          const formattedComboCount = (comboCount || 0).toLocaleString()
 
-                        return (
-                          <Dialog key={index}>
-                            <DialogTrigger asChild>
-                              <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
-                                <div className='mb-2 text-sm font-medium text-gray-800'>
-                                  {t("charmTypes.labels.skillGroups")}:{" "}
-                                  {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group]
-                                    .filter((g) => g !== null)
-                                    .map((g, idx) => {
-                                      const groupKey = typeof g === "number" ? `Group${g}` : `${g}`
-                                      const gd = (skillGroupsData.SkillGroups && skillGroupsData.SkillGroups[groupKey]) || {}
-                                      const bg = gd.color || "#6b7280"
-                                      return (
-                                        <span
-                                          key={`${groupKey}-${idx}`}
-                                          className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-1'
-                                          style={{ backgroundColor: bg, color: "#ffffff" }}>
-                                          {g}
-                                        </span>
-                                      )
-                                    })}
+                          return (
+                            <Dialog key={index}>
+                              <DialogTrigger asChild>
+                                <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
+                                  <div className='mb-2 text-sm font-medium text-gray-800'>
+                                    {t("charmTypes.labels.skillGroups")}:{" "}
+                                    {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group]
+                                      .filter((g) => g !== null)
+                                      .map((g, idx) => {
+                                        const groupKey = typeof g === "number" ? `Group${g}` : `${g}`
+                                        const gd = (skillGroupsData.SkillGroups && skillGroupsData.SkillGroups[groupKey]) || {}
+                                        const bg = gd.color || "#6b7280"
+                                        return (
+                                          <span
+                                            key={`${groupKey}-${idx}`}
+                                            className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-1'
+                                            style={{ backgroundColor: bg, color: "#ffffff" }}>
+                                            {g}
+                                          </span>
+                                        )
+                                      })}
+                                  </div>
+                                  {/* slot combinations moved to rarity header (shown once) */}
+                                  <div className='mt-2 text-sm text-gray-700'>
+                                    {t("charmTypes.labels.combinationCount")}: <span className='font-semibold'>{formattedComboCount}</span>
+                                  </div>
                                 </div>
-                                <div className='text-xs text-gray-600'>
-                                  {t("charmTypes.labels.slotCombinations")}:{" "}
-                                  {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
+                              </DialogTrigger>
+
+                              <DialogContent className='w-full max-w-4xl'>
+                                <DialogHeader>
+                                  <DialogTitle>
+                                    {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
+                                      ? t("charmTypes.dialog.title")
+                                      : getSkillTranslation("Select skills")}
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
+                                      ? t("charmTypes.dialog.description")
+                                      : getSkillTranslation("Choose one skill per group for this charm")}
+                                  </DialogDescription>
+                                </DialogHeader>
+
+                                <div className='space-y-4'>
+                                  <CharmSkillsDialogContent
+                                    charm={charm}
+                                    getSkillTranslation={getSkillTranslation}
+                                    getGroupTranslation={getGroupTranslation}
+                                    t={t}
+                                  />
                                 </div>
-                                <div className='mt-2 text-sm text-gray-700'>
-                                  {t("charmTypes.labels.combinationCount")}: <span className='font-semibold'>{formattedComboCount}</span>
-                                </div>
-                              </div>
-                            </DialogTrigger>
 
-                            <DialogContent className='w-full max-w-4xl'>
-                              <DialogHeader>
-                                <DialogTitle>
-                                  {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
-                                    ? t("charmTypes.dialog.title")
-                                    : getSkillTranslation("Select skills")}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
-                                    ? t("charmTypes.dialog.description")
-                                    : getSkillTranslation("Choose one skill per group for this charm")}
-                                </DialogDescription>
-                              </DialogHeader>
-
-                              <div className='space-y-4'>
-                                <CharmSkillsDialogContent
-                                  charm={charm}
-                                  getSkillTranslation={getSkillTranslation}
-                                  getGroupTranslation={getGroupTranslation}
-                                  t={t}
-                                />
-                              </div>
-
-                              <DialogFooter>
-                                <DialogClose asChild>
-                                  <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
-                                </DialogClose>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        )
-                      })}
+                                <DialogFooter>
+                                  <DialogClose asChild>
+                                    <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
+                                  </DialogClose>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </main>

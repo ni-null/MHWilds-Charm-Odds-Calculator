@@ -152,14 +152,14 @@ const SkillGroupsPage = () => {
 
                   {/* 技能預覽 */}
                   <div className='p-3'>
-                    <div className='space-y-1 overflow-y-auto max-h-48'>
+                    <div className='space-y-1 overflow-y-auto max-h-48 lg:max-h-80'>
                       {groupData.data.map((skill, index) => (
-                        <div key={index} className='flex justify-between items-center py-1.5 px-2 bg-white bg-opacity-70 rounded text-xs'>
-                          <div className='flex items-center flex-1 min-w-0 gap-2'>
+                        <div key={index} className='flex items-center justify-between px-3 py-2 text-sm bg-white rounded bg-opacity-70'>
+                          <div className='flex items-center flex-1 min-w-0 gap-3'>
                             <img
                               src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skill.SkillName.replace(/\//g, "-"))}.png`}
                               alt={skill.SkillName}
-                              className='flex-shrink-0 object-contain w-4 h-4'
+                              className='flex-shrink-0 object-contain w-8 h-8'
                               onError={(e) => {
                                 try {
                                   if (!e || !e.currentTarget) return
@@ -173,10 +173,10 @@ const SkillGroupsPage = () => {
                                 }
                               }}
                             />
-                            <span className='font-medium text-gray-800 truncate'>{getSkillTranslation(skill.SkillName)}</span>
+                            <span className='text-base font-bold text-gray-800 truncate md:text-lg'>{getSkillTranslation(skill.SkillName)}</span>
                           </div>
                           <span
-                            className='text-xs font-bold px-2 py-0.5 rounded-full text-white flex-shrink-0 ml-2'
+                            className='text-sm font-bold px-2 py-0.5 rounded-full text-white flex-shrink-0 ml-2'
                             style={{ backgroundColor: groupData.color }}>
                             Lv.{skill.SkillLevel}
                           </span>
