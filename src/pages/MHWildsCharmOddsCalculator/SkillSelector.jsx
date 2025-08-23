@@ -242,7 +242,7 @@ export default function SkillSelector() {
                   <img
                     src={imgSrc}
                     alt={selName}
-                    style={{ width: 28, height: 28, objectFit: "contain" }}
+                    className='w-5 h-5 md:w-7 md:h-7 object-contain'
                     onError={(e) => {
                       try {
                         if (!e || !e.currentTarget) return
@@ -279,7 +279,7 @@ export default function SkillSelector() {
                       // clear local search when selection changes
                       setLocalSearch("")
                     }}>
-                    <SelectTrigger className='w-full px-4 text-lg h-14'>
+                    <SelectTrigger className='w-full h-10 px-3 text-base md:h-14 md:px-4 md:text-lg'>
                       <SelectValue placeholder={t("skillSelector.selectSkill")}>{selectedDisplay || undefined}</SelectValue>
                     </SelectTrigger>
                     <SelectContent side='bottom' position='popper'>
@@ -355,7 +355,7 @@ export default function SkillSelector() {
                                   <img
                                     src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, "-"))}.png`}
                                     alt={skillName}
-                                    style={{ width: 24, height: 24, objectFit: "contain", marginRight: 8 }}
+                                    className='w-5 h-5 md:w-6 md:h-6 object-contain mr-2'
                                     onError={(e) => {
                                       try {
                                         if (!e || !e.currentTarget) return
@@ -384,7 +384,7 @@ export default function SkillSelector() {
                   <button
                     type='button'
                     aria-label={t("skillSelector.clearSelection", "Clear selection")}
-                    className='px-4 py-3 text-lg rounded h-14 bg-gray-50 hover:bg-gray-100'
+                    className='h-10 px-3 py-2 text-base rounded md:h-14 md:px-4 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
                     onMouseDown={(e) => e.preventDefault()} /* prevent focus loss */
                     onClick={(e) => {
                       e.stopPropagation()
