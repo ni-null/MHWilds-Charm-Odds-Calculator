@@ -125,18 +125,35 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                 <li
                   key={`${amulet.Rarity}-${amulet.Name}-${index}`}
                   className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
-                  <div className='flex flex-col min-w-[140px] mb-2 md:mb-0 md:mr-4'>
-                    <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
-                    <div className='text-xs font-medium '>
-                      {t("amulet.probability")}: {probabilityDisplay}
-                      {t("probability.percentage")}
+                  <div className='flex items-center  min-w-[140px] mb-2 md:mb-0 md:mr-4'>
+                    <img
+                      src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(amulet.Rarity)}.png`}
+                      alt={amulet.Rarity}
+                      style={{ width: 40, height: 40, objectFit: "contain" }}
+                      className='mr-2 rounded'
+                      onError={(e) => {
+                        try {
+                          if (!e || !e.currentTarget) return
+                          const el = e.currentTarget
+                          el.style.display = "none"
+                        } catch {
+                          /* swallow */
+                        }
+                      }}
+                    />
+                    <div className='flex flex-col'>
+                      <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
+                      <div className='flex items-center text-xs font-medium'>
+                        {t("amulet.probability")}: {probabilityDisplay}
+                        {t("probability.percentage")}
+                      </div>
+                      {probability > 0 && (
+                        // probability 是百分比 (p%), 換算成小數機率為 p/100，倒數為 1/(p/100) = 100/p
+                        <span className='ml-2 text-xs font-normal'>
+                          ({t("probability.approximately")} 1/{Math.round(100 / probability).toLocaleString()})
+                        </span>
+                      )}
                     </div>
-                    {probability > 0 && (
-                      // probability 是百分比 (p%), 換算成小數機率為 p/100，倒數為 1/(p/100) = 100/p
-                      <span className='ml-2 text-xs font-normal'>
-                        ({t("probability.approximately")} 1/{Math.round(100 / probability).toLocaleString()})
-                      </span>
-                    )}
                   </div>
                   <div className='flex-1'>
                     <div className='mb-1 text-base'>

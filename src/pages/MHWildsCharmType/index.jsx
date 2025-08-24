@@ -136,7 +136,28 @@ const CharmTypePage = () => {
                 return (
                   <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
                     <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
-                      <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
+                      <div className='flex justify-center mb-5'>
+                        <div className='flex items-center'>
+                          <img
+                            src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(rarity)}.png`}
+                            alt={rarity}
+                            style={{ width: 40, height: 40, objectFit: "contain" }}
+                            className='mr-2 rounded'
+                            onError={(e) => {
+                              try {
+                                if (!e || !e.currentTarget) return
+                                const el = e.currentTarget
+                                el.style.display = "none"
+                              } catch {
+                                /* swallow */
+                              }
+                            }}
+                          />
+
+                          <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
+                        </div>
+                      </div>
+
                       <p className='text-gray-600 '>{t("charmTypes.charmsCount", { count: charms.length })}</p>
                       <p className='text-gray-600 '>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
                       {formattedProbPct && <p className='text-gray-600 '>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>}
