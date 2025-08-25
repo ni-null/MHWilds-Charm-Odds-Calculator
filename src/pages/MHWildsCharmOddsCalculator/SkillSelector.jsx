@@ -28,8 +28,13 @@ export default function SkillSelector() {
   const slotOptions = React.useMemo(() => {
     const setKeys = new Set()
     Object.values(rarityBaseProbability).forEach((r) => {
-      const slotObj = r && r.slot ? r.slot : {}
-      Object.keys(slotObj).forEach((k) => setKeys.add(k))
+      const groups = (r && r.Group) || []
+      if (groups.length) {
+        groups.forEach((g) => {
+          const slotObj = (g && g.slot) || {}
+          Object.keys(slotObj).forEach((k) => setKeys.add(k))
+        })
+      }
     })
     // custom sort:
     // - parse each key as JSON array when possible (e.g. "[1, 1]")
@@ -141,11 +146,9 @@ export default function SkillSelector() {
     const arr = []
     Object.entries(rarityBaseProbability).forEach(([rarity, data]) => {
       const groups = data.Group || []
-      const slots = data.slot || {}
-      // Each group entry corresponds to a possible amulet combination; use groups.skills for skill groups
+      // Each group entry corresponds to a possible amulet combination; slot keys may be defined per-group
       groups.forEach((gObj) => {
-        // Find slot keys for this rarity - the original code treats each Group entry as an amulet
-        // We'll iterate slot keys for that rarity and pair them with groups entries to form virtual amulets.
+        const slots = (gObj && gObj.slot) || {}
         Object.keys(slots).forEach((slotKey) => {
           const skills = gObj.skills || []
           arr.push({
@@ -206,8 +209,27 @@ export default function SkillSelector() {
   const getAvailableSkills = useCallback(
     (slotIndex) => {
       if (slotIndex === 0) {
-        // 第一個 select：列出所有技能（過濾重複）
-        return getAllUniqueSkills
+        // 第一個 select：若未選擇插槽則列出所有技能（過濾重複）
+        // 如果有選擇插槽，僅顯示該插槽對應的護石組合中出現的技能
+        if (!selectedSlot) {
+          return getAllUniqueSkills
+        }
+
+        const possible = new Set()
+        const matchingAmulets = virtualAmulets.filter((a) => normalizeSlotKey(selectedSlot) === a.slotKeyNormalized)
+        matchingAmulets.forEach((amulet) => {
+          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+          amuletGroups.forEach((groupNumber) => {
+            const groupKey = `Group${groupNumber}`
+            if (SkillGroupsData.SkillGroups[groupKey]) {
+              SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+                possible.add(`${skill.SkillName} Lv.${skill.SkillLevel}`)
+              })
+            }
+          })
+        })
+
+        return Array.from(possible).sort()
       }
 
       if (slotIndex === 1) {
@@ -357,7 +379,7 @@ export default function SkillSelector() {
   }, [getAvailableSkills, setSelectedSkills, selected0, selected1, selectedSkills])
 
   return (
-    <section className='w-full p-10 mb-8 bg-white rounded-xl'>
+    <section className='w-full p-5 mb-8 bg-white md:p-10 rounded-xl'>
       <h2 className='mb-4 text-xl font-semibold'>
         {t("skillSelector.title")} {t("skillSelector.maxSkills")}
       </h2>
@@ -562,69 +584,19 @@ export default function SkillSelector() {
       <div className='mt-2 mb-6'>
         <label className='block mb-2 text-sm font-medium'>{t("skillSelector.slotFilter")}</label>
         <div className='flex items-center gap-2'>
-          {/* Use sentinel '__any__' because Radix SelectItem requires non-empty value */}
           {(() => {
-            const selectValueProp = selectedSlot && selectedSlot !== "" ? selectedSlot : "__any__"
+            const selectValueProp = selectedSlot ?? ""
             return (
               <Select
                 value={selectValueProp}
                 onValueChange={(value) => {
-                  const v = value === "__any__" ? "" : value
-                  setSelectedSlot(v)
+                  setSelectedSlot(value)
                 }}>
                 <SelectTrigger className='w-56 h-10 px-3 text-base md:w-72 md:h-14 md:px-4 md:text-lg'>
-                  {selectedSlot ? (
-                    (() => {
-                      let slotImgSrcs = []
-                      let slotAlt = selectedSlot
-                      try {
-                        const arr = JSON.parse(selectedSlot)
-                        if (Array.isArray(arr)) {
-                          arr.forEach((v) => {
-                            if (typeof v === "string" && v.startsWith("W")) {
-                              slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
-                            } else if (typeof v === "number") {
-                              const idx = Math.min(Math.max(1, v), 3)
-                              slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${idx}.png`)
-                            }
-                          })
-                        }
-                      } catch {
-                        if (typeof selectedSlot === "string" && selectedSlot.indexOf("W") !== -1) {
-                          slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
-                        } else if (!isNaN(Number(selectedSlot))) {
-                          const idx = Math.min(Math.max(1, Number(selectedSlot)), 3)
-                          slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${idx}.png`)
-                        }
-                      }
-
-                      return (
-                        <div className='flex items-center justify-start w-full gap-2'>
-                          {slotImgSrcs.length ? (
-                            slotImgSrcs.map((s, idx) => (
-                              <img
-                                key={s + idx}
-                                src={s}
-                                alt={slotAlt}
-                                className='object-contain w-7 h-7 md:w-9 md:h-9'
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none"
-                                }}
-                              />
-                            ))
-                          ) : (
-                            <span>{selectedSlot}</span>
-                          )}
-                        </div>
-                      )
-                    })()
-                  ) : (
-                    /* show placeholder when no slot is selected */
-                    <SelectValue placeholder={t("skillSelector.slotAny")} />
-                  )}
+                  {/* keep SelectValue only; selected SelectItem content (including images) will be shown by Radix */}
+                  <SelectValue placeholder={t("skillSelector.slotAny")} />
                 </SelectTrigger>
                 <SelectContent side='bottom' position='popper'>
-                  <SelectItem value='__any__'>{t("skillSelector.slotAny")}</SelectItem>
                   {filteredSlotOptions.map((k) => {
                     // determine display text and image(s) for each slot option
                     let display = k
@@ -654,21 +626,21 @@ export default function SkillSelector() {
                     return (
                       <SelectItem key={k} value={k}>
                         <div className='flex items-center gap-2'>
-                          {slotImgSrcs.length ? (
+                          {slotImgSrcs.length > 0 && (
                             <div className='flex items-center gap-1'>
-                              {slotImgSrcs.map((s, idx) => (
+                              {slotImgSrcs.map((src) => (
                                 <img
-                                  key={s + idx}
-                                  src={s}
-                                  alt={k}
-                                  className='object-contain w-6 h-6 md:w-8 md:h-8'
+                                  key={src}
+                                  src={src}
+                                  alt=''
+                                  className='object-contain w-6 h-6 xl:w-8 xl:h-8 '
                                   onError={(e) => {
                                     e.currentTarget.style.display = "none"
                                   }}
                                 />
                               ))}
                             </div>
-                          ) : null}
+                          )}
                           <span>{display}</span>
                         </div>
                       </SelectItem>
@@ -697,6 +669,7 @@ export default function SkillSelector() {
           size='sm'
           onClick={() => {
             setSelectedSkills(["", "", ""])
+            setSelectedSlot("")
             // local searches are per-slot; resetting selectedSkills will remount slots
             // which clears their internal localSearch state.
           }}>

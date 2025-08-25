@@ -18,8 +18,8 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
   const defaultTab = groups.length > 0 ? groups[0] : "none"
 
   return (
-    // 在桌面放寬內容限制：lg 顯示更大高度，並保留小螢幕捲動
-    <div className='max-h-[60vh] lg:max-h-[80vh] overflow-y-auto text-base lg:text-lg'>
+    // 只讓技能列表 grid 顯示捲軸；外層不再全區滾動
+    <div className='text-base lg:text-lg'>
       {groups.length === 0 && <div className='text-sm text-gray-600'>{t("charmTypes.dialog.noSkillGroups")}</div>}
 
       <Tabs defaultValue={defaultTab}>
@@ -31,8 +31,8 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
                 <TabsTrigger
                   key={groupKey}
                   value={groupKey}
-                  className='flex-shrink-0 text-base lg:text-lg rounded px-3 py-1'
-                  style={{ backgroundColor: g.color || undefined, color: "#ffffff" }}>
+                  className='flex-shrink-0 px-3 py-1 text-base font-bold rounded lg:text-lg'
+                  style={{ backgroundColor: g.bgColor || undefined, color: g.color }}>
                   {getGroupTranslation(groupKey)}
                 </TabsTrigger>
               )
@@ -52,19 +52,19 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
           return (
             <TabsContent key={groupKey} value={groupKey} className='p-2 border rounded'>
               <div
-                className='flex items-center justify-between mb-2 text-base font-medium px-2 py-1 rounded'
-                style={{ backgroundColor: groupData.color, color: "#ffffff" }}>
+                className='flex items-center justify-between px-2 py-1 mb-2 text-base font-bold rounded'
+                style={{ backgroundColor: groupData.bgColor, color: groupData.color }}>
                 <span className='truncate'>{getGroupTranslation(groupKey)}</span>
                 <span className='text-xs text-white/90'> {groupData.data.length} </span>
               </div>
-              {/* 大螢幕顯示更多欄位 */}
-              <div className='grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3'>
+              {/* 大螢幕顯示更多欄位；此區域限制高度並啟用捲軸 */}
+              <div className='grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3 max-h-[40vh] lg:max-h-[60vh] overflow-y-auto'>
                 {groupData.data.map((skill, i) => (
                   <button key={i} className='flex items-center gap-2 px-3 py-2 text-sm text-left bg-gray-100 rounded lg:text-base hover:bg-gray-200'>
                     <img
                       src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skill.SkillName.replace(/\//g, "-"))}.png`}
                       alt={skill.SkillName}
-                      className='w-5 h-5 lg:w-6 lg:h-6 object-contain flex-shrink-0'
+                      className='flex-shrink-0 object-contain w-5 h-5 lg:w-6 lg:h-6'
                       onError={(e) => {
                         try {
                           if (!e || !e.currentTarget) return
@@ -79,7 +79,7 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
                       }}
                     />
                     <div className='flex-1 min-w-0'>
-                      <span className='inline-block align-middle truncate'>{getSkillTranslation(skill.SkillName)}</span>
+                      <span className='inline-block truncate align-middle'>{getSkillTranslation(skill.SkillName)}</span>
                       <span className='ml-1 text-[10px] text-gray-500'>Lv.{skill.SkillLevel}</span>
                     </div>
                   </button>

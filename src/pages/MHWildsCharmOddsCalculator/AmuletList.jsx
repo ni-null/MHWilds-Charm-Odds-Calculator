@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import SkillGroupsData from "../../data/SkillGroups.json"
+import RarityData from "../../data/Rarity.json"
 import useMhwStore from "../../store/mhwStore"
 
 export default function AmuletList({ matchingAmulets, amuletProbabilities, rarityBaseProbability, getGroupSkillCountForRarity }) {
@@ -8,12 +9,19 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
   const { t, i18n } = useTranslation()
   const { selectedSkills, selectedSlot } = useMhwStore()
 
+  const hasSelection = (selectedSkills || []).filter(Boolean).length > 0
+
   // locally filter by selectedSlot to avoid mismatch if parent forgot to filter
   const visibleAmulets = React.useMemo(() => {
     if (!selectedSlot) return matchingAmulets
     return matchingAmulets.filter((amulet) => {
-      const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
-      return Object.prototype.hasOwnProperty.call(slotObj, selectedSlot)
+      const rarityData = rarityBaseProbability[amulet.Rarity] || {}
+      const groups = rarityData.Group || []
+      // return true if any group within this rarity defines the selectedSlot
+      return groups.some((g) => {
+        const gSlotObj = (g && g.slot) || {}
+        return Object.prototype.hasOwnProperty.call(gSlotObj, selectedSlot)
+      })
     })
   }, [matchingAmulets, selectedSlot, rarityBaseProbability])
 
@@ -70,8 +78,11 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
     totalWithSlot += withSlotProb
   })
 
+  // If no skills selected, don't show the amulet list section
+  if (!hasSelection) return null
+
   return (
-    <section className='w-full p-10 bg-white shadow-lg rounded-xl'>
+    <section className='w-full p-5 bg-white shadow-lg md:p-10 rounded-xl'>
       <h2 className='mb-4 text-2xl font-semibold'>
         {t("amulet.matching")} ({matchingAmulets.length} {t("common.count")})
       </h2>
@@ -103,8 +114,23 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                 // 試圖從任一 visibleAmulet 找到 slot 百分比（同一稀有度下 slot 百分比相同）
                 const sample = visibleAmulets[0]
                 if (!sample) return null
-                const slotObj = (rarityBaseProbability[sample.Rarity] && rarityBaseProbability[sample.Rarity].slot) || {}
-                const slotVal = slotObj[selectedSlot]
+                const rarityData = rarityBaseProbability[sample.Rarity] || {}
+                // find sample probability display to compute approx 1/N for withSlot
+                const sampleOriginalIndex = matchingAmulets.indexOf(sample)
+                const sampleProbEntry = amuletProbabilities[sampleOriginalIndex]
+                const sampleProbabilityDisplay = sampleProbEntry || parseFloat(amuletProbabilities[sampleOriginalIndex]) || 0
+                const groups = rarityData.Group || []
+                // weighted average of group-level slot probabilities using combinationCount
+                let weightSum = 0
+                let weightedSlotSum = 0
+                groups.forEach((g) => {
+                  const comb = g.combinationCount || 1
+                  const gSlotObj = (g && g.slot) || {}
+                  const prob = Object.prototype.hasOwnProperty.call(gSlotObj, selectedSlot) ? gSlotObj[selectedSlot] : 0
+                  weightSum += comb
+                  weightedSlotSum += comb * prob
+                })
+                const slotVal = weightSum > 0 ? weightedSlotSum / weightSum : undefined
                 if (typeof slotVal === "undefined") return null
                 // 格式化含插槽總機率
                 let formattedWithSlot
@@ -114,13 +140,26 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                 else formattedWithSlot = totalWithSlot.toFixed(12).replace(/\.?0+$/, "")
 
                 return (
-                  <div className='mt-1 text-sm text-gray-700'>
+                  <div className='mt-1 text-lg text-gray-700'>
                     <div>
                       {t("amulet.specificSlotProb", { defaultValue: "Specific slot probability" })}: {formattedWithSlot}
                       {t("probability.percentage")}
-                    </div>
-                    <div className='text-gray-500'>
-                      ({t("skillSelector.slotFilter")} {(slotVal * 100).toFixed(2)}%)
+                      {(() => {
+                        // 顯示近似 1/N（使用 withSlot 原始百分比）
+                        const rawWithSlotPct =
+                          typeof sampleProbabilityDisplay === "object"
+                            ? sampleProbabilityDisplay.withSlot && sampleProbabilityDisplay.withSlot.rawPercent
+                            : parseFloat(sampleProbabilityDisplay) || 0
+                        if (rawWithSlotPct && rawWithSlotPct > 0) {
+                          const approx = Math.round(100 / rawWithSlotPct)
+                          return (
+                            <span className='ml-2 text-lg font-normal'>
+                              ({t("probability.approximately")} 1/{approx.toLocaleString()})
+                            </span>
+                          )
+                        }
+                        return null
+                      })()}
                     </div>
                   </div>
                 )
@@ -191,7 +230,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                       {/* When slot filter is active, show detailed slot probability (with slot applied) */}
                       {selectedSlot &&
                         (() => {
-                          const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+                          const slotObj = amulet.slotObj || {}
                           const slotProb = slotObj[selectedSlot]
                           if (typeof slotProb !== "undefined") {
                             const slotPct = slotProb * 100
@@ -208,6 +247,12 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                                 <div className='text-gray-500'>
                                   ({t("skillSelector.slotFilter")} {slotPct.toFixed(2)}%)
                                 </div>
+                                {/*   當等級不為 RARE[8]  顯示 rare8Note 提醒*/}
+                                {amulet.Rarity !== "RARE[8]" && (
+                                  <div className='text-xs text-gray-500'>
+                                    {t("slotProbability.rare8Note", { defaultValue: "Note: This amulet is not RARE[8]." })}
+                                  </div>
+                                )}
                               </div>
                             )
                           }
@@ -309,8 +354,51 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                       <span className='font-medium'>{t("amulet.slotCombinations")}:</span>
                       <span className='ml-2'>
                         {(() => {
-                          const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
-                          const slotKeys = Object.keys(slotObj)
+                          // 嘗試根據顯示美化 selectedSlot
+                          // selectedSlot 會用來比對 key 是否為選擇項目
+
+                          // 讀取來自 src/data/Rarity.json 的所有組合插槽（稀有度聯集）
+                          const rarityEntry = RarityData[amulet.Rarity] || {}
+                          const groups = rarityEntry.Group || []
+
+                          // 嘗試只取與當前 amulet 技能群組相符的 Group 的 slot keys
+                          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group]
+                            .filter((g) => g !== null && g !== undefined)
+                            .map(Number)
+                          // sorted string for easy comparison
+                          const amuletGroupsSorted = amuletGroups
+                            .slice()
+                            .sort((a, b) => a - b)
+                            .join(",")
+
+                          const slotKeySet = new Set()
+                          groups.forEach((g) => {
+                            const gSkills = (g && g.skills) || []
+                            const gSkillsSorted = gSkills
+                              .slice()
+                              .sort((a, b) => a - b)
+                              .join(",")
+                            if (gSkillsSorted === amuletGroupsSorted) {
+                              const gSlotObj = (g && g.slot) || {}
+                              Object.keys(gSlotObj).forEach((k) => slotKeySet.add(k))
+                            }
+                          })
+
+                          // 若沒有任何匹配（保守回退），則使用稀有度下所有 group's 聯集
+                          if (slotKeySet.size === 0) {
+                            groups.forEach((g) => {
+                              const gSlotObj = (g && g.slot) || {}
+                              Object.keys(gSlotObj).forEach((k) => slotKeySet.add(k))
+                            })
+                          }
+
+                          const slotKeys = Array.from(slotKeySet)
+
+                          // 始終顯示所有組合，若其中一個等於 selectedSlot 就加強樣式
+                          if (slotKeys.length === 0) {
+                            return <span className='ml-2 text-sm text-gray-500'>{t("common.none")}</span>
+                          }
+
                           return slotKeys.map((key, idx) => {
                             let display = key
                             try {
@@ -319,8 +407,12 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                             } catch {
                               // fallback to raw key
                             }
+
+                            const isSelected = selectedSlot && selectedSlot === key
+                            const className = `mr-2 text-sm ${isSelected ? "text-blue-600 font-bold" : ""}`
+
                             return (
-                              <span key={idx} className='mr-2 text-sm'>
+                              <span key={idx} className={className}>
                                 {display}
                               </span>
                             )
@@ -550,7 +642,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                             <div className='text-base'>
                               {t("amulet.slotCombinations")}:{" "}
                               {(() => {
-                                const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+                                const slotObj = amulet.slotObj || {}
                                 return Object.keys(slotObj).map((key, idx) => {
                                   let display = key
                                   try {

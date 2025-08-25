@@ -58,6 +58,7 @@ export default function MHWPage() {
           Skill2Group: skills[1] || null,
           Skill3Group: skills[2] || null,
           combinationCount: gObj.combinationCount || 0,
+          slotObj: (gObj && gObj.slot) || {},
         }
         virtualAmulets.push(amu)
       })
@@ -66,7 +67,7 @@ export default function MHWPage() {
     return virtualAmulets.filter((amulet) => {
       // if a slot filter is selected, only include amulets whose rarity supports that slot
       if (selectedSlot) {
-        const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+        const slotObj = amulet.slotObj || {}
         if (!Object.prototype.hasOwnProperty.call(slotObj, selectedSlot)) return false
       }
 
@@ -115,7 +116,7 @@ export default function MHWPage() {
     (amulet, includeSlot = true) => {
       const baseProb = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].probability) || 0.01
       // if a slot is selected, factor in the slot probability for this rarity
-      const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+      const slotObj = amulet.slotObj || {}
       const slotProb = includeSlot && selectedSlot && Object.prototype.hasOwnProperty.call(slotObj, selectedSlot) ? slotObj[selectedSlot] : 1
       const selectedSkillsFiltered = selectedSkills.filter(Boolean)
 
@@ -190,6 +191,13 @@ export default function MHWPage() {
     [rarityBaseProbability, getGroupSkillCountForRarity, selectedSkills, skillToGroupMap, selectedSlot]
   )
 
+  // 計算分數：將機率轉為易於比較的分數表示
+  // 簡單做法：score = Math.round(probability * 100000)（可根據需求調整刻度）
+  const calculateScore = (probability) => {
+    if (!probability || typeof probability !== "number" || probability <= 0) return 0
+    return Math.round(probability * 100000)
+  }
+
   // 計算匹配護石的機率分布，同時回傳「不含插槽」與「含插槽」兩種表示
   const amuletProbabilities = useMemo(() => {
     if (matchingAmulets.length === 0) return {}
@@ -245,8 +253,19 @@ export default function MHWPage() {
                 {/* 顯示所有稀有度累計後的總機率 */}
                 {(() => {
                   const totalFinalProbability = Object.entries(rarityBaseProbability).reduce((sum, [, data]) => {
-                    const slotObj = (data && data.slot) || {}
-                    const slotProb = Object.prototype.hasOwnProperty.call(slotObj, selectedSlot) ? slotObj[selectedSlot] : 0
+                    const groups = (data && data.Group) || []
+                    if (!groups.length) return sum
+                    // weighted average of group-level slot probabilities using combinationCount as weight
+                    let weightSum = 0
+                    let weightedSlotSum = 0
+                    groups.forEach((g) => {
+                      const comb = g.combinationCount || 1
+                      const gSlotObj = (g && g.slot) || {}
+                      const prob = Object.prototype.hasOwnProperty.call(gSlotObj, selectedSlot) ? gSlotObj[selectedSlot] : 0
+                      weightSum += comb
+                      weightedSlotSum += comb * prob
+                    })
+                    const slotProb = weightSum > 0 ? weightedSlotSum / weightSum : 0
                     if (!slotProb) return sum
                     const baseProb = data.probability || 0
                     return sum + baseProb * slotProb
@@ -260,22 +279,34 @@ export default function MHWPage() {
                   }
 
                   return (
-                    <div className='flex items-center justify-between mb-4'>
-                      <div className='text-sm text-gray-600'>{t("slotProbability.totalLabel", "全部稀有度總機率")}:</div>
-                      <div className='text-2xl font-bold text-indigo-600'>
-                        {(totalFinalProbability * 100).toFixed(4)}%<span className='ml-3 text-sm text-gray-500'>({fracStr})</span>
+                    <div className='flex flex-col mb-4'>
+                      <div className='flex'>
+                        <div className='mr-3 text-2xl text-gray-600'>{t("slotProbability.totalLabel", "全部稀有度總機率")}:</div>
+                        <div className='text-2xl font-bold text-indigo-600'>
+                          {(totalFinalProbability * 100).toFixed(4)}%<span className='ml-3 text-sm text-gray-500'>({fracStr})</span>
+                        </div>
                       </div>
+                      <span className='mt-2'>{t("slotProbability.rare8Note", "Only RARE[8] has precise slot probabilities")}</span>
                     </div>
                   )
                 })()}
 
                 <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
                   {Object.entries(rarityBaseProbability).map(([rarity, data]) => {
-                    const slotObj = (data && data.slot) || {}
-                    const hasSlot = Object.prototype.hasOwnProperty.call(slotObj, selectedSlot)
-                    const slotProbability = hasSlot ? slotObj[selectedSlot] : 0
+                    const groups = (data && data.Group) || []
+                    if (!groups.length) return null
 
-                    if (!hasSlot) return null
+                    let weightSum = 0
+                    let weightedSlotSum = 0
+                    groups.forEach((g) => {
+                      const comb = g.combinationCount || 1
+                      const gSlotObj = (g && g.slot) || {}
+                      const prob = Object.prototype.hasOwnProperty.call(gSlotObj, selectedSlot) ? gSlotObj[selectedSlot] : 0
+                      weightSum += comb
+                      weightedSlotSum += comb * prob
+                    })
+                    const slotProbability = weightSum > 0 ? weightedSlotSum / weightSum : 0
+                    if (!slotProbability) return null
 
                     // 計算最終機率 = 稀有度基礎機率 × 插槽機率
                     const baseProbability = data.probability || 0

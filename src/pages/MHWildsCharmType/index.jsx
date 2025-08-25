@@ -9,6 +9,7 @@ import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
 import skillGroupsData from "../../data/SkillGroups.json"
 import rarityProbabilities from "../../data/Rarity.json"
 import { Button } from "@/components/ui/button"
+import * as Tooltip from "@radix-ui/react-tooltip"
 const CharmTypePage = () => {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
@@ -44,27 +45,54 @@ const CharmTypePage = () => {
 
     Object.entries(rarityProbabilities).forEach(([rarity, data]) => {
       const groups = data.Group || []
-      rarityGroups[rarity] = groups.map((g) => ({
-        Rarity: rarity,
-        Skill1Group: g.skills && g.skills[0] ? g.skills[0] : null,
-        Skill2Group: g.skills && g.skills[1] ? g.skills[1] : null,
-        Skill3Group: g.skills && g.skills[2] ? g.skills[2] : null,
-        combinationCount: g.combinationCount || 0,
-      }))
-
-      const raritySlotObj = (rarityProbabilities && rarityProbabilities[rarity] && rarityProbabilities[rarity].slot) || null
-      if (raritySlotObj) {
-        const raritySlotSet = new Set()
-        Object.keys(raritySlotObj).forEach((k) => {
+      rarityGroups[rarity] = groups.map((g) => {
+        // build slot combinations for this group (per-charm)
+        const slotSet = new Set()
+        const gSlotObj = (g && g.slot) || {}
+        Object.keys(gSlotObj).forEach((k) => {
           try {
             const arr = JSON.parse(k)
-            const key = Array.isArray(arr) ? arr.join("-") : k
-            slotCombinations.add(key)
-            raritySlotSet.add(key)
+            const key = Array.isArray(arr) ? arr.join("-") : String(arr)
+            slotSet.add(key)
           } catch {
-            slotCombinations.add(k)
-            raritySlotSet.add(k)
+            slotSet.add(k)
           }
+        })
+
+        const slotCombinations = Array.from(slotSet)
+          .sort()
+          .map((k) => {
+            const parts = String(k).split("-")
+            return `[${parts.join(", ")}]`
+          })
+
+        return {
+          Rarity: rarity,
+          Skill1Group: g.skills && g.skills[0] ? g.skills[0] : null,
+          Skill2Group: g.skills && g.skills[1] ? g.skills[1] : null,
+          Skill3Group: g.skills && g.skills[2] ? g.skills[2] : null,
+          combinationCount: g.combinationCount || 0,
+          slotCombinations,
+        }
+      })
+
+      // collect slot combinations from group-level slot definitions
+      const rarityGroupsArr = data.Group || []
+      if (rarityGroupsArr.length) {
+        const raritySlotSet = new Set()
+        rarityGroupsArr.forEach((g) => {
+          const gSlotObj = (g && g.slot) || {}
+          Object.keys(gSlotObj).forEach((k) => {
+            try {
+              const arr = JSON.parse(k)
+              const key = Array.isArray(arr) ? arr.join("-") : k
+              slotCombinations.add(key)
+              raritySlotSet.add(key)
+            } catch {
+              slotCombinations.add(k)
+              raritySlotSet.add(k)
+            }
+          })
         })
         raritySlotMap[rarity] = Array.from(raritySlotSet).sort()
       }
@@ -141,7 +169,49 @@ const CharmTypePage = () => {
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {rarityEntries.map((entry) => {
                 const { rarity, charms, formattedTotalCombos, formattedProbPct } = entry
-                const raritySlotList = charmAnalysis.raritySlotMap && charmAnalysis.raritySlotMap[rarity] ? charmAnalysis.raritySlotMap[rarity] : []
+
+                // prepare display for default normalslot from data/Rarity.json
+                const normalslotObj = (rarityProbabilities[rarity] && rarityProbabilities[rarity].normalslot) || null
+                let normalslotEntries = []
+                if (normalslotObj) {
+                  const base = normalslotObj && typeof normalslotObj.slot === "object" ? normalslotObj.slot : normalslotObj
+                  normalslotEntries = Object.keys(base || {}).map((k) => {
+                    let label = k
+                    let icons = []
+                    try {
+                      const parsed = JSON.parse(k)
+                      if (Array.isArray(parsed)) {
+                        label = `[${parsed.join(", ")}]`
+                        icons = parsed.filter((v) => v !== null && typeof v !== "object").map((v) => String(v))
+                      } else {
+                        label = String(parsed)
+                        icons = [String(parsed)]
+                      }
+                    } catch {
+                      // keep original key and try to extract tokens
+                      label = k
+                      const matches = k.match(/W1|\d+/g)
+                      icons = matches || []
+                    }
+
+                    const prob = base[k]
+                    const pct = typeof prob !== "undefined" && prob !== null ? `${Math.round(Number(prob) * 100)}%` : null
+
+                    // normalize icons to filenames like 1.png, 2.png, 3.png, W1.png
+                    const iconNames = icons.map((ic) => `${ic}.png`)
+
+                    return {
+                      key: k,
+                      label,
+                      pct,
+                      icons: iconNames,
+                    }
+                  })
+                }
+
+                // build a set of default normal slot labels for easy comparison with individual charms
+                const normalslotLabelsSet = new Set((normalslotEntries || []).map((e) => String(e.label)))
+
                 return (
                   <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
                     <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
@@ -166,15 +236,56 @@ const CharmTypePage = () => {
                           <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
                         </div>
                       </div>
-
                       <p className='text-gray-600 '>{t("charmTypes.charmsCount", { count: charms.length })}</p>
                       <p className='text-gray-600 '>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
                       {formattedProbPct && <p className='text-gray-600 '>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>}
-                      {raritySlotList && raritySlotList.length > 0 && (
-                        <p className='mt-2 text-gray-600'>
-                          {t("charmTypes.header.slotCombinations") ? t("charmTypes.header.slotCombinations") + ": " : "Slot combinations: "}
-                          {raritySlotList.map((c) => `[${c.split("-").join(", ")}]`).join(" ")}
-                        </p>
+                      {/* 顯示 src/data/Rarity.json 內預設 normalslot 插槽 */}
+                      {normalslotEntries && normalslotEntries.length > 0 && (
+                        <div className='mt-2 text-sm text-gray-700'>
+                          <div className='mb-1'>
+                            {t("charmTypes.header.defaultNormalSlot") &&
+                            t("charmTypes.header.defaultNormalSlot") !== "charmTypes.header.defaultNormalSlot"
+                              ? t("charmTypes.header.defaultNormalSlot")
+                              : "Default normal slots"}
+                            :
+                          </div>
+                          <div className='flex flex-wrap items-center gap-2'>
+                            {normalslotEntries.map((e) => (
+                              <Tooltip.Provider key={e.key}>
+                                <Tooltip.Root>
+                                  <Tooltip.Trigger asChild>
+                                    <div className='flex items-center px-2 py-1 rounded cursor-default bg-gray-50'>
+                                      <div className='flex items-center mr-2'>
+                                        {e.icons && e.icons.length > 0
+                                          ? e.icons.map((ic, idx) => (
+                                              <img
+                                                key={idx}
+                                                src={`${import.meta.env.BASE_URL}image/slot/${encodeURIComponent(ic)}`}
+                                                alt={e.label}
+                                                style={{ width: 20, height: 20 }}
+                                                className={idx < e.icons.length - 1 ? "mr-1" : ""}
+                                              />
+                                            ))
+                                          : null}
+                                      </div>
+                                      <div className='text-xs text-gray-600'>
+                                        <span>{e.pct && <span className='ml-1 text-xs text-gray-400'>({e.pct})</span>}</span>
+                                      </div>
+                                    </div>
+                                  </Tooltip.Trigger>
+                                  <Tooltip.Portal>
+                                    <Tooltip.Content side='top' align='center' className='px-2 py-1 text-xs text-white bg-gray-800 rounded'>
+                                      {t(`slotLabels.${e.key}`) && t(`slotLabels.${e.key}`) !== `slotLabels.${e.key}`
+                                        ? t(`slotLabels.${e.key}`)
+                                        : e.label}
+                                      <Tooltip.Arrow className='text-gray-800 fill-current' />
+                                    </Tooltip.Content>
+                                  </Tooltip.Portal>
+                                </Tooltip.Root>
+                              </Tooltip.Provider>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                     <div className='p-4'>
@@ -182,6 +293,47 @@ const CharmTypePage = () => {
                         {charms.map((charm, index) => {
                           const comboCount = charm.combinationCount
                           const formattedComboCount = (comboCount || 0).toLocaleString()
+
+                          // prepare slot combinations display for this charm and icons for each combination
+                          const charmSlotsArr = charm.slotCombinations || []
+
+                          // parse each slot label into { rawKey, label, icons: ["1.png", ...] }
+                          const charmSlotTuples = (charmSlotsArr || []).map((s) => {
+                            let label = String(s)
+                            let icons = []
+                            // build a list of candidate keys to try for translation lookup so it matches group tooltip behavior
+                            let rawKeyCandidates = [String(s)]
+                            try {
+                              const parsed = JSON.parse(s)
+                              if (Array.isArray(parsed)) {
+                                label = `[${parsed.join(", ")}]`
+                                icons = parsed.filter((v) => v !== null && typeof v !== "object").map((v) => `${v}.png`)
+                                rawKeyCandidates.push(parsed.join("-"))
+                                rawKeyCandidates.push(JSON.stringify(parsed))
+                              } else {
+                                label = String(parsed)
+                                icons = [String(parsed) + ".png"]
+                                rawKeyCandidates.push(String(parsed))
+                              }
+                            } catch {
+                              // fallback: extract tokens like W1 or digits and try those as keys
+                              const matches = String(s).match(/W1|\d+/g) || []
+                              icons = matches.map((m) => `${m}.png`)
+                              if (matches.length) rawKeyCandidates.push(matches.join("-"))
+                            }
+
+                            // also add variants without spaces/brackets to increase match chance
+                            rawKeyCandidates = rawKeyCandidates.concat(rawKeyCandidates.map((k) => String(k).replace(/\s+/g, "")))
+                            // dedupe while preserving order
+                            rawKeyCandidates = Array.from(new Set(rawKeyCandidates))
+
+                            return { rawKeyCandidates, label, icons }
+                          })
+
+                          // only show charm slot combinations when they are different from the rarity's default normal slots
+                          const slotMatchesDefault =
+                            charmSlotsArr.length > 0 && normalslotEntries.length > 0 && charmSlotsArr.every((s) => normalslotLabelsSet.has(String(s)))
+                          const showCharmSlot = charmSlotsArr.length > 0 && !slotMatchesDefault
 
                           return (
                             <Dialog key={index}>
@@ -209,6 +361,55 @@ const CharmTypePage = () => {
                                   <div className='mt-2 text-gray-700'>
                                     {t("charmTypes.labels.combinationCount")}: <span className='font-semibold'>{formattedComboCount}</span>
                                   </div>
+                                  {showCharmSlot && charmSlotTuples && charmSlotTuples.length > 0 && (
+                                    <div className='mt-1 text-sm text-gray-600'>
+                                      {t("charmTypes.header.slotCombinations")
+                                        ? t("charmTypes.header.slotCombinations") + ": "
+                                        : "Slot combinations: "}
+                                      <div className='flex flex-wrap items-center gap-2 mt-1'>
+                                        {charmSlotTuples.map((cs, ci) => (
+                                          <Tooltip.Provider key={`${ci}-${cs.label}`}>
+                                            <Tooltip.Root>
+                                              <Tooltip.Trigger asChild>
+                                                <div className='inline-flex items-center px-2 py-1 rounded cursor-default bg-gray-50'>
+                                                  {cs.icons && cs.icons.length > 0
+                                                    ? cs.icons.map((ic, idx) => (
+                                                        <img
+                                                          key={idx}
+                                                          src={`${import.meta.env.BASE_URL}image/slot/${encodeURIComponent(ic)}`}
+                                                          alt={cs.label}
+                                                          style={{ width: 18, height: 18 }}
+                                                          className={idx < cs.icons.length - 1 ? "mr-1" : ""}
+                                                        />
+                                                      ))
+                                                    : null}
+                                                  <span className='ml-1 text-xs text-gray-600'>{cs.label}</span>
+                                                </div>
+                                              </Tooltip.Trigger>
+                                              <Tooltip.Portal>
+                                                <Tooltip.Content
+                                                  side='top'
+                                                  align='center'
+                                                  className='px-2 py-1 text-xs text-white bg-gray-800 rounded'>
+                                                  {/* try multiple candidate keys to match group tooltip lookup */}
+                                                  {(() => {
+                                                    const candidates = cs.rawKeyCandidates || []
+                                                    for (let i = 0; i < candidates.length; i++) {
+                                                      const key = candidates[i]
+                                                      const trans = t(`slotLabels.${key}`)
+                                                      if (trans && trans !== `slotLabels.${key}`) return trans
+                                                    }
+                                                    return cs.label
+                                                  })()}
+                                                  <Tooltip.Arrow className='text-gray-800 fill-current' />
+                                                </Tooltip.Content>
+                                              </Tooltip.Portal>
+                                            </Tooltip.Root>
+                                          </Tooltip.Provider>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
                               </DialogTrigger>
 

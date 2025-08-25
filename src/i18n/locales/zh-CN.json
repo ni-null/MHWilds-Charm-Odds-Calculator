@@ -45,7 +45,7 @@
     "groupInfo": "组别",
     "searchSkill": "搜索技能...",
     "slotFilter": "插槽筛选",
-    "slotAny": "任意插槽",
+    "slotAny": "-- 任意插槽 --",
     "clearSlot": "清除插槽"
   },
   "amulet": {
@@ -136,7 +136,8 @@
     "header": {
       "totalCombos": "总组合数：{{count}}",
       "baseProbability": "基础命中概率：{{pct}}",
-      "slotCombinations": "插槽组合"
+      "slotCombinations": "插槽组合",
+      "defaultNormalSlot": "默认插槽"
     },
     "labels": {
       "skillGroups": "技能组",
@@ -155,8 +156,27 @@
       "rare8FirstSlot": "RARE[8] 的第一个槽位为武器槽位。"
     }
   },
+  "slotProbability": {
+    "rare8Note": "仅 RARE[8] 有精确的插槽概率",
+    "title": "插槽概率",
+    "totalLabel": "全部稀有度总概率",
+    "slot": "插槽",
+    "baseProb": "稀有度概率",
+    "slotProb": "插槽概率",
+    "finalProb": "总概率"
+  },
   "actions": {
     "close": "关闭"
+  },
+  "slotLabels": {
+    "[1]": "装备插槽 1",
+    "[1, 1]": "装备插槽 1+1",
+    "[2]": "装备插槽 2",
+    "[2, 1]": "装备插槽 2+1",
+    "[3]": "装备插槽 3",
+    "[\"W1\"]": "武器插槽 1",
+    "[\"W1\", 1]": "武器插槽 1 + 装备插槽 1",
+    "[\"W1\", 1, 1]": "武器插槽 1 + 装备插槽 1 + 装备插槽 1"
   },
   "skillGroups": {
     "title": "技能组",

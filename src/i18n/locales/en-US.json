@@ -45,7 +45,7 @@
     "groupInfo": "Group",
     "searchSkill": "Search skill...",
     "slotFilter": "Slot filter",
-    "slotAny": "Any slot",
+    "slotAny": "-- 任意插槽 --",
     "clearSlot": "Clear slot"
   },
   "amulet": {
@@ -136,7 +136,8 @@
     "header": {
       "totalCombos": "Total combos: {{count}}",
       "baseProbability": "Base probability: {{pct}}",
-      "slotCombinations": "Slot combinations"
+      "slotCombinations": "Slot combinations",
+      "defaultNormalSlot": "Default slots"
     },
     "labels": {
       "skillGroups": "Skill Groups",
@@ -154,6 +155,15 @@
       "rareSame": "RARE[7] and RARE[8] share the same skill groups; they differ only in decoration slots.",
       "rare8FirstSlot": "For RARE[8], the first slot is a weapon slot."
     }
+  },
+  "slotProbability": {
+    "rare8Note": "Only RARE[8] has precise slot probabilities",
+    "title": "Slot probability",
+    "totalLabel": "Total (all rarities)",
+    "slot": "Slot",
+    "baseProb": "Rarity probability",
+    "slotProb": "Slot probability",
+    "finalProb": "Final probability"
   },
   "actions": {
     "close": "Close"
@@ -178,6 +188,16 @@
     "group8": "Group 8",
     "group9": "Group 9",
     "group10": "Group 10"
+  },
+  "slotLabels": {
+    "[1]": "Equip Slot 1",
+    "[1, 1]": "Equip Slot 1+1",
+    "[2]": "Equip Slot 2",
+    "[2, 1]": "Equip Slot 2+1",
+    "[3]": "Equip Slot 3",
+    "[\"W1\"]": "Weapon Slot 1",
+    "[\"W1\", 1]": "Weapon Slot 1 + Equip Slot 1",
+    "[\"W1\", 1, 1]": "Weapon Slot 1 + Equip Slot 1 + Equip Slot 1"
   },
   "skillTranslations": {
     "Artillery": "Artillery",

@@ -45,7 +45,7 @@
     "groupInfo": "グループ",
     "searchSkill": "スキルを検索...",
     "slotFilter": "スロットフィルター",
-    "slotAny": "すべてのスロット",
+    "slotAny": "-- 任意插槽 --",
     "clearSlot": "スロットをクリア"
   },
   "amulet": {
@@ -58,8 +58,8 @@
     "groups": "グループ",
     "skillGroups": "スキルグループ",
     "matchingSkills": "一致スキル",
-    "slotCombinations": "スロット組み合わせ",
-    "noMatches": "一致する護石が見つかりませんでした。別のスキル組み合わせを試してください",
+    "slotCombinations": "スロットの組み合わせ",
+    "defaultNormalSlot": "デフォルトのスロット",
     "selectSkills": "護石を表示するにはスキルを選択してください"
   },
   "probability": {
@@ -136,7 +136,8 @@
     "header": {
       "totalCombos": "合計コンビネーション：{{count}}",
       "baseProbability": "基礎確率：{{pct}}",
-      "slotCombinations": "スロット組み合わせ"
+      "slotCombinations": "スロット組み合わせ",
+      "defaultNormalSlot": "デフォルト通常スロット"
     },
     "labels": {
       "skillGroups": "スキルグループ",
@@ -155,8 +156,27 @@
       "rare8FirstSlot": "RARE[8] の最初のスロットは武器スロットです。"
     }
   },
+  "slotProbability": {
+    "rare8Note": "RARE[8] のみ正確なスロット確率を持ちます",
+    "title": "スロット確率",
+    "totalLabel": "全レアリティ合計確率",
+    "slot": "スロット",
+    "baseProb": "レアリティ確率",
+    "slotProb": "スロット確率",
+    "finalProb": "最終確率"
+  },
   "actions": {
     "close": "閉じる"
+  },
+  "slotLabels": {
+    "[1]": "装備スロット 1",
+    "[1, 1]": "装備スロット 1+1",
+    "[2]": "装備スロット 2",
+    "[2, 1]": "装備スロット 2+1",
+    "[3]": "装備スロット 3",
+    "[\"W1\"]": "武器スロット 1",
+    "[\"W1\", 1]": "武器スロット 1 + 装備スロット 1",
+    "[\"W1\", 1, 1]": "武器スロット 1 + 装備スロット 1 + 装備スロット 1"
   },
   "skillGroups": {
     "title": "スキルグループ",
