@@ -9,6 +9,7 @@ import SkillSelector from "./SkillSelector"
 import AmuletList from "./AmuletList"
 import useMhwStore from "../../store/mhwStore"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
+import ProbabilityExplanation from "./ProbabilityExplanation"
 
 export default function MHWPage() {
   const { t } = useTranslation()
@@ -190,13 +191,6 @@ export default function MHWPage() {
     },
     [rarityBaseProbability, getGroupSkillCountForRarity, selectedSkills, skillToGroupMap, selectedSlot]
   )
-
-  // 計算分數：將機率轉為易於比較的分數表示
-  // 簡單做法：score = Math.round(probability * 100000)（可根據需求調整刻度）
-  const calculateScore = (probability) => {
-    if (!probability || typeof probability !== "number" || probability <= 0) return 0
-    return Math.round(probability * 100000)
-  }
 
   // 計算匹配護石的機率分布，同時回傳「不含插槽」與「含插槽」兩種表示
   const amuletProbabilities = useMemo(() => {
@@ -396,6 +390,8 @@ export default function MHWPage() {
               rarityBaseProbability={rarityBaseProbability}
               getGroupSkillCountForRarity={getGroupSkillCountForRarity}
             />
+            {/* 機率計算說明（從 AmuletList 提出，集中顯示於頁面） */}
+            <ProbabilityExplanation />
           </div>
         </main>
       </div>

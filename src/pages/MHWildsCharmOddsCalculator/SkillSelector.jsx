@@ -628,9 +628,9 @@ export default function SkillSelector() {
                         <div className='flex items-center gap-2'>
                           {slotImgSrcs.length > 0 && (
                             <div className='flex items-center gap-1'>
-                              {slotImgSrcs.map((src) => (
+                              {slotImgSrcs.map((src, idx) => (
                                 <img
-                                  key={src}
+                                  key={`${src}-${idx}`}
                                   src={src}
                                   alt=''
                                   className='object-contain w-6 h-6 xl:w-8 xl:h-8 '

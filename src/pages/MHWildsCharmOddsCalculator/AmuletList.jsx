@@ -197,10 +197,8 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
             })
 
             return (
-              <>
-                <li
-                  key={`${amulet.Rarity}-${amulet.Name}-${index}`}
-                  className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
+              <React.Fragment key={`${amulet.Rarity}-${amulet.Name}-${index}`}>
+                <li className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
                   <div className='flex items-center  min-w-[140px] mb-2 md:mb-0 md:mr-4'>
                     <img
                       src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(amulet.Rarity)}.png`}
@@ -665,7 +663,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                     </div>
                   </li>
                 )}
-              </>
+              </React.Fragment>
             )
           })}
         </ul>
@@ -675,65 +673,7 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
         </div>
       )}
 
-      {/* 機率計算說明 */}
-      <div className='p-6 mt-6 border border-green-200 rounded-lg bg-green-50'>
-        <div className='space-y-4 text-green-800'>
-          <div>
-            <strong className='text-lg'>{t("probability.calculation.title")}</strong>
-          </div>
-
-          <div className='text-base font-medium'>{t("probability.calculation.subtitle")}</div>
-
-          <div className='space-y-2'>
-            <div className='font-medium'>{t("probability.calculation.rarityBase")}</div>
-            <div className='p-2 font-mono text-sm bg-white rounded'>RARE[5] = 59% | RARE[6] = 27% | RARE[7] = 11% | RARE[8] = 3%</div>
-            <div className='mt-1 text-xs text-green-600'>{t("probability.calculation.charmTypeCounts")}</div>
-          </div>
-
-          <div className='space-y-2 text-sm'>
-            <div>• {t("probability.calculation.baseFormula")}</div>
-            <div>• {t("probability.calculation.typeFormula")}</div>
-            <div>• {t("probability.calculation.skillFormula")}</div>
-          </div>
-
-          <div className='space-y-3'>
-            <div className='text-base font-medium'>{t("probability.calculation.explanation.title")}</div>
-            <div className='pl-2 space-y-1 text-sm'>
-              <div>{t("probability.calculation.explanation.step1")}</div>
-              <div>{t("probability.calculation.explanation.step2")}</div>
-              <div>{t("probability.calculation.explanation.step3")}</div>
-              <div>{t("probability.calculation.explanation.step4")}</div>
-              <div>{t("probability.calculation.explanation.step5")}</div>
-              <div>{t("probability.calculation.explanation.step6")}</div>
-              <div>{t("probability.calculation.explanation.step7")}</div>
-            </div>
-          </div>
-
-          <div className='p-3 bg-white border rounded'>
-            <div className='mb-2 text-base font-medium'>{t("probability.calculation.example.title")}</div>
-            <div className='space-y-1 text-sm'>
-              <div>{t("probability.calculation.example.description")}</div>
-              <div className='pl-2 space-y-0.5 mt-2'>
-                <div>{t("probability.calculation.example.step1")}</div>
-                <div>{t("probability.calculation.example.step2")}</div>
-                <div>{t("probability.calculation.example.step3")}</div>
-              </div>
-              <div className='mt-2 font-medium'>{t("probability.calculation.example.result")}</div>
-            </div>
-          </div>
-
-          <div className='space-y-2 text-sm text-green-700'>
-            <div className='font-semibold'>{t("probability.note.title")}</div>
-            <div className='space-y-1'>
-              <div>{t("probability.note.line1")}</div>
-              <div>{t("probability.note.line2")}</div>
-              <div>{t("probability.note.line3")}</div>
-              <div>{t("probability.note.line4")}</div>
-              <div>{t("probability.note.line5")}</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 機率計算說明 已移至頁面層級 index.jsx */}
     </section>
   )
 }
