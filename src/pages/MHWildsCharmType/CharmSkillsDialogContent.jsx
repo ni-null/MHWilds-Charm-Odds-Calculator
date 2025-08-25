@@ -13,8 +13,10 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
         "</text></svg>"
     )
 
-  const rawGroups = [charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null)
-  const groups = rawGroups.map((g) => (typeof g === "number" ? `Group${g}` : `${g}`))
+  const rawGroups = [charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g != null)
+  // map to string keys and remove duplicates while preserving order
+  const mapped = rawGroups.map((g) => (typeof g === "number" ? `Group${g}` : `${g}`))
+  const groups = [...new Set(mapped)]
   const defaultTab = groups.length > 0 ? groups[0] : "none"
 
   return (
