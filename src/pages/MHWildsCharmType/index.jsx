@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import AmuletData from "../../data/Amulet.json"
+// Amulet data migrated into RarityBaseProbability.json (Group + combinationCount)
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
 import skillGroupsData from "../../data/SkillGroups.json"
-import rarityProbabilities from "../../data/RarityBaseProbability.json"
+import rarityProbabilities from "../../data/Rarity.json"
 import { Button } from "@/components/ui/button"
 const CharmTypePage = () => {
   const { t } = useTranslation()
@@ -42,29 +42,45 @@ const CharmTypePage = () => {
     const slotCombinations = new Set()
     const skillGroups = new Set()
 
-    AmuletData.forEach((amulet) => {
-      // 按稀有度分組
-      if (!rarityGroups[amulet.Rarity]) {
-        rarityGroups[amulet.Rarity] = []
+    Object.entries(rarityProbabilities).forEach(([rarity, data]) => {
+      const groups = data.Group || []
+      rarityGroups[rarity] = groups.map((g) => ({
+        Rarity: rarity,
+        Skill1Group: g.skills && g.skills[0] ? g.skills[0] : null,
+        Skill2Group: g.skills && g.skills[1] ? g.skills[1] : null,
+        Skill3Group: g.skills && g.skills[2] ? g.skills[2] : null,
+        combinationCount: g.combinationCount || 0,
+      }))
+
+      const raritySlotObj = (rarityProbabilities && rarityProbabilities[rarity] && rarityProbabilities[rarity].slot) || null
+      if (raritySlotObj) {
+        Object.keys(raritySlotObj).forEach((k) => {
+          try {
+            const arr = JSON.parse(k)
+            slotCombinations.add(arr.join("-"))
+          } catch {
+            slotCombinations.add(k)
+          }
+        })
       }
-      rarityGroups[amulet.Rarity].push(amulet)
 
-      // 插槽組合
-      amulet.PossibleSlotCombos.forEach((combo) => {
-        slotCombinations.add(combo.join("-"))
+      // collect skill groups
+      groups.forEach((g) => {
+        const skills = g.skills || []
+        if (skills[0]) skillGroups.add(skills[0])
+        if (skills[1]) skillGroups.add(skills[1])
+        if (skills[2]) skillGroups.add(skills[2])
       })
-
-      // 技能群組
-      if (amulet.Skill1Group) skillGroups.add(amulet.Skill1Group)
-      if (amulet.Skill2Group) skillGroups.add(amulet.Skill2Group)
-      if (amulet.Skill3Group) skillGroups.add(amulet.Skill3Group)
     })
+
+    // total charms = sum of group entries
+    const totalCharms = Object.values(rarityGroups).reduce((s, arr) => s + arr.length, 0)
 
     return {
       rarityGroups,
       slotCombinations: Array.from(slotCombinations).sort(),
       totalSkillGroups: skillGroups.size,
-      totalCharms: AmuletData.length,
+      totalCharms,
     }
   }, [])
 
@@ -73,7 +89,8 @@ const CharmTypePage = () => {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([rarity, charms]) => {
       const totalCombos = charms.reduce((s, c) => s + (c.combinationCount || 0), 0)
-      const prob = rarityProbabilities[rarity]
+      const probEntry = rarityProbabilities[rarity]
+      const prob = probEntry && typeof probEntry === "object" ? probEntry.probability : probEntry
       const formattedTotalCombos = (totalCombos || 0).toLocaleString()
       const formattedProbPct = typeof prob !== "undefined" && prob !== null ? `${Math.round(Number(prob) * 100)}%` : null
 
@@ -126,9 +143,15 @@ const CharmTypePage = () => {
                 // compute slot combinations that appear only in this rarity's charms
                 const raritySlotSet = new Set()
                 charms.forEach((ch) => {
-                  if (ch.PossibleSlotCombos && Array.isArray(ch.PossibleSlotCombos)) {
-                    ch.PossibleSlotCombos.forEach((combo) => {
-                      if (Array.isArray(combo)) raritySlotSet.add(combo.join("-"))
+                  const raritySlotObj = (rarityProbabilities && rarityProbabilities[ch.Rarity] && rarityProbabilities[ch.Rarity].slot) || null
+                  if (raritySlotObj) {
+                    Object.keys(raritySlotObj).forEach((k) => {
+                      try {
+                        const arr = JSON.parse(k)
+                        if (Array.isArray(arr)) raritySlotSet.add(arr.join("-"))
+                      } catch {
+                        raritySlotSet.add(k)
+                      }
                     })
                   }
                 })

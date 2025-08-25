@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import AmuletData from "../../data/Amulet.json"
+// AmuletData is now represented inside RarityBaseProbability.json as Group + combinationCount
 import SkillGroupsData from "../../data/SkillGroups.json"
-import RarityBaseProbabilityData from "../../data/RarityBaseProbability.json"
+import RarityBaseProbabilityData from "../../data/Rarity.json"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import SkillSelector from "./SkillSelector"
@@ -16,6 +16,9 @@ export default function MHWPage() {
   // selectedSkills moved to zustand store to avoid prop drilling
   const { selectedSkills } = useMhwStore()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  // 稀有度基礎機率設定（從資料檔載入）
+  const rarityBaseProbability = RarityBaseProbabilityData
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen)
@@ -33,23 +36,37 @@ export default function MHWPage() {
       })
     })
     return map
-  }, [])
+  }, [rarityBaseProbability])
 
-  // 根據選擇的技能篩選護石
+  // 根據選擇的技能篩選護石 — 由於 AmuletData 已搬入 RarityBaseProbability.json，先展平成虛擬護石清單
   const matchingAmulets = useMemo(() => {
     const selectedSkillsFiltered = selectedSkills.filter(Boolean)
     if (selectedSkillsFiltered.length === 0) return []
 
-    return AmuletData.filter((amulet) => {
-      const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
+    // build virtual amulet list from rarity groups
+    const virtualAmulets = []
+    Object.entries(rarityBaseProbability).forEach(([rarity, data]) => {
+      const groups = data.Group || []
+      groups.forEach((gObj) => {
+        const skills = gObj.skills || []
+        // create a lightweight amulet representation that matches code expectations
+        const amu = {
+          Rarity: rarity,
+          Skill1Group: skills[0] || null,
+          Skill2Group: skills[1] || null,
+          Skill3Group: skills[2] || null,
+          combinationCount: gObj.combinationCount || 0,
+        }
+        virtualAmulets.push(amu)
+      })
+    })
 
-      // 嘗試為每個選擇的技能分配槽位（不是群組號碼）
+    return virtualAmulets.filter((amulet) => {
+      const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
       const usedSlots = []
 
       for (const skillKey of selectedSkillsFiltered) {
         const skillGroups = skillToGroupMap[skillKey] || []
-
-        // 找到一個未使用的槽位，且該槽位的群組可以提供此技能
         let foundSlot = false
         for (let slotIndex = 0; slotIndex < amuletGroups.length; slotIndex++) {
           if (!usedSlots.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
@@ -58,21 +75,14 @@ export default function MHWPage() {
             break
           }
         }
-
-        if (!foundSlot) {
-          // 如果找不到可用的槽位，此護石不符合
-          return false
-        }
+        if (!foundSlot) return false
       }
 
       return true
     })
-  }, [selectedSkills, skillToGroupMap])
+  }, [selectedSkills, skillToGroupMap, rarityBaseProbability])
 
   // 根據護石群組取得可能的技能
-
-  // 稀有度基礎機率設定
-  const rarityBaseProbability = RarityBaseProbabilityData
 
   // 計算每個群組在特定稀有度下的技能數量
   const getGroupSkillCountForRarity = useCallback((groupNumber, rarity) => {
@@ -82,11 +92,9 @@ export default function MHWPage() {
     const groupKey = `Group${groupNumber}`
     const totalGroupSkills = SkillGroupsData.SkillGroups[groupKey] ? SkillGroupsData.SkillGroups[groupKey].data.length : 1
 
-    // 檢查該稀有度是否實際包含此群組
-    const hasGroupInRarity = AmuletData.some(
-      (amulet) =>
-        amulet.Rarity === rarity && (amulet.Skill1Group === groupNumber || amulet.Skill2Group === groupNumber || amulet.Skill3Group === groupNumber)
-    )
+    // 檢查該稀有度是否實際包含此群組（從 RarityBaseProbability.json 的 Group 欄位判斷）
+    const rarityGroups = (rarityBaseProbability[rarity] && rarityBaseProbability[rarity].Group) || []
+    const hasGroupInRarity = rarityGroups.some((g) => Array.isArray(g.skills) && g.skills.includes(groupNumber))
 
     return hasGroupInRarity ? totalGroupSkills : 1
   }, [])
@@ -94,14 +102,14 @@ export default function MHWPage() {
   // 計算護石的精確出現機率
   const calculateAmuletProbability = useCallback(
     (amulet) => {
-      const baseProb = rarityBaseProbability[amulet.Rarity] || 0.01
+      const baseProb = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].probability) || 0.01
       const selectedSkillsFiltered = selectedSkills.filter(Boolean)
 
       if (selectedSkillsFiltered.length === 0) return baseProb
 
-      // 計算該稀有度下護石類型的總數
-      const amuletsOfSameRarity = AmuletData.filter((a) => a.Rarity === amulet.Rarity)
-      const amuletTypeProb = 1 / amuletsOfSameRarity.length
+      // 計算該稀有度下護石類型的總數（使用 RarityBaseProbability.Group 的項目數）
+      const amuletsOfSameRarity = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].Group) || []
+      const amuletTypeProb = amuletsOfSameRarity.length > 0 ? 1 / amuletsOfSameRarity.length : 0
 
       // 獲取護石的群組
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)

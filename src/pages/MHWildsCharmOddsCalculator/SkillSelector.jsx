@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import useMhwStore from "../../store/mhwStore"
-import AmuletData from "../../data/Amulet.json"
+import rarityBaseProbability from "../../data/Rarity.json"
 import SkillGroupsData from "../../data/SkillGroups.json"
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -63,15 +63,25 @@ export default function SkillSelector() {
         const firstSkillBaseName = selectedSkills[0].split(" Lv.")[0]
         const possibleSkills = new Set()
 
-        // 找出包含第一個技能組別的所有護石
-        AmuletData.forEach((amulet) => {
+        // build virtual amulet list and find those containing the first skill group
+        const virtualAmulets = []
+        Object.entries(rarityBaseProbability).forEach(([rarity, data]) => {
+          const groups = data.Group || []
+          groups.forEach((gObj) => {
+            const skills = gObj.skills || []
+            virtualAmulets.push({
+              Rarity: rarity,
+              Skill1Group: skills[0] || null,
+              Skill2Group: skills[1] || null,
+              Skill3Group: skills[2] || null,
+            })
+          })
+        })
+
+        virtualAmulets.forEach((amulet) => {
           const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
-
-          // 檢查護石是否包含第一個技能的組別
           const hasFirstSkillGroup = firstSkillGroups.some((group) => amuletGroups.includes(group))
-
           if (hasFirstSkillGroup) {
-            // 為第一個技能分配一個槽位
             let assignedSlotIndex = -1
             for (let i = 0; i < amuletGroups.length; i++) {
               if (firstSkillGroups.includes(amuletGroups[i])) {
@@ -79,8 +89,6 @@ export default function SkillSelector() {
                 break
               }
             }
-
-            // 收集剩餘槽位的技能
             amuletGroups.forEach((groupNumber, slotIndex) => {
               if (slotIndex !== assignedSlotIndex) {
                 const groupKey = `Group${groupNumber}`
@@ -88,8 +96,6 @@ export default function SkillSelector() {
                   SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
                     const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
                     const skillBaseName = skill.SkillName
-
-                    // 排除與第一個技能相同基礎名稱的技能
                     if (skillBaseName !== firstSkillBaseName) {
                       possibleSkills.add(skillKey)
                     }
@@ -113,14 +119,25 @@ export default function SkillSelector() {
         const secondSkillBaseName = selectedSkills[1] ? selectedSkills[1].split(" Lv.")[0] : null
         const possibleSkills = new Set()
 
-        // 找出同時包含第一個技能和（可選）第二個技能組別的護石
-        AmuletData.forEach((amulet) => {
+        // 找出同時包含第一個技能和（可選）第二個技能組別的護石（走 virtualAmulets）
+        const virtualAmulets2 = []
+        Object.entries(rarityBaseProbability).forEach(([rarity, data]) => {
+          const groups = data.Group || []
+          groups.forEach((gObj) => {
+            const skills = gObj.skills || []
+            virtualAmulets2.push({
+              Rarity: rarity,
+              Skill1Group: skills[0] || null,
+              Skill2Group: skills[1] || null,
+              Skill3Group: skills[2] || null,
+            })
+          })
+        })
+
+        virtualAmulets2.forEach((amulet) => {
           const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
 
-          // 嘗試為已選技能分配槽位
           const usedSlotIndexes = []
-
-          // 為第一個技能分配槽位
           let firstAssigned = false
           for (let i = 0; i < amuletGroups.length; i++) {
             if (!usedSlotIndexes.includes(i) && firstSkillGroups.includes(amuletGroups[i])) {
@@ -129,10 +146,8 @@ export default function SkillSelector() {
               break
             }
           }
+          if (!firstAssigned) return
 
-          if (!firstAssigned) return // 無法分配第一個技能，跳過此護石
-
-          // 如果有第二個技能，嘗試分配槽位
           if (selectedSkills[1]) {
             let secondAssigned = false
             for (let i = 0; i < amuletGroups.length; i++) {
@@ -142,10 +157,9 @@ export default function SkillSelector() {
                 break
               }
             }
-            if (!secondAssigned) return // 無法分配第二個技能，跳過此護石
+            if (!secondAssigned) return
           }
 
-          // 收集剩餘槽位的技能
           amuletGroups.forEach((groupNumber, slotIndex) => {
             if (!usedSlotIndexes.includes(slotIndex)) {
               const groupKey = `Group${groupNumber}`
@@ -153,8 +167,6 @@ export default function SkillSelector() {
                 SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
                   const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
                   const skillBaseName = skill.SkillName
-
-                  // 排除與已選技能相同基礎名稱的技能
                   if (skillBaseName !== firstSkillBaseName && skillBaseName !== secondSkillBaseName) {
                     possibleSkills.add(skillKey)
                   }

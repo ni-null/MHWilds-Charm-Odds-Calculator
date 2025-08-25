@@ -1,10 +1,10 @@
 const fs = require("fs")
 const path = require("path")
 
-const amuletPath = path.join(__dirname, "../src/data/Amulet.json")
+const rarityPath = path.join(__dirname, "../src/data/Rarity.json")
 const groupsPath = path.join(__dirname, "../src/data/SkillGroups.json")
 
-const amulets = JSON.parse(fs.readFileSync(amuletPath, "utf8"))
+const rarityData = JSON.parse(fs.readFileSync(rarityPath, "utf8"))
 const groupsData = JSON.parse(fs.readFileSync(groupsPath, "utf8"))
 
 function groupKeyFromValue(g) {
@@ -39,22 +39,33 @@ function computeForCharm(charm) {
   return count
 }
 
-console.log("Computing combinationCount for", amulets.length, "amulets...")
+// iterate rarityData and compute combinationCount per Group entry
 let updated = 0
-for (let i = 0; i < amulets.length; i++) {
-  const charm = amulets[i]
-  const c = computeForCharm(charm)
-  amulets[i].combinationCount = c
-  updated++
-}
+const totalGroups = Object.values(rarityData).reduce((sum, r) => sum + (Array.isArray(r.Group) ? r.Group.length : 0), 0)
+console.log(`Computing combinationCount for ${totalGroups} group entries across rarities...`)
+Object.entries(rarityData).forEach(([rarity, data]) => {
+  const groups = data.Group || []
+  groups.forEach((gObj) => {
+    const skills = gObj.skills || []
+    const charm = { Skill1Group: skills[0] || null, Skill2Group: skills[1] || null, Skill3Group: skills[2] || null }
+    const c = computeForCharm(charm)
+    gObj.combinationCount = c
+    updated++
+  })
+})
 
-fs.writeFileSync(amuletPath, JSON.stringify(amulets, null, 2), "utf8")
-console.log(`Updated ${updated} amulets and wrote to ${amuletPath}`)
+fs.writeFileSync(rarityPath, JSON.stringify(rarityData, null, 2), "utf8")
+console.log(`Updated ${updated} group entries and wrote to ${rarityPath}`)
 
-amulets.slice(0, 10).forEach((a, idx) => {
-  console.log(
-    `#${idx} Rarity:${a.Rarity} Groups:[${[a.Skill1Group, a.Skill2Group, a.Skill3Group].filter((g) => g !== null)}] combo:${a.combinationCount}`
-  )
+// print sample
+let printed = 0
+Object.entries(rarityData).forEach(([rarity, data]) => {
+  ;(data.Group || []).slice(0, 3).forEach((g, idx) => {
+    if (printed < 10) {
+      console.log(`# ${rarity} Group[${idx}] skills:${JSON.stringify(g.skills)} combo:${g.combinationCount}`)
+      printed++
+    }
+  })
 })
 
 console.log("Done.")

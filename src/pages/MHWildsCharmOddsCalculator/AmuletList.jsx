@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import SkillGroupsData from "../../data/SkillGroups.json"
-import AmuletData from "../../data/Amulet.json"
 import useMhwStore from "../../store/mhwStore"
 
 export default function AmuletList({ matchingAmulets, amuletProbabilities, rarityBaseProbability, getGroupSkillCountForRarity }) {
@@ -234,11 +233,24 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                     <div className='mb-1 text-base'>
                       <span className='font-medium'>{t("amulet.slotCombinations")}:</span>
                       <span className='ml-2'>
-                        {amulet.PossibleSlotCombos.map((combo, comboIndex) => (
-                          <span key={comboIndex} className='mr-2 text-sm'>
-                            [{combo.join(", ")}]
-                          </span>
-                        ))}
+                        {(() => {
+                          const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+                          const slotKeys = Object.keys(slotObj)
+                          return slotKeys.map((key, idx) => {
+                            let display = key
+                            try {
+                              const arr = JSON.parse(key)
+                              display = `[${arr.join(", ")}]`
+                            } catch {
+                              // fallback to raw key
+                            }
+                            return (
+                              <span key={idx} className='mr-2 text-sm'>
+                                {display}
+                              </span>
+                            )
+                          })
+                        })()}
                       </span>
                     </div>
                   </div>
@@ -256,15 +268,18 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                     <div className='p-3 text-sm bg-white border rounded'>
                       {/* 機率計算詳細步驟 */}
                       {(() => {
-                        const baseProb = rarityBaseProbability[amulet.Rarity] || 0.01
+                        const baseProb = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].probability) || 0.01
                         const selectedSkillsFiltered = selectedSkills.filter(Boolean)
 
                         if (selectedSkillsFiltered.length === 0) {
                           return <div className='mb-2 text-base'>{t("probability.debug.noSkillsSelected")}</div>
                         }
 
-                        // 計算該稀有度下護石類型的總數（從所有護石數據中計算）
-                        const totalAmuletsOfRarity = AmuletData.filter((a) => a.Rarity === amulet.Rarity).length
+                        // 計算該稀有度下護石類型的總數（使用 RarityBaseProbability.Group 的項目數）
+                        const totalAmuletsOfRarity =
+                          rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].Group
+                            ? rarityBaseProbability[amulet.Rarity].Group.length
+                            : 0
                         const amuletTypeProb = 1 / totalAmuletsOfRarity
 
                         // 統計每個技能在每個群組的需求
@@ -459,11 +474,23 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                             </div>
                             <div className='text-base'>
                               {t("amulet.slotCombinations")}:{" "}
-                              {amulet.PossibleSlotCombos.map((combo, comboIndex) => (
-                                <span key={comboIndex} className='mr-2'>
-                                  [{combo.join(", ")}]
-                                </span>
-                              ))}
+                              {(() => {
+                                const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+                                return Object.keys(slotObj).map((key, idx) => {
+                                  let display = key
+                                  try {
+                                    const arr = JSON.parse(key)
+                                    display = `[${arr.join(", ")}]`
+                                  } catch {
+                                    // fallback
+                                  }
+                                  return (
+                                    <span key={idx} className='mr-2'>
+                                      {display}
+                                    </span>
+                                  )
+                                })
+                              })()}
                             </div>
                           </>
                         )
