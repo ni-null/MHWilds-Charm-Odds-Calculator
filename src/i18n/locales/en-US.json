@@ -12,7 +12,7 @@
     "title": "Info",
     "datasource": {
       "title": "Data Sources",
-      "description": "Below are the primary source data used and organized for this project (Google Sheets):",
+      "description": "Below are the primary source data used and organized for this project (Google Sheets), all Chinese and English data available online originates from this sheet:",
       "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
       "note": "Note: The data is community-maintained and converted; it may contain manual edits or conversion errors. If you find issues, please report them or suggest fixes in the original data sheet."
     },
@@ -21,6 +21,13 @@
       "description": "The project source code and related resources are hosted on GitHub:",
       "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
       "encourage": "If you find this project helpful, please consider giving it a star on GitHub ⭐️ — it really encourages the maintainer!"
+    },
+    "calculation": {
+      "title": "Probability Calculation",
+      "description": "This project uses the following probability calculation formula:",
+      "formula": "P(Specific Charm) = P(Rarity) × P(Template | Rarity) × P(Skill Combination | Template)",
+      "reference": "Reference:",
+      "referenceLink": "Gamersky - rongchingl Guide"
     }
   },
   "rarity": "Rarity",
@@ -33,9 +40,16 @@
     "skill2": "Skill 2",
     "skill3": "Skill 3",
     "selectSkill": "-- Select skill --",
-    "groupInfo": "Group"
+    "clearSelection": "-- Clear selection --",
+    "reset": "Reset",
+    "groupInfo": "Group",
+    "searchSkill": "Search skill...",
+    "slotFilter": "Slot filter",
+    "slotAny": "Any slot",
+    "clearSlot": "Clear slot"
   },
   "amulet": {
+    "specificSlotProb": "Specific slot probability",
     "list": "Charm List",
     "matching": "Matching Charms",
     "probability": "Probability",
@@ -64,18 +78,19 @@
         "title": "Detailed Explanation:",
         "step1": "1. Each charm has 1-3 skill slots, each slot belongs to a specific skill group",
         "step2": "2. Charms with the same rarity have different skill group combinations (e.g., [1,6,6], [1,7,null], [1,8,6])",
-        "step3": "3. The system assigns each selected skill to an available slot that contains the required skill group",
+        "step3": "3. The system assigns each selected skill sequentially to an available slot that contains the required skill group",
         "step4": "4. Each slot can only be assigned to one skill (no duplicate slot usage)",
-        "step5": "5. For each assigned slot, calculate 1/(number of skills in that group) as the skill probability",
-        "step6": "6. Multiply all individual slot probabilities to get the final skill combination probability"
+        "step5": "5. For each assigned slot, calculate 1/(available skill count in that group) as the skill probability",
+        "step6": "6. Important: Already assigned skills in the same group are excluded, reducing available skill count for subsequent assignments",
+        "step7": "7. Multiply all individual slot probabilities to get the final skill combination probability"
       },
       "example": {
         "title": "Example:",
         "description": "For a RARE[6] charm with groups [1,1,10] and selected skills [Artillery Lv.1, Attack Boost Lv.1, Weakness Exploit Lv.1]:",
         "step1": "• Base Rarity Probability: 27% (RARE[6])",
         "step2": "• Charm Type Probability: 1/7 ≈ 14.29% (RARE[6] has 7 different group combinations)",
-        "step3": "• Skill Combination: Slot1(Group1)→Artillery(1/35), Slot2(Group1)→Attack(1/35), Slot3(Group10)→Weakness Exploit(1/9)",
-        "result": "Final Probability = 27% × (1/7) × (1/35) × (1/35) × (1/9) ≈ 0.009%"
+        "step3": "• Skill Combination: Slot1(Group1)→Artillery(1/35), Slot2(Group1)→Attack(1/34, excluding Artillery), Slot3(Group10)→Weakness Exploit(1/9)",
+        "result": "Final Probability = 27% × (1/7) × (1/35) × (1/34) × (1/9) ≈ 0.009%"
       },
       "rarityBase": "Rarity Base Probability: ",
       "groupCount": "Skill Group Count: Total number of available skills in that group",
@@ -84,9 +99,10 @@
     "note": {
       "title": "Important Notes:",
       "line1": "• This calculation assumes each skill in a group has equal probability",
-      "line2": "• Actual game mechanics may differ from this simplified model",
-      "line3": "• Results are estimates for reference only, not guaranteed accuracy",
-      "line4": "• Charm slot assignments follow a greedy matching algorithm"
+      "line2": "• Skills cannot be repeated: Already selected skills in the same group are excluded, reducing available skill count for subsequent selections",
+      "line3": "• Actual game mechanics may differ from this simplified model",
+      "line4": "• Results are estimates for reference only, not guaranteed accuracy",
+      "line5": "• Charm slot assignments follow a greedy matching algorithm"
     },
     "debug": {
       "title": "Probability Calculation Debug Info:",
@@ -95,7 +111,8 @@
       "skills": "skills",
       "skillCombProb": "Skill Combination Probability",
       "finalProb": "Final Probability",
-      "finalPercentage": "Final Percentage"
+      "finalPercentage": "Final Percentage",
+      "excluded": "Excluded"
     }
   },
   "common": {
@@ -116,10 +133,30 @@
       "slotCombinations": "Slot Combinations"
     },
     "charmsCount": "{{count}} charms",
+    "header": {
+      "totalCombos": "Total combos: {{count}}",
+      "baseProbability": "Base probability: {{pct}}",
+      "slotCombinations": "Slot combinations"
+    },
     "labels": {
       "skillGroups": "Skill Groups",
-      "slotCombinations": "Slot Combinations"
+      "slotCombinations": "Slot Combinations",
+      "combinationCount": "Combination Count"
+    },
+    "dialog": {
+      "title": "Select skills",
+      "description": "Choose one skill per group for this charm",
+      "noSkillGroups": "No skill groups",
+      "unknownGroup": "Unknown {{group}}"
+    },
+    "notes": {
+      "title": "Notes",
+      "rareSame": "RARE[7] and RARE[8] share the same skill groups; they differ only in decoration slots.",
+      "rare8FirstSlot": "For RARE[8], the first slot is a weapon slot."
     }
+  },
+  "actions": {
+    "close": "Close"
   },
   "skillGroups": {
     "title": "Skill Groups",
@@ -255,5 +292,9 @@
     "Foray": "Foray",
     "Latent Power": "Latent Power",
     "Weakness Exploit": "Weakness Exploit"
+  },
+  "version": {
+    "logic": "Logic Version",
+    "data": "Data Version"
   }
 }

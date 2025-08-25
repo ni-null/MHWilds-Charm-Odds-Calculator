@@ -1,0 +1,74 @@
+{
+  "RARE[5]": {
+    "probability": 0.59,
+    "slot": {
+      "[1, 1]": 0.25,
+      "[2]": 0.25,
+      "[2, 1]": 0.25,
+      "[3]": 0.25
+    },
+    "Group": [
+      { "skills": [1, 6, 6], "combinationCount": 49284 },
+      { "skills": [1, 7], "combinationCount": 1258 },
+      { "skills": [1, 8, 6], "combinationCount": 20535 },
+      { "skills": [1, 8, 8], "combinationCount": 7770 },
+      { "skills": [1, 9], "combinationCount": 555 },
+      { "skills": [1, 10], "combinationCount": 333 }
+    ]
+  },
+  "RARE[6]": {
+    "probability": 0.27,
+    "slot": {
+      "[1]": 0.25,
+      "[1, 1]": 0.25,
+      "[2]": 0.25,
+      "[2, 1]": 0.25
+    },
+    "Group": [
+      { "skills": [1, 1, 7], "combinationCount": 45288 },
+      { "skills": [1, 1, 10], "combinationCount": 11988 },
+      { "skills": [2, 6, 6], "combinationCount": 57276 },
+      { "skills": [2, 8, 6], "combinationCount": 23865 },
+      { "skills": [2, 8, 8], "combinationCount": 9030 },
+      { "skills": [2, 9], "combinationCount": 645 },
+      { "skills": [2, 10], "combinationCount": 387 }
+    ]
+  },
+  "RARE[7]": {
+    "probability": 0.11,
+    "slot": {
+      "[1]": 0.25,
+      "[1, 1]": 0.25,
+      "[2]": 0.25,
+      "[3]": 0.25
+    },
+    "Group": [
+      { "skills": [2, 1, 7], "combinationCount": 52836 },
+      { "skills": [2, 1, 8], "combinationCount": 23310 },
+      { "skills": [2, 1, 10], "combinationCount": 13986 },
+      { "skills": [3, 6, 5], "combinationCount": 53280 },
+      { "skills": [3, 7], "combinationCount": 1360 },
+      { "skills": [3, 8, 5], "combinationCount": 22200 },
+      { "skills": [3, 10], "combinationCount": 360 },
+      { "skills": [4, 1, 1], "combinationCount": 26532 }
+    ]
+  },
+  "RARE[8]": {
+    "probability": 0.03,
+    "slot": {
+      "[\"W1\"]": 0.5,
+      "[\"W1\", 1]": 0.33,
+      "[\"W1\", 1, 1]": 0.17
+    },
+    "Group": [
+      { "skills": [2, 1, 7], "combinationCount": 52836 },
+      { "skills": [2, 1, 8], "combinationCount": 23310 },
+      { "skills": [2, 1, 10], "combinationCount": 13986 },
+      { "skills": [3, 6, 5], "combinationCount": 53280 },
+      { "skills": [3, 7], "combinationCount": 1360 },
+      { "skills": [3, 8, 5], "combinationCount": 22200 },
+      { "skills": [3, 10], "combinationCount": 360 },
+      { "skills": [4, 1, 1], "combinationCount": 26532 }
+    ]
+  }
+}

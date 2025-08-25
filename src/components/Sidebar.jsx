@@ -4,6 +4,22 @@ import { useTranslation } from "react-i18next"
 const Sidebar = ({ isOpen, onToggle }) => {
   const location = useLocation()
   const { t, i18n } = useTranslation()
+  // 由 Vite 注入的環境變數（在 CI/CD pipeline 裡設定 VITE_BUILD_TIME）
+  const buildTimeRaw = import.meta.env.VITE_BUILD_TIME || import.meta.env.VITE_BUILD_TIMESTAMP || null
+  const buildLabel = t("version.buildTime", { defaultValue: "Build Time" })
+  const unknownLabel = t("version.unknown", { defaultValue: "N/A" })
+  const buildTime = buildTimeRaw
+    ? (() => {
+        const parsed = Date.parse(buildTimeRaw)
+        if (!isNaN(parsed)) {
+          // 根據目前語言選擇合適的地區顯示
+          if (i18n.language === "zhTW") return new Date(parsed).toLocaleString("zh-TW")
+          if (i18n.language === "zhCN") return new Date(parsed).toLocaleString("zh-CN")
+          return new Date(parsed).toLocaleString("en-US")
+        }
+        return buildTimeRaw
+      })()
+    : null
 
   const navs = [
     { to: "/", label: t("navigation.mhwCalculator") },
@@ -81,11 +97,10 @@ const Sidebar = ({ isOpen, onToggle }) => {
             )
           })}
         </nav>
-
         {/* 語言選擇器 */}
         <div className='px-4 py-4 border-t border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <label className='block mb-3 text-sm font-semibold tracking-wide text-yellow-300'>
-            {i18n.language === "zhTW" ? "語言 / Language" : t("navigation.languageLabel")}
+            {i18n.language && i18n.language.startsWith("zh") ? "語言 / Language" : t("navigation.languageLabel")}
           </label>
           <select
             value={i18n.language}
@@ -94,10 +109,27 @@ const Sidebar = ({ isOpen, onToggle }) => {
             <option value='zhTW' className='bg-gray-800'>
               繁體中文
             </option>
+            <option value='zhCN' className='bg-gray-800'>
+              简体中文
+            </option>
             <option value='enUS' className='bg-gray-800'>
               English
             </option>
+            <option value='jaJP' className='bg-gray-800'>
+              日本語
+            </option>
           </select>
+        </div>
+
+        {/* 版本資訊區域 */}
+        <div className='px-4 py-2 text-xs border-t text-yellow-400/60 border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
+          <div className='space-y-1 text-center'>
+            <div className='text-yellow-400/60'>{t("version.logic")} 1.3</div>
+            <div className='text-yellow-400/60'>{t("version.data")} 20250813</div>
+            <div className='text-yellow-400/60'>
+              {buildLabel}: {buildTime ?? unknownLabel}
+            </div>
+          </div>
         </div>
 
         <div className='p-4 text-xs border-t text-yellow-400/70 border-yellow-500/20 bg-black/30 backdrop-blur-sm'>

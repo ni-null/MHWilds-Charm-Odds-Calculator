@@ -12,7 +12,7 @@
     "title": "資訊",
     "datasource": {
       "title": "資料來源",
-      "description": "以下為本專案主要使用與整理的原始資料（Google Sheets）：",
+      "description": "以下為本專案主要使用與整理的原始資料（Google Sheets），網路上所有中英文資料都是出自這張表：",
       "linkLabel": "https://docs.google.com/spreadsheets/d/1fpkamu1VzEpX8dZqecygW1GflKyvdY2975Y0d9SUt04/edit?gid=0#gid=0",
       "note": "注意：資料由社群整理與轉換，可能包含手動編輯或轉換錯誤。若發現問題，歡迎回報或在原始資料表提出修正建議。"
     },
@@ -21,6 +21,13 @@
       "description": "本專案程式碼與相關資源已放在 GitHub：",
       "linkLabel": "https://github.com/ni-null/MHWilds-Charm-Odds-Calculator",
       "encourage": "如果你覺得這個專案有幫助，歡迎在 GitHub 上給個星星 ⭐️，這會是很大的鼓勵！"
+    },
+    "calculation": {
+      "title": "機率計算",
+      "description": "本專案使用以下機率計算公式：",
+      "formula": "P(特定護石) = P(稀有度) × P(模板 | 稀有度) × P(技能組合 | 模板)",
+      "reference": "參考資料：",
+      "referenceLink": "遊民星空 - rongchingl 攻略"
     }
   },
   "rarity": "稀有度",
@@ -33,9 +40,16 @@
     "skill2": "技能 2",
     "skill3": "技能 3",
     "selectSkill": "-- 選擇技能 --",
-    "groupInfo": "群組"
+    "clearSelection": "-- 清除選擇 --",
+    "reset": "重設",
+    "groupInfo": "群組",
+    "searchSkill": "搜尋技能...",
+    "slotFilter": "插槽篩選",
+    "slotAny": "任意插槽",
+    "clearSlot": "清除插槽"
   },
   "amulet": {
+    "specificSlotProb": "特定插槽機率",
     "list": "護石列表",
     "matching": "匹配的護石",
     "probability": "機率",
@@ -64,18 +78,19 @@
         "title": "詳細說明：",
         "step1": "1. 每個護石有 1-3 個技能槽，每個槽位屬於特定的技能群組",
         "step2": "2. 相同稀有度的護石有不同的技能群組組合（如 [1,6,6]、[1,7,null]、[1,8,6] 等）",
-        "step3": "3. 系統將每個選擇的技能分配到包含所需技能群組的可用槽位",
+        "step3": "3. 系統將每個選擇的技能依序分配到包含所需技能群組的可用槽位",
         "step4": "4. 每個槽位只能分配給一個技能（不可重複使用槽位）",
-        "step5": "5. 對於每個分配的槽位，計算 1/(該群組技能數量) 作為技能機率",
-        "step6": "6. 將所有個別槽位機率相乘，得到最終技能組合機率"
+        "step5": "5. 對於每個分配的槽位，計算 1/(該群組可用技能數量) 作為技能機率",
+        "step6": "6. 重要：同一群組中已分配的技能會被排除，後續分配時可用技能數量會減少",
+        "step7": "7. 將所有個別槽位機率相乘，得到最終技能組合機率"
       },
       "example": {
         "title": "範例：",
         "description": "對於群組為 [1,1,10] 的 RARE[6] 護石，選擇技能為 [砲術 Lv.1, 攻擊 Lv.1, 巧擊 Lv.1]：",
         "step1": "• 稀有度基礎機率：27% (RARE[6])",
         "step2": "• 護石類型機率：1/7 ≈ 14.29% (RARE[6] 有 7 種不同群組組合)",
-        "step3": "• 技能組合：槽位1(群組1)→砲術(1/35)，槽位2(群組1)→攻擊(1/35)，槽位3(群組10)→巧擊(1/9)",
-        "result": "最終機率 = 27% × (1/7) × (1/35) × (1/35) × (1/9) ≈ 0.009%"
+        "step3": "• 技能組合：槽位1(群組1)→砲術(1/35)，槽位2(群組1)→攻擊(1/34，排除砲術)，槽位3(群組10)→巧擊(1/9)",
+        "result": "最終機率 = 27% × (1/7) × (1/35) × (1/34) × (1/9) ≈ 0.009%"
       },
       "rarityBase": "稀有度基礎機率：",
       "groupCount": "技能群組數量：該群組中所有可用技能的數量",
@@ -84,9 +99,10 @@
     "note": {
       "title": "重要說明：",
       "line1": "• 此計算假設群組內每個技能出現機率相等",
-      "line2": "• 實際遊戲機制可能與此簡化模型有所差異",
-      "line3": "• 計算結果為估算值，僅供參考，不保證準確性",
-      "line4": "• 護石槽位分配採用貪婪匹配演算法"
+      "line2": "• 技能不能重複：同一群組中已選擇的技能會被排除，降低後續技能的可選數量",
+      "line3": "• 實際遊戲機制可能與此簡化模型有所差異",
+      "line4": "• 計算結果為估算值，僅供參考，不保證準確性",
+      "line5": "• 護石槽位分配採用貪婪匹配演算法"
     },
     "debug": {
       "title": "機率計算除錯資訊：",
@@ -95,7 +111,8 @@
       "skills": "技能",
       "skillCombProb": "技能組合機率",
       "finalProb": "最終機率",
-      "finalPercentage": "最終百分比"
+      "finalPercentage": "最終百分比",
+      "excluded": "排除"
     }
   },
   "common": {
@@ -116,10 +133,30 @@
       "slotCombinations": "插槽組合"
     },
     "charmsCount": "{{count}} 個護石",
+    "header": {
+      "totalCombos": "總組合數：{{count}}",
+      "baseProbability": "基礎命中機率：{{pct}}",
+      "slotCombinations": "插槽組合"
+    },
     "labels": {
       "skillGroups": "技能群組",
-      "slotCombinations": "插槽組合"
+      "slotCombinations": "插槽組合",
+      "combinationCount": "組合數量"
+    },
+    "dialog": {
+      "title": "選擇技能",
+      "description": "為此護石從每個群組中選擇一項技能",
+      "noSkillGroups": "無技能群組",
+      "unknownGroup": "未知 {{group}}"
+    },
+    "notes": {
+      "title": "說明",
+      "rareSame": "RARE[7] 與 RARE[8] 的技能群組相同，差別在裝飾品插槽。",
+      "rare8FirstSlot": "RARE[8] 的第一個插槽為武器插槽。"
     }
+  },
+  "actions": {
+    "close": "關閉"
   },
   "skillGroups": {
     "title": "技能群組",
@@ -148,7 +185,7 @@
     "Ballistics": "彈道強化",
     "Blast Attack": "爆破屬性強化",
     "Bludgeoner": "鈍器能手",
-    "Charge Master": "蓄力高手",
+    "Charge Master": "蓄力大師",
     "Critical Draw": "拔刀術【技】",
     "Critical Element": "屬性會心",
     "Critical Eye": "看破",
@@ -181,17 +218,17 @@
     "Thunder Attack": "雷屬性攻擊強化",
     "Water Attack": "水屬性攻擊強化",
     "Airborne": "飛燕",
-    "Blast Functionality": "爆破屬性機能",
-    "Charge Up": "蓄力強化",
-    "Exhaust Functionality": "疲勞屬性機能",
+    "Blast Functionality": "爆破瓶追加",
+    "Charge Up": "蓄攻強化",
+    "Exhaust Functionality": "減氣瓶追加",
     "Poison Duration Up": "毒傷害強化",
     "Poison Functionality": "毒瓶追加",
     "Master's Touch": "達人藝",
     "Normal Shots": "通常彈・連射箭強化",
-    "Para Functionality": "麻痺屬性機能",
+    "Para Functionality": "麻痺瓶追加",
     "Piercing Shots": "貫通彈・龍之箭強化",
     "Rapid Fire Up": "速射強化",
-    "Sleep Functionality": "睡眠屬性機能",
+    "Sleep Functionality": "睡眠瓶追加",
     "Spread/Power Shots": "散彈・剛射強化",
     "Critical Boost": "超會心",
     "Adaptability": "適應環境",
@@ -255,5 +292,9 @@
     "Foray": "攻勢",
     "Latent Power": "力量解放",
     "Weakness Exploit": "弱點特效"
+  },
+  "version": {
+    "logic": "邏輯版本",
+    "data": "資料版本"
   }
 }

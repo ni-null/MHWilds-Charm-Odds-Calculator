@@ -1,15 +1,36 @@
 import React, { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import AmuletData from "../../data/Amulet.json"
+// Amulet data migrated into RarityBaseProbability.json (Group + combinationCount)
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
-
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
+import skillGroupsData from "../../data/SkillGroups.json"
+import rarityProbabilities from "../../data/Rarity.json"
+import { Button } from "@/components/ui/button"
 const CharmTypePage = () => {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
-  const [searchTerm, setSearchTerm] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  // 翻譯技能名稱的函數（複用 SkillGroups 頁面的邏輯）
+  const getSkillTranslation = React.useCallback(
+    (skillName) => {
+      const translation = t(`skillTranslations.${skillName}`)
+      return translation !== `skillTranslations.${skillName}` ? translation : skillName
+    },
+    [t]
+  )
+
+  const getGroupTranslation = React.useCallback(
+    (groupKey) => {
+      const groupNumber = groupKey.toLowerCase()
+      const translation = t(`skillGroups.${groupNumber}`)
+      return translation !== `skillGroups.${groupNumber}` ? translation : groupKey
+    },
+    [t]
+  )
 
   const handleSidebarToggle = () => {
     setIsSidebarOpen(!isSidebarOpen)
@@ -19,45 +40,70 @@ const CharmTypePage = () => {
   const charmAnalysis = useMemo(() => {
     const rarityGroups = {}
     const slotCombinations = new Set()
-    const skillGroups = new Set()
+    const raritySlotMap = {}
 
-    AmuletData.forEach((amulet) => {
-      // 按稀有度分組
-      if (!rarityGroups[amulet.Rarity]) {
-        rarityGroups[amulet.Rarity] = []
+    Object.entries(rarityProbabilities).forEach(([rarity, data]) => {
+      const groups = data.Group || []
+      rarityGroups[rarity] = groups.map((g) => ({
+        Rarity: rarity,
+        Skill1Group: g.skills && g.skills[0] ? g.skills[0] : null,
+        Skill2Group: g.skills && g.skills[1] ? g.skills[1] : null,
+        Skill3Group: g.skills && g.skills[2] ? g.skills[2] : null,
+        combinationCount: g.combinationCount || 0,
+      }))
+
+      const raritySlotObj = (rarityProbabilities && rarityProbabilities[rarity] && rarityProbabilities[rarity].slot) || null
+      if (raritySlotObj) {
+        const raritySlotSet = new Set()
+        Object.keys(raritySlotObj).forEach((k) => {
+          try {
+            const arr = JSON.parse(k)
+            const key = Array.isArray(arr) ? arr.join("-") : k
+            slotCombinations.add(key)
+            raritySlotSet.add(key)
+          } catch {
+            slotCombinations.add(k)
+            raritySlotSet.add(k)
+          }
+        })
+        raritySlotMap[rarity] = Array.from(raritySlotSet).sort()
       }
-      rarityGroups[amulet.Rarity].push(amulet)
 
-      // 插槽組合
-      amulet.PossibleSlotCombos.forEach((combo) => {
-        slotCombinations.add(combo.join("-"))
-      })
-
-      // 技能群組
-      if (amulet.Skill1Group) skillGroups.add(amulet.Skill1Group)
-      if (amulet.Skill2Group) skillGroups.add(amulet.Skill2Group)
-      if (amulet.Skill3Group) skillGroups.add(amulet.Skill3Group)
+      // collect skill groups (kept for future use if needed)
+      // const skills = g.skills || []
     })
+
+    // total charms = sum of group entries
+    const totalCharms = Object.values(rarityGroups).reduce((s, arr) => s + arr.length, 0)
 
     return {
       rarityGroups,
       slotCombinations: Array.from(slotCombinations).sort(),
-      totalSkillGroups: skillGroups.size,
-      totalCharms: AmuletData.length,
+      raritySlotMap,
+      // totalSkillGroups removed (unused)
+      totalCharms,
     }
   }, [])
 
-  // 篩選護石
-  const filteredCharms = useMemo(() => {
-    if (!searchTerm) return AmuletData
+  // prepare rarity entries with total combos and base probability
+  const rarityEntries = Object.entries(charmAnalysis.rarityGroups)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([rarity, charms]) => {
+      const totalCombos = charms.reduce((s, c) => s + (c.combinationCount || 0), 0)
+      const probEntry = rarityProbabilities[rarity]
+      const prob = probEntry && typeof probEntry === "object" ? probEntry.probability : probEntry
+      const formattedTotalCombos = (totalCombos || 0).toLocaleString()
+      const formattedProbPct = typeof prob !== "undefined" && prob !== null ? `${Math.round(Number(prob) * 100)}%` : null
 
-    return AmuletData.filter((amulet) => {
-      return (
-        amulet.Rarity.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        amulet.PossibleSlotCombos.some((combo) => combo.join("-").includes(searchTerm))
-      )
+      return {
+        rarity,
+        charms,
+        totalCombos,
+        prob,
+        formattedTotalCombos,
+        formattedProbPct,
+      }
     })
-  }, [searchTerm])
 
   return (
     <div className='flex min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50'>
@@ -85,33 +131,124 @@ const CharmTypePage = () => {
               </div>
             </div>
 
+            <div className='p-4 mb-6 bg-white border border-gray-200 rounded-lg'>
+              <h3 className='mb-1 font-semibold text-gray-800'>{t("charmTypes.notes.title")}</h3>
+              <p className='text-gray-600 '>{t("charmTypes.notes.rareSame")}</p>
+              <p className='text-gray-600 '>{t("charmTypes.notes.rare8FirstSlot")}</p>
+            </div>
+
             {/* 護石種類展示 */}
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-              {Object.entries(charmAnalysis.rarityGroups)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([rarity, charms]) => (
+              {rarityEntries.map((entry) => {
+                const { rarity, charms, formattedTotalCombos, formattedProbPct } = entry
+                const raritySlotList = charmAnalysis.raritySlotMap && charmAnalysis.raritySlotMap[rarity] ? charmAnalysis.raritySlotMap[rarity] : []
+                return (
                   <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
                     <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
-                      <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
-                      <p className='text-sm text-gray-600'>{t("charmTypes.charmsCount", { count: charms.length })}</p>
+                      <div className='flex justify-center mb-5'>
+                        <div className='flex items-center'>
+                          <img
+                            src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(rarity)}.png`}
+                            alt={rarity}
+                            style={{ width: 40, height: 40, objectFit: "contain" }}
+                            className='mr-2 rounded'
+                            onError={(e) => {
+                              try {
+                                if (!e || !e.currentTarget) return
+                                const el = e.currentTarget
+                                el.style.display = "none"
+                              } catch {
+                                /* swallow */
+                              }
+                            }}
+                          />
+
+                          <h2 className='text-xl font-bold text-purple-700'>{rarity}</h2>
+                        </div>
+                      </div>
+
+                      <p className='text-gray-600 '>{t("charmTypes.charmsCount", { count: charms.length })}</p>
+                      <p className='text-gray-600 '>{t("charmTypes.header.totalCombos", { count: formattedTotalCombos })}</p>
+                      {formattedProbPct && <p className='text-gray-600 '>{t("charmTypes.header.baseProbability", { pct: formattedProbPct })}</p>}
+                      {raritySlotList && raritySlotList.length > 0 && (
+                        <p className='mt-2 text-gray-600'>
+                          {t("charmTypes.header.slotCombinations") ? t("charmTypes.header.slotCombinations") + ": " : "Slot combinations: "}
+                          {raritySlotList.map((c) => `[${c.split("-").join(", ")}]`).join(" ")}
+                        </p>
+                      )}
                     </div>
                     <div className='p-4'>
                       <div className='space-y-2'>
-                        {charms.map((charm, index) => (
-                          <div key={index} className='p-3 border rounded bg-gray-50'>
-                            <div className='mb-2 text-sm font-medium text-gray-800'>
-                              {t("charmTypes.labels.skillGroups")}:{" "}
-                              {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group].filter((g) => g !== null).join(", ")}
-                            </div>
-                            <div className='text-xs text-gray-600'>
-                              {t("charmTypes.labels.slotCombinations")}: {charm.PossibleSlotCombos.map((combo) => `[${combo.join(", ")}]`).join(" ")}
-                            </div>
-                          </div>
-                        ))}
+                        {charms.map((charm, index) => {
+                          const comboCount = charm.combinationCount
+                          const formattedComboCount = (comboCount || 0).toLocaleString()
+
+                          return (
+                            <Dialog key={index}>
+                              <DialogTrigger asChild>
+                                <div className='p-3 border rounded cursor-pointer bg-gray-50 hover:bg-gray-100'>
+                                  <div className='mb-2 font-medium text-gray-800'>
+                                    {t("charmTypes.labels.skillGroups")}:{" "}
+                                    {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group]
+                                      .filter((g) => g !== null)
+                                      .map((g, idx) => {
+                                        const groupKey = typeof g === "number" ? `Group${g}` : `${g}`
+                                        const gd = (skillGroupsData.SkillGroups && skillGroupsData.SkillGroups[groupKey]) || {}
+
+                                        return (
+                                          <span
+                                            key={`${groupKey}-${idx}`}
+                                            className='inline-block px-2 py-0.5 mr-1 font-medium rounded'
+                                            style={{ backgroundColor: gd.bgColor, color: gd.Color }}>
+                                            {g}
+                                          </span>
+                                        )
+                                      })}
+                                  </div>
+                                  {/* slot combinations moved to rarity header (shown once) */}
+                                  <div className='mt-2 text-gray-700'>
+                                    {t("charmTypes.labels.combinationCount")}: <span className='font-semibold'>{formattedComboCount}</span>
+                                  </div>
+                                </div>
+                              </DialogTrigger>
+
+                              <DialogContent className='w-full max-w-4xl'>
+                                <DialogHeader>
+                                  <DialogTitle>
+                                    {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
+                                      ? t("charmTypes.dialog.title")
+                                      : getSkillTranslation("Select skills")}
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
+                                      ? t("charmTypes.dialog.description")
+                                      : getSkillTranslation("Choose one skill per group for this charm")}
+                                  </DialogDescription>
+                                </DialogHeader>
+
+                                <div className='space-y-4'>
+                                  <CharmSkillsDialogContent
+                                    charm={charm}
+                                    getSkillTranslation={getSkillTranslation}
+                                    getGroupTranslation={getGroupTranslation}
+                                    t={t}
+                                  />
+                                </div>
+
+                                <DialogFooter>
+                                  <DialogClose asChild>
+                                    <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
+                                  </DialogClose>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>
-                ))}
+                )
+              })}
             </div>
           </div>
         </main>
