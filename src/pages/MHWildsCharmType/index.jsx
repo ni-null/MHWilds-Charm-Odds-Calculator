@@ -40,7 +40,7 @@ const CharmTypePage = () => {
   const charmAnalysis = useMemo(() => {
     const rarityGroups = {}
     const slotCombinations = new Set()
-    const skillGroups = new Set()
+    const raritySlotMap = {}
 
     Object.entries(rarityProbabilities).forEach(([rarity, data]) => {
       const groups = data.Group || []
@@ -54,23 +54,23 @@ const CharmTypePage = () => {
 
       const raritySlotObj = (rarityProbabilities && rarityProbabilities[rarity] && rarityProbabilities[rarity].slot) || null
       if (raritySlotObj) {
+        const raritySlotSet = new Set()
         Object.keys(raritySlotObj).forEach((k) => {
           try {
             const arr = JSON.parse(k)
-            slotCombinations.add(arr.join("-"))
+            const key = Array.isArray(arr) ? arr.join("-") : k
+            slotCombinations.add(key)
+            raritySlotSet.add(key)
           } catch {
             slotCombinations.add(k)
+            raritySlotSet.add(k)
           }
         })
+        raritySlotMap[rarity] = Array.from(raritySlotSet).sort()
       }
 
-      // collect skill groups
-      groups.forEach((g) => {
-        const skills = g.skills || []
-        if (skills[0]) skillGroups.add(skills[0])
-        if (skills[1]) skillGroups.add(skills[1])
-        if (skills[2]) skillGroups.add(skills[2])
-      })
+      // collect skill groups (kept for future use if needed)
+      // const skills = g.skills || []
     })
 
     // total charms = sum of group entries
@@ -79,7 +79,8 @@ const CharmTypePage = () => {
     return {
       rarityGroups,
       slotCombinations: Array.from(slotCombinations).sort(),
-      totalSkillGroups: skillGroups.size,
+      raritySlotMap,
+      // totalSkillGroups removed (unused)
       totalCharms,
     }
   }, [])
@@ -140,22 +141,7 @@ const CharmTypePage = () => {
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
               {rarityEntries.map((entry) => {
                 const { rarity, charms, formattedTotalCombos, formattedProbPct } = entry
-                // compute slot combinations that appear only in this rarity's charms
-                const raritySlotSet = new Set()
-                charms.forEach((ch) => {
-                  const raritySlotObj = (rarityProbabilities && rarityProbabilities[ch.Rarity] && rarityProbabilities[ch.Rarity].slot) || null
-                  if (raritySlotObj) {
-                    Object.keys(raritySlotObj).forEach((k) => {
-                      try {
-                        const arr = JSON.parse(k)
-                        if (Array.isArray(arr)) raritySlotSet.add(arr.join("-"))
-                      } catch {
-                        raritySlotSet.add(k)
-                      }
-                    })
-                  }
-                })
-                const raritySlotList = Array.from(raritySlotSet).sort()
+                const raritySlotList = charmAnalysis.raritySlotMap && charmAnalysis.raritySlotMap[rarity] ? charmAnalysis.raritySlotMap[rarity] : []
                 return (
                   <div key={rarity} className='bg-white border border-gray-200 rounded-lg shadow-lg'>
                     <div className='p-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50'>
