@@ -14,7 +14,7 @@ export default function MHWPage() {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
   // selectedSkills moved to zustand store to avoid prop drilling
-  const { selectedSkills } = useMhwStore()
+  const { selectedSkills, selectedSlot } = useMhwStore()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // 稀有度基礎機率設定（從資料檔載入）
@@ -36,11 +36,13 @@ export default function MHWPage() {
       })
     })
     return map
-  }, [rarityBaseProbability])
+  }, [])
 
   // 根據選擇的技能篩選護石 — 由於 AmuletData 已搬入 RarityBaseProbability.json，先展平成虛擬護石清單
   const matchingAmulets = useMemo(() => {
     const selectedSkillsFiltered = selectedSkills.filter(Boolean)
+
+    // 如果只選擇插槽而沒有選擇技能，返回空陣列（只顯示插槽機率）
     if (selectedSkillsFiltered.length === 0) return []
 
     // build virtual amulet list from rarity groups
@@ -62,6 +64,12 @@ export default function MHWPage() {
     })
 
     return virtualAmulets.filter((amulet) => {
+      // if a slot filter is selected, only include amulets whose rarity supports that slot
+      if (selectedSlot) {
+        const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+        if (!Object.prototype.hasOwnProperty.call(slotObj, selectedSlot)) return false
+      }
+
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
       const usedSlots = []
 
@@ -80,32 +88,38 @@ export default function MHWPage() {
 
       return true
     })
-  }, [selectedSkills, skillToGroupMap, rarityBaseProbability])
+  }, [selectedSkills, skillToGroupMap, rarityBaseProbability, selectedSlot])
 
   // 根據護石群組取得可能的技能
 
   // 計算每個群組在特定稀有度下的技能數量
-  const getGroupSkillCountForRarity = useCallback((groupNumber, rarity) => {
-    // 對於Monster Hunter護石系統：
-    // 每個群組的技能數量在所有稀有度下都是相同的
-    // 稀有度主要影響基礎出現機率，而不是技能選擇池
-    const groupKey = `Group${groupNumber}`
-    const totalGroupSkills = SkillGroupsData.SkillGroups[groupKey] ? SkillGroupsData.SkillGroups[groupKey].data.length : 1
+  const getGroupSkillCountForRarity = useCallback(
+    (groupNumber, rarity) => {
+      // 對於Monster Hunter護石系統：
+      // 每個群組的技能數量在所有稀有度下都是相同的
+      // 稀有度主要影響基礎出現機率，而不是技能選擇池
+      const groupKey = `Group${groupNumber}`
+      const totalGroupSkills = SkillGroupsData.SkillGroups[groupKey] ? SkillGroupsData.SkillGroups[groupKey].data.length : 1
 
-    // 檢查該稀有度是否實際包含此群組（從 RarityBaseProbability.json 的 Group 欄位判斷）
-    const rarityGroups = (rarityBaseProbability[rarity] && rarityBaseProbability[rarity].Group) || []
-    const hasGroupInRarity = rarityGroups.some((g) => Array.isArray(g.skills) && g.skills.includes(groupNumber))
+      // 檢查該稀有度是否實際包含此群組（從 RarityBaseProbability.json 的 Group 欄位判斷）
+      const rarityGroups = (rarityBaseProbability[rarity] && rarityBaseProbability[rarity].Group) || []
+      const hasGroupInRarity = rarityGroups.some((g) => Array.isArray(g.skills) && g.skills.includes(groupNumber))
 
-    return hasGroupInRarity ? totalGroupSkills : 1
-  }, [])
+      return hasGroupInRarity ? totalGroupSkills : 1
+    },
+    [rarityBaseProbability]
+  )
 
   // 計算護石的精確出現機率
   const calculateAmuletProbability = useCallback(
-    (amulet) => {
+    (amulet, includeSlot = true) => {
       const baseProb = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].probability) || 0.01
+      // if a slot is selected, factor in the slot probability for this rarity
+      const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+      const slotProb = includeSlot && selectedSlot && Object.prototype.hasOwnProperty.call(slotObj, selectedSlot) ? slotObj[selectedSlot] : 1
       const selectedSkillsFiltered = selectedSkills.filter(Boolean)
 
-      if (selectedSkillsFiltered.length === 0) return baseProb
+      if (selectedSkillsFiltered.length === 0) return baseProb * slotProb
 
       // 計算該稀有度下護石類型的總數（使用 RarityBaseProbability.Group 的項目數）
       const amuletsOfSameRarity = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].Group) || []
@@ -170,48 +184,41 @@ export default function MHWPage() {
         }
       }
 
-      // 最終機率 = 基礎機率 × 護石類型機率 × 技能組合機率
-      return baseProb * amuletTypeProb * skillCombinationProb
+      // 最終機率 = 基礎機率 × 插槽機率(if included) × 護石類型機率 × 技能組合機率
+      return baseProb * slotProb * amuletTypeProb * skillCombinationProb
     },
-    [rarityBaseProbability, getGroupSkillCountForRarity, selectedSkills, skillToGroupMap]
+    [rarityBaseProbability, getGroupSkillCountForRarity, selectedSkills, skillToGroupMap, selectedSlot]
   )
 
-  // 計算匹配護石的機率分布
+  // 計算匹配護石的機率分布，同時回傳「不含插槽」與「含插槽」兩種表示
   const amuletProbabilities = useMemo(() => {
     if (matchingAmulets.length === 0) return {}
 
     const probabilities = {}
     matchingAmulets.forEach((amulet, index) => {
-      const probability = calculateAmuletProbability(amulet)
-      const percentageProb = probability * 100
+      const probNoSlot = calculateAmuletProbability(amulet, false)
+      const probWithSlot = calculateAmuletProbability(amulet, true)
 
-      // 更智能的小數位數格式化，避免科學記號
-      let formattedProb
-      if (percentageProb >= 0.01) {
-        formattedProb = percentageProb.toFixed(4)
-      } else if (percentageProb >= 0.001) {
-        formattedProb = percentageProb.toFixed(6)
-      } else if (percentageProb >= 0.0001) {
-        formattedProb = percentageProb.toFixed(8)
-      } else {
-        // 對於非常小的數字，使用更多小數位數並移除尾隨的零
-        formattedProb = percentageProb.toFixed(12).replace(/\.?0+$/, "")
-        // 如果還是會變成科學記號，則使用 toPrecision
-        if (formattedProb.includes("e")) {
-          formattedProb = percentageProb.toPrecision(8)
-          if (formattedProb.includes("e")) {
-            // 手動格式化避免科學記號
-            const str = percentageProb.toString()
-            if (str.includes("e")) {
-              formattedProb = percentageProb.toFixed(15).replace(/\.?0+$/, "")
-            } else {
-              formattedProb = str
-            }
-          }
-        }
+      const pctNoSlot = probNoSlot * 100
+      const pctWithSlot = probWithSlot * 100
+
+      const formatPct = (percentageProb) => {
+        if (percentageProb >= 0.01) return percentageProb.toFixed(4)
+        if (percentageProb >= 0.001) return percentageProb.toFixed(6)
+        if (percentageProb >= 0.0001) return percentageProb.toFixed(8)
+        return percentageProb.toFixed(12).replace(/\.?0+$/, "")
       }
 
-      probabilities[index] = formattedProb
+      probabilities[index] = {
+        noSlot: {
+          formatted: formatPct(pctNoSlot),
+          rawPercent: pctNoSlot,
+        },
+        withSlot: {
+          formatted: formatPct(pctWithSlot),
+          rawPercent: pctWithSlot,
+        },
+      }
     })
 
     return probabilities
@@ -230,6 +237,127 @@ export default function MHWPage() {
             </div>
 
             <SkillSelector />
+
+            {/* 插槽機率顯示區塊 - 當只選擇插槽而沒選擇技能時顯示 */}
+            {selectedSlot && selectedSkills.filter(Boolean).length === 0 && (
+              <section className='w-full p-6 mb-8 bg-white rounded-xl'>
+                <h2 className='mb-4 text-xl font-semibold'>{t("slotProbability.title", "插槽機率")}</h2>
+                {/* 顯示所有稀有度累計後的總機率 */}
+                {(() => {
+                  const totalFinalProbability = Object.entries(rarityBaseProbability).reduce((sum, [, data]) => {
+                    const slotObj = (data && data.slot) || {}
+                    const slotProb = Object.prototype.hasOwnProperty.call(slotObj, selectedSlot) ? slotObj[selectedSlot] : 0
+                    if (!slotProb) return sum
+                    const baseProb = data.probability || 0
+                    return sum + baseProb * slotProb
+                  }, 0)
+
+                  // 分子固定為 1 的表示法：1 / N（若機率為 0 顯示 0）
+                  let fracStr = "0"
+                  if (totalFinalProbability > 0) {
+                    const denomOne = Math.max(1, Math.round(1 / totalFinalProbability))
+                    fracStr = `1/${denomOne}`
+                  }
+
+                  return (
+                    <div className='flex items-center justify-between mb-4'>
+                      <div className='text-sm text-gray-600'>{t("slotProbability.totalLabel", "全部稀有度總機率")}:</div>
+                      <div className='text-2xl font-bold text-indigo-600'>
+                        {(totalFinalProbability * 100).toFixed(4)}%<span className='ml-3 text-sm text-gray-500'>({fracStr})</span>
+                      </div>
+                    </div>
+                  )
+                })()}
+
+                <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
+                  {Object.entries(rarityBaseProbability).map(([rarity, data]) => {
+                    const slotObj = (data && data.slot) || {}
+                    const hasSlot = Object.prototype.hasOwnProperty.call(slotObj, selectedSlot)
+                    const slotProbability = hasSlot ? slotObj[selectedSlot] : 0
+
+                    if (!hasSlot) return null
+
+                    // 計算最終機率 = 稀有度基礎機率 × 插槽機率
+                    const baseProbability = data.probability || 0
+                    const finalProbability = baseProbability * slotProbability
+
+                    // determine slot image(s) or fallback text
+                    let slotImgSrcs = []
+                    let slotAlt = selectedSlot
+                    try {
+                      const arr = JSON.parse(selectedSlot)
+                      if (Array.isArray(arr)) {
+                        arr.forEach((v) => {
+                          if (typeof v === "string" && v.startsWith("W")) {
+                            slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
+                          } else if (typeof v === "number") {
+                            const idx = Math.min(Math.max(1, v), 3)
+                            slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${idx}.png`)
+                          }
+                        })
+                      }
+                    } catch {
+                      // not JSON, try simple string like 'W1' or numeric
+                      if (typeof selectedSlot === "string" && selectedSlot.indexOf("W") !== -1) {
+                        slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
+                      } else if (!isNaN(Number(selectedSlot))) {
+                        const idx = Math.min(Math.max(1, Number(selectedSlot)), 3)
+                        slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${idx}.png`)
+                      }
+                    }
+
+                    return (
+                      <div
+                        key={rarity}
+                        className='p-6 transition-shadow border rounded-lg shadow-sm bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-md'>
+                        <div className='flex items-center justify-between mb-3'>
+                          <span className='text-lg font-medium text-gray-700'>{rarity}</span>
+                          <img
+                            src={`${import.meta.env.BASE_URL}image/Charm/${rarity}.png`}
+                            alt={rarity}
+                            className='object-contain w-12 h-12'
+                            onError={(e) => {
+                              e.target.style.display = "none"
+                            }}
+                          />
+                        </div>
+                        <div className='flex items-center gap-3 mb-2 text-sm text-gray-600'>
+                          <div className='text-gray-600'>{t("slotProbability.slot", "插槽")}:</div>
+                          {slotImgSrcs.length ? (
+                            <div className='flex items-center gap-2'>
+                              {slotImgSrcs.map((s, idx) => (
+                                <img
+                                  key={s + idx}
+                                  src={s}
+                                  alt={slotAlt}
+                                  className='object-contain w-10 h-10'
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = "none"
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            <span className='font-mono'>{selectedSlot}</span>
+                          )}
+                        </div>
+                        <div className='space-y-1'>
+                          <div className='text-xs text-gray-500'>
+                            {t("slotProbability.baseProb", "稀有度機率")}: {(baseProbability * 100).toFixed(2)}%
+                          </div>
+                          <div className='text-xs text-gray-500'>
+                            {t("slotProbability.slotProb", "插槽機率")}: {(slotProbability * 100).toFixed(2)}%
+                          </div>
+                          <div className='pt-1 text-xl font-bold text-indigo-600'>
+                            {t("slotProbability.finalProb", "總機率")}: {(finalProbability * 100).toFixed(4)}%
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </section>
+            )}
 
             <AmuletList
               matchingAmulets={matchingAmulets}

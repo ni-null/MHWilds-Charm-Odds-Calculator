@@ -6,7 +6,16 @@ import useMhwStore from "../../store/mhwStore"
 export default function AmuletList({ matchingAmulets, amuletProbabilities, rarityBaseProbability, getGroupSkillCountForRarity }) {
   const [expandedIndex, setExpandedIndex] = useState(null)
   const { t, i18n } = useTranslation()
-  const { selectedSkills } = useMhwStore()
+  const { selectedSkills, selectedSlot } = useMhwStore()
+
+  // locally filter by selectedSlot to avoid mismatch if parent forgot to filter
+  const visibleAmulets = React.useMemo(() => {
+    if (!selectedSlot) return matchingAmulets
+    return matchingAmulets.filter((amulet) => {
+      const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+      return Object.prototype.hasOwnProperty.call(slotObj, selectedSlot)
+    })
+  }, [matchingAmulets, selectedSlot, rarityBaseProbability])
 
   // inline placeholder SVG used when skill icon fails to load
   const SKILL_PLACEHOLDER_SVG =
@@ -40,17 +49,25 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
     return possibleSkills
   }
 
-  // 計算總機率和按稀有度分組的機率
+  // 計算總機率和按稀有度分組的機率（同時累計不含插槽與含插槽）
   const rarityProbabilities = {}
-  let totalProbability = 0
+  let totalNoSlot = 0
+  let totalWithSlot = 0
 
-  matchingAmulets.forEach((amulet, index) => {
-    const probability = parseFloat(amuletProbabilities[index]) || 0
+  visibleAmulets.forEach((amulet) => {
+    // find original index in matchingAmulets to look up probability map
+    const originalIndex = matchingAmulets.indexOf(amulet)
+    const probEntry = amuletProbabilities[originalIndex]
+    const noSlotProb = probEntry && probEntry.noSlot ? parseFloat(probEntry.noSlot.rawPercent) || 0 : 0
+    const withSlotProb = probEntry && probEntry.withSlot ? parseFloat(probEntry.withSlot.rawPercent) || 0 : 0
+
     if (!rarityProbabilities[amulet.Rarity]) {
-      rarityProbabilities[amulet.Rarity] = 0
+      rarityProbabilities[amulet.Rarity] = { noSlot: 0, withSlot: 0 }
     }
-    rarityProbabilities[amulet.Rarity] += probability
-    totalProbability += probability
+    rarityProbabilities[amulet.Rarity].noSlot += noSlotProb
+    rarityProbabilities[amulet.Rarity].withSlot += withSlotProb
+    totalNoSlot += noSlotProb
+    totalWithSlot += withSlotProb
   })
 
   return (
@@ -66,39 +83,60 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
             {t("common.total")}
             {t("amulet.probability")}:{" "}
             {(() => {
-              // 智能格式化總機率，避免科學記號
-              if (totalProbability >= 0.01) {
-                return totalProbability.toFixed(4)
-              } else if (totalProbability >= 0.001) {
-                return totalProbability.toFixed(6)
-              } else if (totalProbability >= 0.0001) {
-                return totalProbability.toFixed(8)
-              } else {
-                // 對於非常小的數字，使用更多小數位數
-                const formatted = totalProbability.toFixed(12).replace(/\.?0+$/, "")
-                if (formatted.includes("e")) {
-                  return totalProbability.toFixed(15).replace(/\.?0+$/, "")
-                }
-                return formatted
-              }
+              // 智能格式化總機率（不含插槽）
+              if (totalNoSlot >= 0.01) return totalNoSlot.toFixed(4)
+              if (totalNoSlot >= 0.001) return totalNoSlot.toFixed(6)
+              if (totalNoSlot >= 0.0001) return totalNoSlot.toFixed(8)
+              const formatted = totalNoSlot.toFixed(12).replace(/\.?0+$/, "")
+              if (formatted.includes("e")) return totalNoSlot.toFixed(15).replace(/\.?0+$/, "")
+              return formatted
             })()}
             {t("probability.percentage")}
-            {totalProbability > 0 && (
+            {totalNoSlot > 0 && (
               <span className='ml-2 text-lg font-normal'>
-                ({t("probability.approximately")} 1/{Math.round(100 / totalProbability).toLocaleString()})
+                ({t("probability.approximately")} 1/{Math.round(100 / totalNoSlot).toLocaleString()})
               </span>
             )}
+            {/* 當選擇插槽時，顯示含插槽的總機率與插槽篩選百分比 */}
+            {selectedSlot &&
+              (() => {
+                // 試圖從任一 visibleAmulet 找到 slot 百分比（同一稀有度下 slot 百分比相同）
+                const sample = visibleAmulets[0]
+                if (!sample) return null
+                const slotObj = (rarityBaseProbability[sample.Rarity] && rarityBaseProbability[sample.Rarity].slot) || {}
+                const slotVal = slotObj[selectedSlot]
+                if (typeof slotVal === "undefined") return null
+                // 格式化含插槽總機率
+                let formattedWithSlot
+                if (totalWithSlot >= 0.01) formattedWithSlot = totalWithSlot.toFixed(4)
+                else if (totalWithSlot >= 0.001) formattedWithSlot = totalWithSlot.toFixed(6)
+                else if (totalWithSlot >= 0.0001) formattedWithSlot = totalWithSlot.toFixed(8)
+                else formattedWithSlot = totalWithSlot.toFixed(12).replace(/\.?0+$/, "")
+
+                return (
+                  <div className='mt-1 text-sm text-gray-700'>
+                    <div>
+                      {t("amulet.specificSlotProb", { defaultValue: "Specific slot probability" })}: {formattedWithSlot}
+                      {t("probability.percentage")}
+                    </div>
+                    <div className='text-gray-500'>
+                      ({t("skillSelector.slotFilter")} {(slotVal * 100).toFixed(2)}%)
+                    </div>
+                  </div>
+                )
+              })()}
           </div>
         </div>
       )}
 
-      {matchingAmulets.length > 0 ? (
+      {visibleAmulets.length > 0 ? (
         <ul className='divide-y divide-gray-200'>
-          {matchingAmulets.map((amulet, index) => {
+          {visibleAmulets.map((amulet, index) => {
             const amuletSkills = getSkillsFromAmulet(amulet)
-            // 所以 parseFloat 得到的是百分比數值。保留原顯示字串以維持小數位數格式。
-            const probability = parseFloat(amuletProbabilities[index]) || 0
-            const probabilityDisplay = amuletProbabilities[index] ?? probability.toFixed(4)
+            // find probability using original index
+            const originalIndex = matchingAmulets.indexOf(amulet)
+            const probability = parseFloat(amuletProbabilities[originalIndex]) || 0
+            const probabilityDisplay = amuletProbabilities[originalIndex] ?? probability.toFixed(4)
             // 稀有度顏色對照
             const rarityColorMap = {
               "RARE[8]": "text-orange-600",
@@ -143,15 +181,52 @@ export default function AmuletList({ matchingAmulets, amuletProbabilities, rarit
                     <div className='flex flex-col'>
                       <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
                       <div className='flex items-center text-xs font-medium'>
-                        {t("amulet.probability")}: {probabilityDisplay}
+                        {t("amulet.probability")}:{/* show probability WITHOUT slot as primary */}
+                        <span className='ml-1'>
+                          {typeof probabilityDisplay === "object" ? probabilityDisplay.noSlot.formatted : probabilityDisplay}
+                        </span>
                         {t("probability.percentage")}
                       </div>
-                      {probability > 0 && (
-                        // probability 是百分比 (p%), 換算成小數機率為 p/100，倒數為 1/(p/100) = 100/p
-                        <span className='ml-2 text-xs font-normal'>
-                          ({t("probability.approximately")} 1/{Math.round(100 / probability).toLocaleString()})
-                        </span>
-                      )}
+
+                      {/* When slot filter is active, show detailed slot probability (with slot applied) */}
+                      {selectedSlot &&
+                        (() => {
+                          const slotObj = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].slot) || {}
+                          const slotProb = slotObj[selectedSlot]
+                          if (typeof slotProb !== "undefined") {
+                            const slotPct = slotProb * 100
+                            const formattedWithSlot =
+                              typeof probabilityDisplay === "object"
+                                ? probabilityDisplay.withSlot.formatted
+                                : (parseFloat(probabilityDisplay) || 0).toFixed(6)
+                            return (
+                              <div className='mt-1 text-xs text-gray-700'>
+                                <div>
+                                  {t("amulet.specificSlotProb", { defaultValue: "Specific slot probability" })}: {formattedWithSlot}
+                                  {t("probability.percentage")}
+                                </div>
+                                <div className='text-gray-500'>
+                                  ({t("skillSelector.slotFilter")} {slotPct.toFixed(2)}%)
+                                </div>
+                              </div>
+                            )
+                          }
+                          return null
+                        })()}
+
+                      {(() => {
+                        // probability is the percentage string or object; compute approximate 1/N display using raw percent
+                        const rawPct = typeof probabilityDisplay === "object" ? probabilityDisplay.rawPercent : parseFloat(probabilityDisplay) || 0
+                        if (rawPct > 0) {
+                          const approx = Math.round(100 / rawPct)
+                          return (
+                            <span className='ml-2 text-xs font-normal'>
+                              ({t("probability.approximately")} 1/{approx.toLocaleString()})
+                            </span>
+                          )
+                        }
+                        return null
+                      })()}
                     </div>
                   </div>
                   <div className='flex-1'>

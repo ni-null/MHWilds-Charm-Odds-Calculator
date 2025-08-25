@@ -43,9 +43,13 @@
     "clearSelection": "-- 選択をクリア --",
     "reset": "リセット",
     "groupInfo": "グループ",
-    "searchSkill": "スキルを検索..."
+    "searchSkill": "スキルを検索...",
+    "slotFilter": "スロットフィルター",
+    "slotAny": "すべてのスロット",
+    "clearSlot": "スロットをクリア"
   },
   "amulet": {
+    "specificSlotProb": "特定スロット確率",
     "list": "護石リスト",
     "matching": "一致する護石",
     "probability": "確率",

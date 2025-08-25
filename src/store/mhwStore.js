@@ -4,6 +4,9 @@ import { create } from "zustand"
 const useMhwStore = create((set) => ({
   selectedSkills: [null, null, null],
   setSelectedSkills: (skills) => set({ selectedSkills: skills }),
+  // selectedSlot stores the raw slot key string from Rarity.json (e.g. "[1, 1]")
+  selectedSlot: "",
+  setSelectedSlot: (slotKey) => set({ selectedSlot: slotKey }),
 }))
 
 export default useMhwStore

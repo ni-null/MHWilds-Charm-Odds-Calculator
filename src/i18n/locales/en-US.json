@@ -43,9 +43,13 @@
     "clearSelection": "-- Clear selection --",
     "reset": "Reset",
     "groupInfo": "Group",
-    "searchSkill": "Search skill..."
+    "searchSkill": "Search skill...",
+    "slotFilter": "Slot filter",
+    "slotAny": "Any slot",
+    "clearSlot": "Clear slot"
   },
   "amulet": {
+    "specificSlotProb": "Specific slot probability",
     "list": "Charm List",
     "matching": "Matching Charms",
     "probability": "Probability",

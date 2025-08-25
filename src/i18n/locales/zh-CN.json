@@ -43,9 +43,13 @@
     "clearSelection": "-- 清除选择 --",
     "reset": "重设",
     "groupInfo": "组别",
-    "searchSkill": "搜索技能..."
+    "searchSkill": "搜索技能...",
+    "slotFilter": "插槽筛选",
+    "slotAny": "任意插槽",
+    "clearSlot": "清除插槽"
   },
   "amulet": {
+    "specificSlotProb": "特定插槽机率",
     "list": "护石列表",
     "matching": "匹配的护石",
     "probability": "概率",
