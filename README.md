@@ -10,6 +10,8 @@ A small tool for calculating skill probabilities and combination chances of Char
 <img width="1884" height="971" alt="Snipaste_2025-08-25_16-40-55" src="https://github.com/user-attachments/assets/2ce0fad2-600f-4aad-b01d-191f2c6f9741" />
 
 
+<img width="1884" height="966" alt="Snipaste_2025-08-25_16-41-13" src="https://github.com/user-attachments/assets/fe60479b-8db5-4e87-be1f-9271a8f111d7" />
+
 
 ## Features
 
