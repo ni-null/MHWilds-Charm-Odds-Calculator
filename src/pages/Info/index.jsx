@@ -54,11 +54,11 @@ const InfoPage = () => {
                     </div>
                     <p className='mb-4 text-sm text-gray-600 sm:text-base'>{t("info.calculation.reference") || "參考資料："}</p>
                     <a
-                      href='https://www.gamersky.com/handbook/202508/1979751.shtml'
+                      href='https://forum.gamer.com.tw/C.php?bsn=5786&snA=177107'
                       target='_blank'
                       rel='noopener noreferrer'
                       className='block w-full px-4 py-2 text-xs font-medium text-center text-blue-600 break-all border border-blue-200 rounded sm:text-sm bg-blue-50 hover:bg-blue-100'>
-                      {t("info.calculation.referenceLink") || "遊民星空 - rongchingl 攻略"}
+                      {t("info.calculation.referenceLink") || "巴哈 - rongchingl 攻略"}
                     </a>
                   </div>
 

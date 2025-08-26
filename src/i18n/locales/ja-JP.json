@@ -27,7 +27,7 @@
       "description": "本プロジェクトでは以下の確率計算公式を使用しています：",
       "formula": "P(特定の護石) = P(レアリティ) × P(テンプレート | レアリティ) × P(スキル組み合わせ | テンプレート)",
       "reference": "参考資料：",
-      "referenceLink": "遊民星空 - rongchingl ガイド"
+      "referenceLink": "巴哈 - rongchingl ガイド"
     }
   },
   "rarity": "レアリティ",
