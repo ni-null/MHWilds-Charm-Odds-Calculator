@@ -24,4 +24,4 @@ A small tool for calculating skill probabilities and combination chances of Char
 
 - 顯示可選護石（Charm）清單與其技能組合
 - 計算並顯示不同稀有度與技能數量下的機率分佈
-- 多語系支援（當前僅繁體中文 / 英文）
+- 多語系支援
