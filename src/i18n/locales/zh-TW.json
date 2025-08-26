@@ -27,7 +27,7 @@
       "description": "本專案使用以下機率計算公式：",
       "formula": "P(特定護石) = P(稀有度) × P(模板 | 稀有度) × P(技能組合 | 模板)",
       "reference": "參考資料：",
-      "referenceLink": "遊民星空 - rongchingl 攻略"
+      "referenceLink": "巴哈 - rongchingl 攻略"
     }
   },
   "rarity": "稀有度",

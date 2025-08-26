@@ -27,7 +27,7 @@
       "description": "This project uses the following probability calculation formula:",
       "formula": "P(Specific Charm) = P(Rarity) × P(Template | Rarity) × P(Skill Combination | Template)",
       "reference": "Reference:",
-      "referenceLink": "Gamersky - rongchingl Guide"
+      "referenceLink": "Bahamut (rongchingl) Guide"
     }
   },
   "rarity": "Rarity",
