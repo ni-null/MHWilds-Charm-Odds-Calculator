@@ -6,37 +6,62 @@ export default function AmuletListView(props) {
     visibleAmulets,
     amuletProbabilities,
     getSkillsFromAmulet,
+    expandedMatches: _expandedMatches,
     selectedSkills,
-    selectedSlot,
-    expandedIndex,
-    setExpandedIndex,
-    rarityBaseProbability,
+    selectedSlot: _selectedSlot,
+    expandedIndex: _expandedIndex,
+    setExpandedIndex: _setExpandedIndex,
+    rarityBaseProbability: _rarityBaseProbability,
     RarityData,
     SkillGroupsData,
-    getGroupSkillCountForRarity,
+    getGroupSkillCountForRarity: _getGroupSkillCountForRarity,
   } = props
 
-  const { t, i18n } = useTranslation()
-
-  // compute rarity probabilities & totals for display
-  const rarityProbabilities = {}
-  let totalNoSlot = 0
-  let totalWithSlot = 0
-
-  visibleAmulets.forEach((amulet) => {
-    const originalIndex = matchingAmulets.indexOf(amulet)
-    const probEntry = amuletProbabilities[originalIndex]
-    const noSlotProb = probEntry && probEntry.noSlot ? parseFloat(probEntry.noSlot.rawPercent) || 0 : 0
-    const withSlotProb = probEntry && probEntry.withSlot ? parseFloat(probEntry.withSlot.rawPercent) || 0 : 0
-
-    if (!rarityProbabilities[amulet.Rarity]) {
-      rarityProbabilities[amulet.Rarity] = { noSlot: 0, withSlot: 0 }
+  const { t, i18n: _i18n } = useTranslation()
+  // helper: build per-slot cartesian combos but keep slot positions (null for empty)
+  const buildPerSlotCombinations = (perSlotArrays) => {
+    const res = []
+    const dfs = (i, acc) => {
+      if (i >= perSlotArrays.length) {
+        res.push(acc.slice())
+        return
+      }
+      const arr = perSlotArrays[i]
+      if (!arr || arr.length === 0) {
+        acc.push(null)
+        dfs(i + 1, acc)
+        acc.pop()
+        return
+      }
+      for (const v of arr) {
+        acc.push(v)
+        dfs(i + 1, acc)
+        acc.pop()
+      }
     }
-    rarityProbabilities[amulet.Rarity].noSlot += noSlotProb
-    rarityProbabilities[amulet.Rarity].withSlot += withSlotProb
-    totalNoSlot += noSlotProb
-    totalWithSlot += withSlotProb
-  })
+    dfs(0, [])
+    return res
+  }
+
+  // helper: map skill string to group numbers available in SkillGroupsData
+  const buildSkillToGroupsMap = () => {
+    const map = {}
+    if (!SkillGroupsData || !SkillGroupsData.SkillGroups) return map
+    Object.keys(SkillGroupsData.SkillGroups).forEach((groupKey) => {
+      const groupNum = parseInt(groupKey.replace(/^Group/, ""), 10)
+      const group = SkillGroupsData.SkillGroups[groupKey]
+      if (!group || !Array.isArray(group.data)) return
+      group.data.forEach((s) => {
+        if (!s || !s.SkillName) return
+        const key = `${s.SkillName} Lv.${s.SkillLevel}`
+        if (!map[key]) map[key] = []
+        map[key].push(groupNum)
+      })
+    })
+    return map
+  }
+
+  const skillToGroups = buildSkillToGroupsMap()
 
   const SKILL_PLACEHOLDER_SVG =
     "data:image/svg+xml;utf8," +
@@ -47,209 +72,214 @@ export default function AmuletListView(props) {
         "</text></svg>"
     )
 
+  const rarityColorMap = {
+    "RARE[8]": "text-orange-600",
+    "RARE[7]": "text-purple-600",
+    "RARE[6]": "text-blue-800",
+    "RARE[5]": "text-green-600",
+  }
+
+  // Given an amulet and selectedSkills (per-slot arrays), return valid combos
+  const getDisplayableCombosForAmulet = (amulet) => {
+    if (!amulet) return []
+    const perSlotArrays = selectedSkills.map((a) => (Array.isArray(a) ? a : a ? [a] : []))
+    const combos = buildPerSlotCombinations(perSlotArrays)
+    const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null && g !== undefined)
+
+    const valid = []
+    combos.forEach((combo) => {
+      // assign chosen skills (non-null) to amulet group slots without reusing
+      const usedGroupIndices = new Set()
+      let ok = true
+      const assigned = []
+      for (const chosenSkill of combo) {
+        if (!chosenSkill) {
+          assigned.push(null)
+          continue
+        }
+        const groupsForSkill = skillToGroups[chosenSkill] || []
+        // find a matching amulet group index that hasn't been used
+        let assignedIndex = -1
+        for (let idx = 0; idx < amuletGroups.length; idx++) {
+          if (usedGroupIndices.has(idx)) continue
+          const groupNum = amuletGroups[idx]
+          if (groupsForSkill.includes(groupNum)) {
+            assignedIndex = idx
+            break
+          }
+        }
+        if (assignedIndex === -1) {
+          ok = false
+          break
+        }
+        usedGroupIndices.add(assignedIndex)
+        assigned.push({ skill: chosenSkill, amuletGroupIndex: assignedIndex, amuletGroup: amuletGroups[assignedIndex] })
+      }
+      if (ok) {
+        // produce displayable skill list (filter nulls)
+        const displayList = assigned.filter(Boolean).map((a) => a.skill)
+        if (displayList.length > 0) valid.push(displayList)
+      }
+    })
+    // dedupe combos by string
+    const uniq = []
+    const seen = new Set()
+    valid.forEach((c) => {
+      const key = c.join("|")
+      if (!seen.has(key)) {
+        seen.add(key)
+        uniq.push(c)
+      }
+    })
+    return uniq
+  }
+
+  // build render items: one entry per combo (if combos exist), otherwise one entry with combo=null
+  const renderItems = visibleAmulets.flatMap((amulet, index) => {
+    const combos = getDisplayableCombosForAmulet(amulet)
+    if (!combos || combos.length === 0) return [{ amulet, combo: null, index, comboIndex: -1 }]
+    return combos.map((c, ci) => ({ amulet, combo: c, index, comboIndex: ci }))
+  })
+
+  // helper to format percentage numbers (input: percent value, e.g., 0.0123 => 0.0123)
+  const formatPct = (percentage) => {
+    if (percentage >= 0.01) return percentage.toFixed(4)
+    if (percentage >= 0.001) return percentage.toFixed(6)
+    if (percentage >= 0.0001) return percentage.toFixed(8)
+    return percentage.toFixed(12).replace(/\.?0+$/, "")
+  }
+
+  // compute totals for renderItems using expandedMatches when available
+  const totals = renderItems.reduce(
+    (acc, item) => {
+      const { amulet, combo } = item
+      // try find in expandedMatches by reference + combo string
+      let found = null
+      if (Array.isArray(_expandedMatches)) {
+        const comboKey = combo && Array.isArray(combo) ? combo.join("|") : combo
+        for (const m of _expandedMatches) {
+          const mComboKey = m.combo && Array.isArray(m.combo) ? m.combo.join("|") : m.combo
+          if (m.amulet === amulet && String(mComboKey) === String(comboKey)) {
+            found = m
+            break
+          }
+        }
+      }
+
+      if (found) {
+        acc.noSlot += (found.probNoSlot || 0) * 100
+        acc.withSlot += (found.probWithSlot || 0) * 100
+      } else {
+        // fallback to amuletProbabilities mapping by original matchingAmulets index
+        const originalIndex = matchingAmulets.indexOf(amulet)
+        const probs = amuletProbabilities && amuletProbabilities[originalIndex]
+        if (probs && probs.noSlot && probs.withSlot) {
+          acc.noSlot += probs.noSlot.rawPercent || 0
+          acc.withSlot += probs.withSlot.rawPercent || 0
+        }
+      }
+      return acc
+    },
+    { noSlot: 0, withSlot: 0 }
+  )
+
   return (
-    <section className='w-full p-5 bg-white shadow-lg md:p-10 rounded-xl'>
-      <h2 className='mb-4 text-2xl font-semibold'>
-        {t("amulet.matching")} ({matchingAmulets.length} {t("common.count")})
-      </h2>
+    <React.Fragment>
+      {/* 顯示所有機率的加總 使用 renderItems 計算的結果 */}
+      <div className='p-10 my-10 bg-white rounded-lg'>
+        <h2 className='mb-4 text-2xl font-semibold'>機率計算</h2>
 
-      {matchingAmulets.length > 0 && (
-        <div className='p-3 bg-orange-100 rounded'>
-          <div className='text-xl font-bold text-orange-800'>
-            {t("common.total")}
-            {t("amulet.probability")}:{" "}
-            {(() => {
-              if (totalNoSlot >= 0.01) return totalNoSlot.toFixed(4)
-              if (totalNoSlot >= 0.001) return totalNoSlot.toFixed(6)
-              if (totalNoSlot >= 0.0001) return totalNoSlot.toFixed(8)
-              const formatted = totalNoSlot.toFixed(12).replace(/\.?0+$/, "")
-              if (formatted.includes("e")) return totalNoSlot.toFixed(15).replace(/\.?0+$/, "")
-              return formatted
-            })()}
+        <div className='mb-3 text-sm'>
+          <div>
+            {t("probability.base")} (no slot total): {formatPct(totals.noSlot)}
             {t("probability.percentage")}
-            {totalNoSlot > 0 && (
-              <span className='ml-2 text-lg font-normal'>
-                ({t("probability.approximately")} 1/{Math.round(100 / totalNoSlot).toLocaleString()})
-              </span>
-            )}
-            {selectedSlot &&
-              (() => {
-                const sample = visibleAmulets[0]
-                if (!sample) return null
-                const rarityData = rarityBaseProbability[sample.Rarity] || {}
-                const sampleOriginalIndex = matchingAmulets.indexOf(sample)
-                const sampleProbEntry = amuletProbabilities[sampleOriginalIndex]
-                const sampleProbabilityDisplay = sampleProbEntry || parseFloat(amuletProbabilities[sampleOriginalIndex]) || 0
-                const groups = rarityData.Group || []
-                let weightSum = 0
-                let weightedSlotSum = 0
-                groups.forEach((g) => {
-                  const comb = g.combinationCount || 1
-                  const gSlotObj = (g && g.slot) || {}
-                  const prob = Object.prototype.hasOwnProperty.call(gSlotObj, selectedSlot) ? gSlotObj[selectedSlot] : 0
-                  weightSum += comb
-                  weightedSlotSum += comb * prob
-                })
-                const slotVal = weightSum > 0 ? weightedSlotSum / weightSum : undefined
-                if (typeof slotVal === "undefined") return null
-                let formattedWithSlot
-                if (totalWithSlot >= 0.01) formattedWithSlot = totalWithSlot.toFixed(4)
-                else if (totalWithSlot >= 0.001) formattedWithSlot = totalWithSlot.toFixed(6)
-                else if (totalWithSlot >= 0.0001) formattedWithSlot = totalWithSlot.toFixed(8)
-                else formattedWithSlot = totalWithSlot.toFixed(12).replace(/\.?0+$/, "")
-
-                return (
-                  <div className='mt-1 text-lg text-gray-700'>
-                    <div>
-                      {t("amulet.specificSlotProb", { defaultValue: "Specific slot probability" })}: {formattedWithSlot}
-                      {t("probability.percentage")}
-                      {(() => {
-                        const rawWithSlotPct =
-                          typeof sampleProbabilityDisplay === "object"
-                            ? sampleProbabilityDisplay.withSlot && sampleProbabilityDisplay.withSlot.rawPercent
-                            : parseFloat(sampleProbabilityDisplay) || 0
-                        if (rawWithSlotPct && rawWithSlotPct > 0) {
-                          const approx = Math.round(100 / rawWithSlotPct)
-                          return (
-                            <span className='ml-2 text-lg font-normal'>
-                              ({t("probability.approximately")} 1/{approx.toLocaleString()})
-                            </span>
-                          )
-                        }
-                        return null
-                      })()}
-                    </div>
-                  </div>
-                )
-              })()}
+          </div>
+          <div>
+            {t("probability.individual")} (with slot total): {formatPct(totals.withSlot)}
+            {t("probability.percentage")}
           </div>
         </div>
-      )}
+      </div>
 
-      {visibleAmulets.length > 0 ? (
-        <ul className='divide-y divide-gray-200'>
-          {visibleAmulets.map((amulet, index) => {
+      <div className='p-10 bg-white rounded-lg'>
+        {/* 顯示所有機率的加總 使用 renderItems 計算的結果 */}
+
+        <h2 className='mb-4 text-2xl font-semibold'>
+          {t("amulet.matching")} ({matchingAmulets.length})
+        </h2>
+
+        <ul>
+          {renderItems.map((item, idx) => {
+            const { amulet, combo } = item
+            // unique id per rendered row: amulet original index + comboIndex
+            const renderedId = `${item.index}-${item.comboIndex}`
+            const key = `${amulet.Rarity}-${item.index}-${item.comboIndex}-${idx}`
             const amuletSkills = getSkillsFromAmulet(amulet)
             const originalIndex = matchingAmulets.indexOf(amulet)
             const probability = parseFloat(amuletProbabilities[originalIndex]) || 0
             const probabilityDisplay = amuletProbabilities[originalIndex] ?? probability.toFixed(4)
-            const rarityColorMap = {
-              "RARE[8]": "text-orange-600",
-              "RARE[7]": "text-purple-600",
-              "RARE[6]": "text-blue-800",
-              "RARE[5]": "text-green-600",
-            }
             const rarityClass = rarityColorMap[amulet.Rarity] || "text-gray-800"
-            const selectedSkillsFilteredForRender = selectedSkills.filter(Boolean)
-            const amuletGroupsForSort = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null && g !== undefined)
-            const sortedSelectedSkills = selectedSkillsFilteredForRender.slice().sort((a, b) => {
-              const ma = amuletSkills.find((s) => s.name === a)
-              const mb = amuletSkills.find((s) => s.name === b)
-              const ia = ma ? amuletGroupsForSort.indexOf(ma.group) : Number.POSITIVE_INFINITY
-              const ib = mb ? amuletGroupsForSort.indexOf(mb.group) : Number.POSITIVE_INFINITY
-              if (ia === ib) return 0
-              return ia - ib
-            })
 
             return (
-              <React.Fragment key={`${amulet.Rarity}-${amulet.Name}-${index}`}>
-                <li className='flex flex-col items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
-                  <div className='flex items-center  min-w-[140px] mb-2 md:mb-0 md:mr-4'>
-                    <img
-                      src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(amulet.Rarity)}.png`}
-                      alt={amulet.Rarity}
-                      style={{ width: 40, height: 40, objectFit: "contain" }}
-                      className='mr-2 rounded'
-                      onError={(e) => {
-                        try {
-                          if (!e || !e.currentTarget) return
-                          const el = e.currentTarget
-                          el.style.display = "none"
-                        } catch {
-                          /* swallow */
-                        }
-                      }}
-                    />
-                    <div className='flex flex-col'>
-                      <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
-                      <div className='flex items-center text-xs font-medium'>
-                        {t("amulet.probability")}:
-                        <span className='ml-1'>
-                          {typeof probabilityDisplay === "object" ? probabilityDisplay.noSlot.formatted : probabilityDisplay}
-                        </span>
-                        {t("probability.percentage")}
-                      </div>
-
-                      {selectedSlot &&
-                        (() => {
-                          const slotObj = amulet.slotObj || {}
-                          const slotProb = slotObj[selectedSlot]
-                          if (typeof slotProb !== "undefined") {
-                            const slotPct = slotProb * 100
-                            const formattedWithSlot =
-                              typeof probabilityDisplay === "object"
-                                ? probabilityDisplay.withSlot.formatted
-                                : (parseFloat(probabilityDisplay) || 0).toFixed(6)
-                            return (
-                              <div className='mt-1 text-xs text-gray-700'>
-                                <div>
-                                  {t("amulet.specificSlotProb", { defaultValue: "Specific slot probability" })}: {formattedWithSlot}
-                                  {t("probability.percentage")}
-                                </div>
-                                <div className='text-gray-500'>
-                                  ({t("skillSelector.slotFilter")} {slotPct.toFixed(2)}%)
-                                </div>
-                                {amulet.Rarity !== "RARE[8]" && (
-                                  <div className='text-xs text-gray-500'>
-                                    {t("slotProbability.rare8Note", { defaultValue: "Note: This amulet is not RARE[8]." })}
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          }
-                          return null
-                        })()}
-
-                      {(() => {
-                        const rawPct = typeof probabilityDisplay === "object" ? probabilityDisplay.rawPercent : parseFloat(probabilityDisplay) || 0
-                        if (rawPct > 0) {
-                          const approx = Math.round(100 / rawPct)
-                          return (
-                            <span className='ml-2 text-xs font-normal'>
-                              ({t("probability.approximately")} 1/{approx.toLocaleString()})
-                            </span>
-                          )
-                        }
-                        return null
-                      })()}
+              <li
+                key={key}
+                className='flex flex-col flex-wrap items-start justify-between gap-4 px-2 py-4 border-b md:flex-row md:items-center md:gap-6'>
+                <div className='flex items-center min-w-[140px] mb-2 md:mb-0 md:mr-4'>
+                  <img
+                    src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(amulet.Rarity)}.png`}
+                    alt={amulet.Rarity}
+                    style={{ width: 40, height: 40, objectFit: "contain" }}
+                    className='mr-2 rounded'
+                    onError={(e) => {
+                      try {
+                        if (!e || !e.currentTarget) return
+                        const el = e.currentTarget
+                        el.style.display = "none"
+                      } catch {
+                        /* swallow */
+                      }
+                    }}
+                  />
+                  <div className='flex flex-col'>
+                    <div className={`text-lg font-semibold ${rarityClass}`}>{amulet.Rarity}</div>
+                    <div className='flex items-center text-xs font-medium'>
+                      {t("amulet.probability")}:{" "}
+                      <span className='ml-1'>
+                        {typeof probabilityDisplay === "object" ? probabilityDisplay.noSlot.formatted : probabilityDisplay}
+                      </span>
+                      {t("probability.percentage")}
                     </div>
                   </div>
-                  <div className='flex-1'>
-                    <div className='mb-1 text-base'>
-                      <span className='font-medium'>{t("amulet.skillGroups")}:</span>
-                      <span className='ml-2'>
-                        {[amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group]
-                          .filter((g) => g !== null && g !== undefined)
-                          .map((g, i) => {
-                            const groupKey = `Group${g}`
-                            const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
-                            const bg = gd.color || "#6b7280"
-                            const text = "#ffffff"
-                            return (
-                              <span
-                                key={i}
-                                className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-2'
-                                style={{ backgroundColor: bg, color: text }}>
-                                {g}
-                              </span>
-                            )
-                          })}
-                      </span>
-                    </div>
-                    <div className='mb-1 text-base'>
-                      <span className='font-medium'>{t("amulet.matchingSkills")}:</span>
-                      {selectedSkills.filter(Boolean).length === 0 && <span className='ml-2 text-sm text-gray-500'>{t("common.none")}</span>}
-                      {sortedSelectedSkills.map((skillKey, skillIndex) => {
+                </div>
+
+                <div className='flex-1'>
+                  <div className='mb-1 text-base'>
+                    <span className='font-medium'>{t("amulet.skillGroups")}:</span>
+                    <span className='ml-2'>
+                      {[amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group]
+                        .filter((g) => g !== null && g !== undefined)
+                        .map((g, i) => {
+                          const groupKey = `Group${g}`
+                          const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
+                          const bg = gd.bgColor || "#6b7280"
+                          const text = gd.color || "#ffffff"
+                          return (
+                            <span
+                              key={i}
+                              className='inline-block px-2 py-0.5 rounded text-xs font-medium mr-2'
+                              style={{ backgroundColor: bg, color: text }}>
+                              {g}
+                            </span>
+                          )
+                        })}
+                    </span>
+                  </div>
+
+                  <div className='mb-1 text-base'>
+                    <span className='font-medium'>{t("amulet.matchingSkills")}:</span>
+                    {(!combo || combo.length === 0) && <span className='ml-2 text-sm text-gray-500'>{t("common.none")}</span>}
+                    {combo &&
+                      combo.map((skillKey, si) => {
                         const match = amuletSkills.find((s) => s.name === skillKey)
                         let displayName = skillKey
                         let bgColor = "#e0e0e0"
@@ -257,23 +287,34 @@ export default function AmuletListView(props) {
                         if (match) {
                           const groupKey = `Group${match.group}`
                           if (SkillGroupsData.SkillGroups[groupKey]) {
-                            if (SkillGroupsData.SkillGroups[groupKey].bgColor) {
-                              bgColor = SkillGroupsData.SkillGroups[groupKey].bgColor
-                            }
-                            if (SkillGroupsData.SkillGroups[groupKey].color) {
-                              textColor = SkillGroupsData.SkillGroups[groupKey].color
-                            }
+                            if (SkillGroupsData.SkillGroups[groupKey].bgColor) bgColor = SkillGroupsData.SkillGroups[groupKey].bgColor
+                            if (SkillGroupsData.SkillGroups[groupKey].color) textColor = SkillGroupsData.SkillGroups[groupKey].color
+                          }
+                          // translate skill name and add localized level if present
+                          try {
+                            const skillBase = match.name.split(" Lv.")[0]
+                            const skillLevel = match.name.split(" Lv.")[1]
+                            const translated = t(`skillTranslations.${skillBase}`, skillBase)
+                            displayName = skillLevel ? `${translated} ${t("common.level")}${skillLevel}` : translated
+                          } catch {
+                            /* fallback keep original */
                           }
                         }
-                        if (i18n.language && i18n.language.startsWith("zh") && match) {
-                          const skillName = match.name.split(" Lv.")[0]
-                          const skillLevel = match.name.split(" Lv.")[1]
-                          const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                          displayName = `${translatedName} ${t("common.level")}${skillLevel}`
+                        if (!match) {
+                          // fallback translate even if skill not present in amuletSkills
+                          try {
+                            const skillBase = skillKey.split(" Lv.")[0]
+                            const skillLevel = skillKey.split(" Lv.")[1]
+                            const translated = t(`skillTranslations.${skillBase}`, skillBase)
+                            displayName = skillLevel ? `${translated} ${t("common.level")}${skillLevel}` : translated
+                          } catch {
+                            /* fallback keep original */
+                          }
                         }
+
                         return match ? (
                           <span
-                            key={skillIndex}
+                            key={si}
                             className='inline-flex items-center gap-1 mt-2 px-2 py-0.5 ml-2 text-base rounded whitespace-nowrap'
                             style={{ backgroundColor: bgColor, color: textColor, fontWeight: "bold" }}>
                             <img
@@ -286,9 +327,7 @@ export default function AmuletListView(props) {
                                 try {
                                   if (!e || !e.currentTarget) return
                                   const el = e.currentTarget
-                                  if (el.src && el.src.indexOf("data:image/svg+xml") === -1) {
-                                    el.src = SKILL_PLACEHOLDER_SVG
-                                  }
+                                  if (el.src && el.src.indexOf("data:image/svg+xml") === -1) el.src = SKILL_PLACEHOLDER_SVG
                                 } catch {
                                   /* swallow */
                                 }
@@ -296,308 +335,216 @@ export default function AmuletListView(props) {
                             />
                             {displayName}
                           </span>
-                        ) : null
+                        ) : (
+                          <span key={si} className='inline-block ml-2 text-sm text-gray-600'>
+                            {skillKey}
+                          </span>
+                        )
                       })}
-                    </div>
-                    <div className='mb-1 text-base'>
-                      <span className='font-medium'>{t("amulet.slotCombinations")}:</span>
-                      <span className='ml-2'>
-                        {(() => {
-                          const rarityEntry = RarityData[amulet.Rarity] || {}
-                          const groups = rarityEntry.Group || []
-                          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group]
-                            .filter((g) => g !== null && g !== undefined)
-                            .map(Number)
-                          const amuletGroupsSorted = amuletGroups
-                            .slice()
-                            .sort((a, b) => a - b)
-                            .join(",")
-
-                          const slotKeySet = new Set()
-                          groups.forEach((g) => {
-                            const gSkills = (g && g.skills) || []
-                            const gSkillsSorted = gSkills
-                              .slice()
-                              .sort((a, b) => a - b)
-                              .join(",")
-                            if (gSkillsSorted === amuletGroupsSorted) {
-                              const gSlotObj = (g && g.slot) || {}
-                              Object.keys(gSlotObj).forEach((k) => slotKeySet.add(k))
-                            }
-                          })
-
-                          if (slotKeySet.size === 0) {
-                            groups.forEach((g) => {
-                              const gSlotObj = (g && g.slot) || {}
-                              Object.keys(gSlotObj).forEach((k) => slotKeySet.add(k))
-                            })
-                          }
-
-                          const slotKeys = Array.from(slotKeySet)
-
-                          if (slotKeys.length === 0) {
-                            return <span className='ml-2 text-sm text-gray-500'>{t("common.none")}</span>
-                          }
-
-                          return slotKeys.map((key, idx) => {
-                            let display = key
-                            try {
-                              const arr = JSON.parse(key)
-                              display = `[${arr.join(", ")}]`
-                            } catch {
-                              // fallback
-                            }
-
-                            const isSelected = selectedSlot && selectedSlot === key
-                            const className = `mr-2 text-sm ${isSelected ? "text-blue-600 font-bold" : ""}`
-
-                            return (
-                              <span key={idx} className={className}>
-                                {display}
-                              </span>
-                            )
-                          })
-                        })()}
-                      </span>
-                    </div>
                   </div>
+                </div>
+                <div className='flex flex-col items-end md:items-end min-w-[80px] mt-2 md:mt-0 md:ml-4'>
+                  <button
+                    className='px-3 py-2 text-sm text-blue-600 border border-blue-200 rounded hover:bg-blue-50'
+                    onClick={() => _setExpandedIndex(_expandedIndex === renderedId ? null : renderedId)}>
+                    {_expandedIndex === renderedId ? t("common.collapse") : t("common.details")}
+                  </button>
+                </div>
 
-                  <div className='flex flex-col items-end md:items-end min-w-[80px] mt-2 md:mt-0 md:ml-4 w-full md:w-auto'>
-                    <button
-                      className='px-3 py-2 text-sm text-blue-600 border border-blue-200 rounded hover:bg-blue-50'
-                      onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}>
-                      {expandedIndex === index ? t("common.collapse") : t("common.details")}
-                    </button>
-                  </div>
-                </li>
-                {expandedIndex === index && (
-                  <li className='px-2 py-3 border-b bg-gray-50'>
-                    <div className='p-3 text-sm bg-white border rounded'>
-                      {(() => {
-                        const baseProb = (rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].probability) || 0.01
-                        const selectedSkillsFiltered = selectedSkills.filter(Boolean)
+                {_expandedIndex === renderedId && (
+                  <div className='w-full mt-2'>
+                    {(() => {
+                      const baseProb =
+                        (_rarityBaseProbability && _rarityBaseProbability[amulet.Rarity] && _rarityBaseProbability[amulet.Rarity].probability) || 0.01
+                      const totalAmuletsOfRarity =
+                        _rarityBaseProbability && _rarityBaseProbability[amulet.Rarity] && Array.isArray(_rarityBaseProbability[amulet.Rarity].Group)
+                          ? _rarityBaseProbability[amulet.Rarity].Group.length
+                          : 0
+                      const amuletTypeProb = totalAmuletsOfRarity > 0 ? 1 / totalAmuletsOfRarity : 0
 
-                        if (selectedSkillsFiltered.length === 0) {
-                          return <div className='mb-2 text-base'>{t("probability.debug.noSkillsSelected")}</div>
+                      const perSlotArraysForCalc = selectedSkills.map((a) => (Array.isArray(a) ? a : a ? [a] : []))
+                      const combosForCalc = buildPerSlotCombinations(perSlotArraysForCalc)
+                      const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null && g !== undefined)
+
+                      const skillToGroupMapLocal = {}
+                      amuletGroups.forEach((groupNum) => {
+                        const groupKey = `Group${groupNum}`
+                        if (SkillGroupsData && SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) {
+                          SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+                            const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+                            if (!skillToGroupMapLocal[skillKey]) skillToGroupMapLocal[skillKey] = []
+                            skillToGroupMapLocal[skillKey].push(groupNum)
+                          })
                         }
+                      })
 
-                        const totalAmuletsOfRarity =
-                          rarityBaseProbability[amulet.Rarity] && rarityBaseProbability[amulet.Rarity].Group
-                            ? rarityBaseProbability[amulet.Rarity].Group.length
-                            : 0
-                        const amuletTypeProb = 1 / totalAmuletsOfRarity
+                      let totalComboProb = 0
+                      const skillDrawDetails = []
 
-                        const skillRequirements = {}
-                        selectedSkillsFiltered.forEach((skillKey) => {
-                          skillRequirements[skillKey] = (skillRequirements[skillKey] || 0) + 1
-                        })
-
-                        const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((group) => group !== null)
-
-                        const usedGroups = []
-                        const usedSkillCounts = []
-                        const skillDrawDetails = []
-                        let skillCombinationProb = 1
+                      combosForCalc.forEach((c) => {
+                        const usedSlotsLocal = []
                         const selectedSkillBaseNamesInGroup = {}
+                        let skillCombinationProb = 1
 
-                        const skillToGroupMap = {}
-                        for (const groupNum of amuletGroups) {
-                          const groupKey = `Group${groupNum}`
-                          if (SkillGroupsData.SkillGroups[groupKey]) {
-                            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-                              const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
-                              if (!skillToGroupMap[skillKey]) {
-                                skillToGroupMap[skillKey] = []
-                              }
-                              skillToGroupMap[skillKey].push(groupNum)
-                            })
-                          }
-                        }
-
-                        const usedSlots = []
-                        for (const skillKey of selectedSkillsFiltered) {
-                          const skillGroups = skillToGroupMap[skillKey] || []
-
+                        for (const skillKey of c) {
+                          if (!skillKey) continue
+                          const skillGroups = skillToGroupMapLocal[skillKey] || []
                           let assignedSlot = -1
                           for (let slotIndex = 0; slotIndex < amuletGroups.length; slotIndex++) {
-                            if (!usedSlots.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
+                            if (!usedSlotsLocal.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
                               assignedSlot = slotIndex
-                              usedSlots.push(slotIndex)
+                              usedSlotsLocal.push(slotIndex)
                               break
                             }
                           }
-
                           if (assignedSlot !== -1) {
                             const groupNumber = amuletGroups[assignedSlot]
-                            const totalSkillCount = getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+                            const totalSkillCount =
+                              _getGroupSkillCountForRarity && typeof _getGroupSkillCountForRarity === "function"
+                                ? _getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+                                : SkillGroupsData && SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[`Group${groupNumber}`]
+                                ? SkillGroupsData.SkillGroups[`Group${groupNumber}`].data.length
+                                : 1
 
-                            if (!selectedSkillBaseNamesInGroup[groupNumber]) {
-                              selectedSkillBaseNamesInGroup[groupNumber] = new Set()
-                            }
-
+                            if (!selectedSkillBaseNamesInGroup[groupNumber]) selectedSkillBaseNamesInGroup[groupNumber] = new Set()
                             const currentSkillBaseName = skillKey.split(" Lv.")[0]
 
-                            const groupKey = `Group${groupNumber}`
                             let excludedSkillCount = 0
-                            const excludedSkillBaseNames = new Set()
-
-                            if (SkillGroupsData.SkillGroups[groupKey]) {
+                            const excludedBaseNames = new Set()
+                            const groupKey = `Group${groupNumber}`
+                            if (SkillGroupsData && SkillGroupsData.SkillGroups[groupKey]) {
                               const allSelectedBaseNames = new Set()
-                              Object.values(selectedSkillBaseNamesInGroup).forEach((baseNameSet) => {
-                                baseNameSet.forEach((baseName) => allSelectedBaseNames.add(baseName))
-                              })
-
+                              Object.values(selectedSkillBaseNamesInGroup).forEach((sset) => sset.forEach((v) => allSelectedBaseNames.add(v)))
                               allSelectedBaseNames.forEach((baseName) => {
-                                const sameBaseNameSkills = SkillGroupsData.SkillGroups[groupKey].data.filter((skill) => skill.SkillName === baseName)
+                                const sameBaseNameSkills = SkillGroupsData.SkillGroups[groupKey].data.filter((sk) => sk.SkillName === baseName)
                                 if (sameBaseNameSkills.length > 0) {
                                   excludedSkillCount += sameBaseNameSkills.length
-                                  excludedSkillBaseNames.add(baseName)
+                                  excludedBaseNames.add(baseName)
                                 }
                               })
                             }
 
-                            const availableSkillCount = totalSkillCount - excludedSkillCount
+                            const availableSkillCount = Math.max(1, totalSkillCount - excludedSkillCount)
                             skillCombinationProb *= 1 / availableSkillCount
-
                             selectedSkillBaseNamesInGroup[groupNumber].add(currentSkillBaseName)
 
-                            usedGroups.push(groupNumber)
-                            usedSkillCounts.push(availableSkillCount)
                             skillDrawDetails.push({
                               skill: skillKey,
                               group: groupNumber,
                               total: totalSkillCount,
-                              excludedBaseNames: Array.from(excludedSkillBaseNames),
+                              excluded: Array.from(excludedBaseNames),
                               available: availableSkillCount,
                             })
                           }
                         }
 
-                        const finalProb = baseProb * amuletTypeProb * skillCombinationProb
+                        totalComboProb += baseProb * amuletTypeProb * skillCombinationProb
+                      })
 
-                        return (
-                          <>
-                            <div className='mb-2 text-base font-semibold'>{t("probability.debug.title")}</div>
-                            <div className='mb-1 text-base'>
-                              {amulet.Rarity}
-                              {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(2)}%)
-                            </div>
-                            <div className='mb-1 text-base'>
-                              {amulet.Rarity}
-                              {t("probability.charmTypeProb")} : 1/{totalAmuletsOfRarity} ={" "}
-                              {(() => {
-                                const prob = amuletTypeProb
-                                if (prob >= 0.001) return prob.toFixed(8)
-                                else if (prob >= 0.0001) return prob.toFixed(10)
-                                else return prob.toFixed(12).replace(/\.?0+$/, "")
-                              })()}
-                            </div>
-                            <div className='mb-1 text-base'>
-                              {t("probability.debug.skillGroups")} :{" "}
-                              {skillDrawDetails.map((detail, i) => (
-                                <div key={i} className='ml-4 text-sm'>
-                                  <span className='font-medium'>
-                                    {t("common.group")}
-                                    {detail.group}: {detail.total}
-                                    {t("probability.debug.skills")}
-                                    {detail.excludedBaseNames.length > 0 && (
-                                      <span className='ml-2 text-gray-600'>
-                                        ({t("probability.debug.excluded")} :{" "}
-                                        {detail.excludedBaseNames
-                                          .map((skillBaseName) => {
-                                            if (i18n.language && i18n.language.startsWith("zh")) {
-                                              return t(`skillTranslations.${skillBaseName}`, skillBaseName)
-                                            } else {
-                                              return skillBaseName
-                                            }
-                                          })
-                                          .join(", ")}
-                                        )
-                                      </span>
-                                    )}
-                                  </span>
-                                  <span className='ml-2 text-green-600'> → {detail.available}</span>
-                                </div>
-                              ))}
-                            </div>
-                            <div className='mb-1 text-base'>
-                              {t("probability.debug.skillCombProb")} : {usedSkillCounts.map((count) => `1/${count}`).join(" × ")} ={" "}
-                              {(() => {
-                                const prob = skillCombinationProb
-                                if (prob >= 0.001) return prob.toFixed(8)
-                                else if (prob >= 0.0001) return prob.toFixed(10)
-                                else return prob.toFixed(12).replace(/\.?0+$/, "")
-                              })()}
-                            </div>
-                            <div className='mb-1 text-base'>
-                              {t("probability.debug.finalProb")} : {baseProb} ×{" "}
-                              {(() => {
-                                const prob = amuletTypeProb
-                                if (prob >= 0.001) return prob.toFixed(8)
-                                else if (prob >= 0.0001) return prob.toFixed(10)
-                                else return prob.toFixed(12).replace(/\.?0+$/, "")
-                              })()}{" "}
-                              ×{" "}
-                              {(() => {
-                                const prob = skillCombinationProb
-                                if (prob >= 0.001) return prob.toFixed(8)
-                                else if (prob >= 0.0001) return prob.toFixed(10)
-                                else return prob.toFixed(12).replace(/\.?0+$/, "")
-                              })()}{" "}
-                              ={" "}
-                              {(() => {
-                                const prob = finalProb
-                                if (prob >= 0.001) return prob.toFixed(8)
-                                else if (prob >= 0.0001) return prob.toFixed(10)
-                                else return prob.toFixed(15).replace(/\.?0+$/, "")
-                              })()}
-                            </div>
-                            <div className='mb-1 text-base'>
-                              {t("probability.debug.finalPercentage")} :{" "}
-                              {(() => {
-                                const percentageProb = finalProb * 100
-                                if (percentageProb >= 0.01) return percentageProb.toFixed(6)
-                                else if (percentageProb >= 0.001) return percentageProb.toFixed(8)
-                                else if (percentageProb >= 0.0001) return percentageProb.toFixed(10)
-                                else return percentageProb.toFixed(12).replace(/\.?0+$/, "")
-                              })()}{" "}
-                              %
-                            </div>
-                            <div className='text-base'>
-                              {t("amulet.slotCombinations")} :{" "}
-                              {(() => {
-                                const slotObj = amulet.slotObj || {}
-                                return Object.keys(slotObj).map((key, idx) => {
-                                  let display = key
-                                  try {
-                                    const arr = JSON.parse(key)
-                                    display = `[${arr.join(", ")}]`
-                                  } catch {
-                                    // fallback
-                                  }
-                                  return (
-                                    <span key={idx} className='mr-2'>
-                                      {display}
+                      const finalProb = totalComboProb
+
+                      // sample for human-readable breakdown
+                      let sampleSkillCombProb = 1
+                      let sampleUsedSkillCounts = []
+                      if (combosForCalc && combosForCalc[0]) {
+                        const first = combosForCalc[0]
+                        const usedSlotsLocal = []
+                        const selectedSkillBaseNamesInGroupSample = {}
+                        for (const skillKey of first) {
+                          if (!skillKey) continue
+                          const skillGroups = skillToGroupMapLocal[skillKey] || []
+                          let assignedSlot = -1
+                          for (let slotIndex = 0; slotIndex < amuletGroups.length; slotIndex++) {
+                            if (!usedSlotsLocal.includes(slotIndex) && skillGroups.includes(amuletGroups[slotIndex])) {
+                              assignedSlot = slotIndex
+                              usedSlotsLocal.push(slotIndex)
+                              break
+                            }
+                          }
+                          if (assignedSlot !== -1) {
+                            const groupNumber = amuletGroups[assignedSlot]
+                            const totalSkillCount =
+                              _getGroupSkillCountForRarity && typeof _getGroupSkillCountForRarity === "function"
+                                ? _getGroupSkillCountForRarity(groupNumber, amulet.Rarity)
+                                : SkillGroupsData && SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[`Group${groupNumber}`]
+                                ? SkillGroupsData.SkillGroups[`Group${groupNumber}`].data.length
+                                : 1
+                            if (!selectedSkillBaseNamesInGroupSample[groupNumber]) selectedSkillBaseNamesInGroupSample[groupNumber] = new Set()
+                            const currentSkillBaseName = skillKey.split(" Lv.")[0]
+                            const groupKey = `Group${groupNumber}`
+                            let excludedSkillCount = 0
+                            if (SkillGroupsData && SkillGroupsData.SkillGroups[groupKey]) {
+                              const allSelectedBaseNames = new Set()
+                              Object.values(selectedSkillBaseNamesInGroupSample).forEach((sset) => sset.forEach((v) => allSelectedBaseNames.add(v)))
+                              allSelectedBaseNames.forEach((baseName) => {
+                                const sameBaseNameSkills = SkillGroupsData.SkillGroups[groupKey].data.filter((sk) => sk.SkillName === baseName)
+                                if (sameBaseNameSkills.length > 0) excludedSkillCount += sameBaseNameSkills.length
+                              })
+                            }
+                            const availableSkillCount = Math.max(1, totalSkillCount - excludedSkillCount)
+                            sampleUsedSkillCounts.push(availableSkillCount)
+                            sampleSkillCombProb *= 1 / availableSkillCount
+                            selectedSkillBaseNamesInGroupSample[groupNumber].add(currentSkillBaseName)
+                          }
+                        }
+                      }
+
+                      return (
+                        <div className='p-2 text-xs text-left border rounded bg-gray-50'>
+                          <div className='mb-1 font-medium'>{t("probability.debug.title")}</div>
+                          <div className='text-xs'>
+                            {t("probability.debug.baseProb")}: {baseProb} ({(baseProb * 100).toFixed(6)}%)
+                          </div>
+                          <div className='text-xs'>
+                            {t("probability.charmTypeProb")}: {amuletTypeProb} (1/{totalAmuletsOfRarity})
+                          </div>
+                          <div className='text-xs'>
+                            {t("probability.debug.skillCombProb")}: {sampleUsedSkillCounts.map((c) => `1/${c}`).join(" × ")} = {sampleSkillCombProb}
+                          </div>
+                          <div className='text-xs'>
+                            {t("probability.debug.finalProb")}: {finalProb} ({(finalProb * 100).toFixed(8)}%)
+                          </div>
+                          <div className='mt-1 text-xs'>
+                            {t("probability.debug.skillGroups")}
+                            {(() => {
+                              const grouped = {}
+                              for (const d of skillDrawDetails) {
+                                if (!grouped[d.group]) {
+                                  grouped[d.group] = { group: d.group, total: d.total, available: d.available, excluded: new Set(d.excluded || []) }
+                                } else {
+                                  const cur = grouped[d.group]
+                                  cur.total = Math.max(cur.total || 0, d.total || 0)
+                                  cur.available = Math.max(cur.available || 0, d.available || 0)
+                                  ;(d.excluded || []).forEach((e) => cur.excluded.add(e))
+                                }
+                              }
+                              const displayGroups = amuletGroups
+                                .filter((g) => Object.prototype.hasOwnProperty.call(grouped, g))
+                                .map((g) => ({ ...grouped[g], excluded: Array.from(grouped[g].excluded) }))
+
+                              return displayGroups.map((d, i) => (
+                                <div key={i} className='ml-2'>
+                                  {t("common.group")} {d.group}: {t("probability.debug.total")} {d.total} → {t("probability.debug.available")}{" "}
+                                  {d.available}
+                                  {d.excluded && d.excluded.length > 0 && (
+                                    <span className='ml-2 text-gray-600'>
+                                      ({t("probability.debug.excluded")}: {d.excluded.map((name) => t(`skillTranslations.${name}`, name)).join(", ")})
                                     </span>
-                                  )
-                                })
-                              })()}
-                            </div>
-                          </>
-                        )
-                      })()}
-                    </div>
-                  </li>
+                                  )}
+                                </div>
+                              ))
+                            })()}
+                          </div>
+                        </div>
+                      )
+                    })()}
+                  </div>
                 )}
-              </React.Fragment>
+              </li>
             )
           })}
         </ul>
-      ) : (
-        <div className='py-8 text-base text-center text-gray-500'>
-          {selectedSkills.some(Boolean) ? t("amulet.noMatches") : t("amulet.selectSkills")}
-        </div>
-      )}
-    </section>
+      </div>
+    </React.Fragment>
   )
 }

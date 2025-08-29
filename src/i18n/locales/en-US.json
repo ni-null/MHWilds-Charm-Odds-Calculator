@@ -112,6 +112,8 @@
       "skillCombProb": "Skill Combination Probability",
       "finalProb": "Final Probability",
       "finalPercentage": "Final Percentage",
+      "total": "Total",
+      "available": "Available",
       "excluded": "Excluded"
     }
   },

@@ -112,6 +112,8 @@
       "skillCombProb": "スキル組み合わせ確率",
       "finalProb": "最終確率",
       "finalPercentage": "最終百分率",
+      "total": "合計",
+      "available": "利用可能",
       "excluded": "除外"
     }
   },

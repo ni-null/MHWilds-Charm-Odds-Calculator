@@ -1,0 +1,2194 @@
+{
+    "matchingAmulets": [
+        {
+            "Rarity": "RARE[6]",
+            "Skill1Group": 2,
+            "Skill2Group": 10,
+            "Skill3Group": null,
+            "combinationCount": 387,
+            "slotObj": {
+                "[1]": 0.25,
+                "[1, 1]": 0.25,
+                "[2]": 0.25,
+                "[2, 1]": 0.25
+            }
+        },
+        {
+            "Rarity": "RARE[7]",
+            "Skill1Group": 2,
+            "Skill2Group": 1,
+            "Skill3Group": 10,
+            "combinationCount": 13986,
+            "slotObj": {
+                "[1]": 0.33333,
+                "[1, 1]": 0.33333,
+                "[2]": 0.33333
+            }
+        },
+        {
+            "Rarity": "RARE[8]",
+            "Skill1Group": 2,
+            "Skill2Group": 1,
+            "Skill3Group": 10,
+            "combinationCount": 13986,
+            "slotObj": {
+                "[\"W1\"]": 0.5,
+                "[\"W1\", 1]": 0.33,
+                "[\"W1\", 1, 1]": 0.17
+            }
+        }
+    ],
+    "visibleAmulets": [
+        {
+            "Rarity": "RARE[6]",
+            "Skill1Group": 2,
+            "Skill2Group": 10,
+            "Skill3Group": null,
+            "combinationCount": 387,
+            "slotObj": {
+                "[1]": 0.25,
+                "[1, 1]": 0.25,
+                "[2]": 0.25,
+                "[2, 1]": 0.25
+            }
+        },
+        {
+            "Rarity": "RARE[7]",
+            "Skill1Group": 2,
+            "Skill2Group": 1,
+            "Skill3Group": 10,
+            "combinationCount": 13986,
+            "slotObj": {
+                "[1]": 0.33333,
+                "[1, 1]": 0.33333,
+                "[2]": 0.33333
+            }
+        },
+        {
+            "Rarity": "RARE[8]",
+            "Skill1Group": 2,
+            "Skill2Group": 1,
+            "Skill3Group": 10,
+            "combinationCount": 13986,
+            "slotObj": {
+                "[\"W1\"]": 0.5,
+                "[\"W1\", 1]": 0.33,
+                "[\"W1\", 1, 1]": 0.17
+            }
+        }
+    ],
+    "amuletProbabilities": {
+        "0": {
+            "noSlot": {
+                "formatted": "0.0997",
+                "rawPercent": 0.09966777408637872
+            },
+            "withSlot": {
+                "formatted": "0.0997",
+                "rawPercent": 0.09966777408637872
+            }
+        },
+        "1": {
+            "noSlot": {
+                "formatted": "0.0355",
+                "rawPercent": 0.0355297157622739
+            },
+            "withSlot": {
+                "formatted": "0.0355",
+                "rawPercent": 0.0355297157622739
+            }
+        },
+        "2": {
+            "noSlot": {
+                "formatted": "0.009690",
+                "rawPercent": 0.009689922480620155
+            },
+            "withSlot": {
+                "formatted": "0.009690",
+                "rawPercent": 0.009689922480620155
+            }
+        }
+    },
+    "selectedSkills": [
+        [
+            "Adaptability Lv.1",
+            "Adrenaline Rush Lv.1"
+        ],
+        [
+            "Artillery Lv.2"
+        ],
+        []
+    ],
+    "selectedSlot": "",
+    "expandedIndex": null,
+    "rarityBaseProbability": {
+        "RARE[5]": {
+            "probability": 0.59,
+            "normalslot": {
+                "[1, 1]": 0.25,
+                "[2]": 0.25,
+                "[2, 1]": 0.25,
+                "[3]": 0.25
+            },
+            "Group": [
+                {
+                    "skills": [
+                        1,
+                        6,
+                        6
+                    ],
+                    "combinationCount": 49284,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        7
+                    ],
+                    "combinationCount": 1258,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        8,
+                        6
+                    ],
+                    "combinationCount": 20535,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        8,
+                        8
+                    ],
+                    "combinationCount": 7770,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        9
+                    ],
+                    "combinationCount": 555,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        10
+                    ],
+                    "combinationCount": 333,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                }
+            ]
+        },
+        "RARE[6]": {
+            "probability": 0.27,
+            "normalslot": {
+                "[1]": 0.25,
+                "[1, 1]": 0.25,
+                "[2]": 0.25,
+                "[2, 1]": 0.25
+            },
+            "Group": [
+                {
+                    "skills": [
+                        1,
+                        1,
+                        7
+                    ],
+                    "combinationCount": 45288,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        1,
+                        10
+                    ],
+                    "combinationCount": 11988,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        6,
+                        6
+                    ],
+                    "combinationCount": 57276,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        8,
+                        6
+                    ],
+                    "combinationCount": 23865,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        8,
+                        8
+                    ],
+                    "combinationCount": 9030,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        9
+                    ],
+                    "combinationCount": 645,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        10
+                    ],
+                    "combinationCount": 387,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                }
+            ]
+        },
+        "RARE[7]": {
+            "probability": 0.11,
+            "normalslot": {
+                "[1]": 0.33333,
+                "[1, 1]": 0.33333,
+                "[2]": 0.33333
+            },
+            "Group": [
+                {
+                    "skills": [
+                        2,
+                        1,
+                        7
+                    ],
+                    "combinationCount": 52836,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        8
+                    ],
+                    "combinationCount": 23310,
+                    "slot": {
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333,
+                        "[3]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        10
+                    ],
+                    "combinationCount": 13986,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        6,
+                        5
+                    ],
+                    "combinationCount": 53280,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        7
+                    ],
+                    "combinationCount": 1360,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        8,
+                        5
+                    ],
+                    "combinationCount": 22200,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        10
+                    ],
+                    "combinationCount": 360,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        4,
+                        1,
+                        1
+                    ],
+                    "combinationCount": 26532,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                }
+            ]
+        },
+        "RARE[8]": {
+            "probability": 0.03,
+            "normalslot": {
+                "slot": {
+                    "[\"W1\"]": 0.5,
+                    "[\"W1\", 1]": 0.33,
+                    "[\"W1\", 1, 1]": 0.17
+                }
+            },
+            "Group": [
+                {
+                    "skills": [
+                        2,
+                        1,
+                        7
+                    ],
+                    "combinationCount": 52836,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        8
+                    ],
+                    "combinationCount": 23310,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        10
+                    ],
+                    "combinationCount": 13986,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        6,
+                        5
+                    ],
+                    "combinationCount": 53280,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        7
+                    ],
+                    "combinationCount": 1360,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        8,
+                        5
+                    ],
+                    "combinationCount": 22200,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        10
+                    ],
+                    "combinationCount": 360,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        4,
+                        1,
+                        1
+                    ],
+                    "combinationCount": 26532,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                }
+            ]
+        }
+    },
+    "RarityData": {
+        "RARE[5]": {
+            "probability": 0.59,
+            "normalslot": {
+                "[1, 1]": 0.25,
+                "[2]": 0.25,
+                "[2, 1]": 0.25,
+                "[3]": 0.25
+            },
+            "Group": [
+                {
+                    "skills": [
+                        1,
+                        6,
+                        6
+                    ],
+                    "combinationCount": 49284,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        7
+                    ],
+                    "combinationCount": 1258,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        8,
+                        6
+                    ],
+                    "combinationCount": 20535,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        8,
+                        8
+                    ],
+                    "combinationCount": 7770,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        9
+                    ],
+                    "combinationCount": 555,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        10
+                    ],
+                    "combinationCount": 333,
+                    "slot": {
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25,
+                        "[3]": 0.25
+                    }
+                }
+            ]
+        },
+        "RARE[6]": {
+            "probability": 0.27,
+            "normalslot": {
+                "[1]": 0.25,
+                "[1, 1]": 0.25,
+                "[2]": 0.25,
+                "[2, 1]": 0.25
+            },
+            "Group": [
+                {
+                    "skills": [
+                        1,
+                        1,
+                        7
+                    ],
+                    "combinationCount": 45288,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        1,
+                        1,
+                        10
+                    ],
+                    "combinationCount": 11988,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        6,
+                        6
+                    ],
+                    "combinationCount": 57276,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        8,
+                        6
+                    ],
+                    "combinationCount": 23865,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        8,
+                        8
+                    ],
+                    "combinationCount": 9030,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        9
+                    ],
+                    "combinationCount": 645,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        10
+                    ],
+                    "combinationCount": 387,
+                    "slot": {
+                        "[1]": 0.25,
+                        "[1, 1]": 0.25,
+                        "[2]": 0.25,
+                        "[2, 1]": 0.25
+                    }
+                }
+            ]
+        },
+        "RARE[7]": {
+            "probability": 0.11,
+            "normalslot": {
+                "[1]": 0.33333,
+                "[1, 1]": 0.33333,
+                "[2]": 0.33333
+            },
+            "Group": [
+                {
+                    "skills": [
+                        2,
+                        1,
+                        7
+                    ],
+                    "combinationCount": 52836,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        8
+                    ],
+                    "combinationCount": 23310,
+                    "slot": {
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333,
+                        "[3]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        10
+                    ],
+                    "combinationCount": 13986,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        6,
+                        5
+                    ],
+                    "combinationCount": 53280,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        7
+                    ],
+                    "combinationCount": 1360,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        8,
+                        5
+                    ],
+                    "combinationCount": 22200,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        10
+                    ],
+                    "combinationCount": 360,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                },
+                {
+                    "skills": [
+                        4,
+                        1,
+                        1
+                    ],
+                    "combinationCount": 26532,
+                    "slot": {
+                        "[1]": 0.33333,
+                        "[1, 1]": 0.33333,
+                        "[2]": 0.33333
+                    }
+                }
+            ]
+        },
+        "RARE[8]": {
+            "probability": 0.03,
+            "normalslot": {
+                "slot": {
+                    "[\"W1\"]": 0.5,
+                    "[\"W1\", 1]": 0.33,
+                    "[\"W1\", 1, 1]": 0.17
+                }
+            },
+            "Group": [
+                {
+                    "skills": [
+                        2,
+                        1,
+                        7
+                    ],
+                    "combinationCount": 52836,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        8
+                    ],
+                    "combinationCount": 23310,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        2,
+                        1,
+                        10
+                    ],
+                    "combinationCount": 13986,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        6,
+                        5
+                    ],
+                    "combinationCount": 53280,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        7
+                    ],
+                    "combinationCount": 1360,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        8,
+                        5
+                    ],
+                    "combinationCount": 22200,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        3,
+                        10
+                    ],
+                    "combinationCount": 360,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                },
+                {
+                    "skills": [
+                        4,
+                        1,
+                        1
+                    ],
+                    "combinationCount": 26532,
+                    "slot": {
+                        "[\"W1\"]": 0.5,
+                        "[\"W1\", 1]": 0.33,
+                        "[\"W1\", 1, 1]": 0.17
+                    }
+                }
+            ]
+        }
+    },
+    "SkillGroupsData": {
+        "SkillGroups": {
+            "Group1": {
+                "color": "#6A9855",
+                "bgColor": "#D9EAD3",
+                "data": [
+                    {
+                        "SkillName": "Artillery",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Attack Boost",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Ballistics",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Blast Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Bludgeoner",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Charge Master",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Critical Draw",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Critical Element",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Critical Eye",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Critical Status",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Dragon Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Fire Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Focus",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Guard",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Guard Up",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Handicraft",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Horn Maestro",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Ice Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Load Shells",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Mind's Eye",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Offensive Guard",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Opening Shot",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Paralysis Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Poison Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Power Prolonger",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Protective Polish",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Punishing Draw",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Rapid Morph",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Razor Sharp",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Sleep Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Slugger",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Special Ammo Boost",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Speed Sharpening",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Stamina Thief",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Tetrad Shot",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Thunder Attack",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Water Attack",
+                        "SkillLevel": 1
+                    }
+                ]
+            },
+            "Group2": {
+                "color": "#D94040",
+                "bgColor": "#F4CCCC",
+                "data": [
+                    {
+                        "SkillName": "Airborne",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Artillery",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Attack Boost",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Ballistics",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Blast Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Blast Functionality",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Bludgeoner",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Charge Master",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Charge Up",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Critical Draw",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Critical Element",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Critical Eye",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Critical Status",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Dragon Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Exhaust Functionality",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Fire Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Focus",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Guard",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Guard Up",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Handicraft",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Horn Maestro",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Ice Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Load Shells",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Mind's Eye",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Offensive Guard",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Opening Shot",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Paralysis Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Poison Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Poison Duration Up",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Poison Functionality",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Power Prolonger",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Protective Polish",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Punishing Draw",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Rapid Morph",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Razor Sharp",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Sleep Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Slugger",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Special Ammo Boost",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Speed Sharpening",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Stamina Thief",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Tetrad Shot",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Thunder Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Water Attack",
+                        "SkillLevel": 2
+                    }
+                ]
+            },
+            "Group3": {
+                "color": "#8D7ABD",
+                "bgColor": "#D9D2E9",
+                "data": [
+                    {
+                        "SkillName": "Artillery",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Attack Boost",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Ballistics",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Blast Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Bludgeoner",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Charge Master",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Critical Draw",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Critical Element",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Critical Eye",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Critical Status",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Dragon Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Fire Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Focus",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Guard",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Guard Up",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Handicraft",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Ice Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Master's Touch",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Mind's Eye",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Normal Shots",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Offensive Guard",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Opening Shot",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Para Functionality",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Paralysis Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Piercing Shots",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Poison Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Power Prolonger",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Protective Polish",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Punishing Draw",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Rapid Fire Up",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Rapid Morph",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Razor Sharp",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Sleep Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Sleep Functionality",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Slugger",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Spread/Power Shots",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Stamina Thief",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Tetrad Shot",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Thunder Attack",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Water Attack",
+                        "SkillLevel": 3
+                    }
+                ]
+            },
+            "Group4": {
+                "color": "#a58d43",
+                "bgColor": "#FFF2CC",
+                "data": [
+                    {
+                        "SkillName": "Attack Boost",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Ballistics",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Blast Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Critical Boost",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Critical Element",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Critical Eye",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Dragon Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Fire Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Guard",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Guard Up",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Handicraft",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Ice Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Opening Shot",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Paralysis Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Poison Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Protective Polish",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Razor Sharp",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Sleep Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Tetrad Shot",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Thunder Attack",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Water Attack",
+                        "SkillLevel": 2
+                    }
+                ]
+            },
+            "Group5": {
+                "color": "#3e6067",
+                "bgColor": "#D0E0E3",
+                "data": [
+                    {
+                        "SkillName": "Adaptability",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Antivirus",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Aquatic/Oilsilt Mobility",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Bind Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Blast Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Bleeding Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Bombardier",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Botanist",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Constitution",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Defense Boost",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Divine Blessing",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Dragon Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Fire Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Flinch Free",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Free Meal",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Geologist",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Hunger Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Ice Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Intimidator",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Iron Skin",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Item Prolonger",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Marathon Runner",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Paralysis Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Poison Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Quick Sheathe",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Recovery Speed",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Recovery Up",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Sleep Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Speed Eating",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Stench Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Stun Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Survival Expert",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Thunder Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Tremor Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Water Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Wide-Range",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Windproof",
+                        "SkillLevel": 1
+                    }
+                ]
+            },
+            "Group6": {
+                "color": "#b17e49",
+                "bgColor": "#FCE5CD",
+                "data": [
+                    {
+                        "SkillName": "Adaptability",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Antivirus",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Aquatic/Oilsilt Mobility",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Bind Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Blast Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Bleeding Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Bombardier",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Botanist",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Constitution",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Defense Boost",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Divine Blessing",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Dragon Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Fire Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Flinch Free",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Free Meal",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Geologist",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Hunger Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Ice Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Intimidator",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Iron Skin",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Item Prolonger",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Marathon Runner",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Paralysis Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Poison Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Quick Sheathe",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Recovery Speed",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Recovery Up",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Sleep Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Speed Eating",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Stench Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Stun Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Survival Expert",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Thunder Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Tremor Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Water Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Wide-Range",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Windproof",
+                        "SkillLevel": 2
+                    }
+                ]
+            },
+            "Group7": {
+                "color": "#844B40",
+                "bgColor": "#E6B8AF",
+                "data": [
+                    {
+                        "SkillName": "Antivirus",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Bind Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Blast Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Bleeding Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Bombardier",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Botanist",
+                        "SkillLevel": 4
+                    },
+                    {
+                        "SkillName": "Constitution",
+                        "SkillLevel": 4
+                    },
+                    {
+                        "SkillName": "Defense Boost",
+                        "SkillLevel": 4
+                    },
+                    {
+                        "SkillName": "Divine Blessing",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Dragon Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Fire Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Flinch Free",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Free Meal",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Geologist",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Hunger Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Ice Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Intimidator",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Iron Skin",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Item Prolonger",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Marathon Runner",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Paralysis Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Poison Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Quick Sheathe",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Recovery Speed",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Recovery Up",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Sleep Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Speed Eating",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Stun Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Survival Expert",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Thunder Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Tremor Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Water Resistance",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Wide-Range",
+                        "SkillLevel": 4
+                    },
+                    {
+                        "SkillName": "Windproof",
+                        "SkillLevel": 3
+                    }
+                ]
+            },
+            "Group8": {
+                "color": "#597d9f",
+                "bgColor": "#CFE2F3",
+                "data": [
+                    {
+                        "SkillName": "Ambush",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Blight Resistance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Coalescence",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Counterstrike",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Earplugs",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Evade Extender",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Evade Window",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Heroics",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Maximum Might",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Mushroomancer",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Partbreaker",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Peak Performance",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Resentment",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Stamina Surge",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Tool Specialist",
+                        "SkillLevel": 2
+                    }
+                ]
+            },
+            "Group9": {
+                "color": "#8f5875",
+                "bgColor": "#EAD1DC",
+                "data": [
+                    {
+                        "SkillName": "Ambush",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Blight Resistance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Coalescence",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Counterstrike",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Earplugs",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Evade Extender",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Evade Window",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Heroics",
+                        "SkillLevel": 3
+                    },
+                    {
+                        "SkillName": "Maximum Might",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Mushroomancer",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Partbreaker",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Peak Performance",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Resentment",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Stamina Surge",
+                        "SkillLevel": 2
+                    },
+                    {
+                        "SkillName": "Tool Specialist",
+                        "SkillLevel": 3
+                    }
+                ]
+            },
+            "Group10": {
+                "color": "#4D80D9",
+                "bgColor": "#C9DAF8",
+                "data": [
+                    {
+                        "SkillName": "Adrenaline Rush",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Agitator",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Burst",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Convert Element",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Elemental Absorption",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Flayer",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Foray",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Latent Power",
+                        "SkillLevel": 1
+                    },
+                    {
+                        "SkillName": "Weakness Exploit",
+                        "SkillLevel": 1
+                    }
+                ]
+            }
+        }
+    }
+}

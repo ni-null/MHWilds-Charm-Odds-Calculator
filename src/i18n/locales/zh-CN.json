@@ -112,6 +112,8 @@
       "skillCombProb": "技能组合概率",
       "finalProb": "最终概率",
       "finalPercentage": "最终百分比",
+      "total": "总",
+      "available": "可用",
       "excluded": "排除"
     }
   },

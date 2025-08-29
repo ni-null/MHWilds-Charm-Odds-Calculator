@@ -24,6 +24,10 @@ export default function SkillSelector() {
 
   const { selectedSkills, setSelectedSkills, selectedSlot, setSelectedSlot } = useMhwStore()
 
+  useEffect(() => {
+    console.log(selectedSkills)
+  }, [selectedSkills])
+
   // build global list of slot options from rarity data
   const slotOptions = React.useMemo(() => {
     const setKeys = new Set()
@@ -168,38 +172,47 @@ export default function SkillSelector() {
   // compute slot options filtered by currently selected skills
   const filteredSlotOptions = useMemo(() => {
     // if no skills chosen at all, return all slotOptions
-    const anySkillChosen = selectedSkills.some((s) => s && s !== "")
+    const anySkillChosen = selectedSkills.some((arr) => (Array.isArray(arr) ? arr.length > 0 : !!arr))
     if (!anySkillChosen) return slotOptions
 
     const validSet = new Set()
 
     const canAssignSelectedToAmulet = (amulet) => {
-      // build amulet groups array (in order)
+      // amulet groups in order
       const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
-      const used = []
-      for (let i = 0; i < 3; i++) {
-        const sel = selectedSkills[i]
-        if (!sel) continue
-        const groups = skillToGroupMap[sel] || []
-        let assigned = false
-        for (let j = 0; j < amuletGroups.length; j++) {
-          if (used.includes(j)) continue
-          if (groups.includes(amuletGroups[j])) {
-            used.push(j)
-            assigned = true
-            break
+      // build list of chosen skill keys per earlier slot (treat per-slot multi-select as OR)
+      const chosenPerSlot = selectedSkills.map((s) => (Array.isArray(s) ? s.slice() : s ? [s] : [])).filter((arr) => arr.length > 0)
+
+      // if no chosen slots, trivially true
+      if (chosenPerSlot.length === 0) return true
+
+      // backtracking: for each chosen slot, pick one of its selected skills and assign to a distinct amuletGroup index
+      const used = new Set()
+      const dfsSlot = (slotIdx) => {
+        if (slotIdx >= chosenPerSlot.length) return true
+        const options = chosenPerSlot[slotIdx]
+        for (let optIdx = 0; optIdx < options.length; optIdx++) {
+          const skillKey = options[optIdx]
+          const groups = skillToGroupMap[skillKey] || []
+          for (let j = 0; j < amuletGroups.length; j++) {
+            if (used.has(j)) continue
+            if (groups.includes(amuletGroups[j])) {
+              used.add(j)
+              if (dfsSlot(slotIdx + 1)) return true
+              used.delete(j)
+            }
           }
         }
-        if (!assigned) return false
+        return false
       }
-      return true
+
+      return dfsSlot(0)
     }
 
     virtualAmulets.forEach((amulet) => {
       if (canAssignSelectedToAmulet(amulet)) validSet.add(amulet.slotKeyOriginal)
     })
 
-    // preserve original order from slotOptions
     return slotOptions.filter((k) => validSet.has(k))
   }, [selectedSkills, skillToGroupMap, slotOptions, virtualAmulets])
 
@@ -208,12 +221,12 @@ export default function SkillSelector() {
 
   const getAvailableSkills = useCallback(
     (slotIndex) => {
+      // normalize current slot selections
+      // (not used directly here but kept for clarity)
+
+      // if slotIndex is 0: show all skills if no slot filter; otherwise only skills appearing in amulets for that slot
       if (slotIndex === 0) {
-        // 第一個 select：若未選擇插槽則列出所有技能（過濾重複）
-        // 如果有選擇插槽，僅顯示該插槽對應的護石組合中出現的技能
-        if (!selectedSlot) {
-          return getAllUniqueSkills
-        }
+        if (!selectedSlot) return getAllUniqueSkills
 
         const possible = new Set()
         const matchingAmulets = virtualAmulets.filter((a) => normalizeSlotKey(selectedSlot) === a.slotKeyNormalized)
@@ -232,113 +245,115 @@ export default function SkillSelector() {
         return Array.from(possible).sort()
       }
 
-      if (slotIndex === 1) {
-        // 第二個 select：根據第一個技能找出可能的護石組合中的其他技能
-        if (!selectedSkills[0]) return []
+      // For slotIndex 1 or 2: build available skills that can coexist with already selected skills in earlier slots
+      // We'll collect possible skills by checking amulets that contain matches for already chosen skill-sets
+      const earlierChosen = []
+      for (let i = 0; i < slotIndex; i++) {
+        const arr = Array.isArray(selectedSkills[i]) ? selectedSkills[i] : selectedSkills[i] ? [selectedSkills[i]] : []
+        earlierChosen.push(...arr)
+      }
 
-        const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
-        const firstSkillBaseName = selectedSkills[0].split(" Lv.")[0]
-        const possibleSkills = new Set()
+      // if no earlier choice, return [] (we require previous slots to be chosen to show dependent options)
+      if (earlierChosen.length === 0) return []
 
-        // reuse virtualAmulets but filter by selectedSlot if present
-        const matchingAmulets = virtualAmulets.filter((a) => {
-          if (!selectedSlot) return true
-          return normalizeSlotKey(selectedSlot) === a.slotKeyNormalized
-        })
+      // helper to get base skill name without level (e.g. "Attack Boost" from "Attack Boost Lv.3")
+      const baseName = (skillKey) => String(skillKey).split(" Lv.")[0]
 
-        matchingAmulets.forEach((amulet) => {
-          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
-          const hasFirstSkillGroup = firstSkillGroups.some((group) => amuletGroups.includes(group))
-          if (hasFirstSkillGroup) {
-            let assignedSlotIndex = -1
-            for (let i = 0; i < amuletGroups.length; i++) {
-              if (firstSkillGroups.includes(amuletGroups[i])) {
-                assignedSlotIndex = i
-                break
+      // exclude already chosen earlier skills by base name to catch same skills with different levels
+      const earlierBaseSet = new Set(earlierChosen.map(baseName))
+
+      const possibleSkills = new Set()
+      const matchingAmulets = virtualAmulets.filter((a) => {
+        if (!selectedSlot) return true
+        return normalizeSlotKey(selectedSlot) === a.slotKeyNormalized
+      })
+
+      matchingAmulets.forEach((amulet) => {
+        const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+        // check if amulet can assign all earlierChosen items
+
+        // Treat earlierChosen per-slot as OR; build perSlot options
+        const perSlot = []
+        for (let si = 0; si < slotIndex; si++) {
+          const arr = Array.isArray(selectedSkills[si]) ? selectedSkills[si] : selectedSkills[si] ? [selectedSkills[si]] : []
+          if (arr.length > 0) perSlot.push(arr.slice())
+        }
+
+        if (perSlot.length === 0) {
+          // nothing chosen earlier; shouldn't reach here due to earlier guard, but skip
+          return
+        }
+
+        // enumerate all valid assignments (map each earlier slot to a distinct amulet group index)
+        const assignments = []
+        const usedIdx = []
+        const dfsAssign = (si) => {
+          if (si >= perSlot.length) {
+            assignments.push(new Set(usedIdx))
+            return
+          }
+          const options = perSlot[si]
+          for (let oi = 0; oi < options.length; oi++) {
+            const groups = skillToGroupMap[options[oi]] || []
+            for (let j = 0; j < amuletGroups.length; j++) {
+              if (usedIdx.includes(j)) continue
+              if (groups.includes(amuletGroups[j])) {
+                usedIdx.push(j)
+                dfsAssign(si + 1)
+                usedIdx.pop()
               }
             }
-            amuletGroups.forEach((groupNumber, slotIndex) => {
-              if (slotIndex !== assignedSlotIndex) {
-                const groupKey = `Group${groupNumber}`
-                if (SkillGroupsData.SkillGroups[groupKey]) {
-                  SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-                    const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
-                    const skillBaseName = skill.SkillName
-                    if (skillBaseName !== firstSkillBaseName) {
-                      possibleSkills.add(skillKey)
-                    }
-                  })
-                }
-              }
+          }
+        }
+
+        dfsAssign(0)
+
+        if (assignments.length === 0) return
+
+        // For each valid assignment, collect skills from remaining groups; union across assignments
+        const remainingGroupIdxs = new Set()
+        assignments.forEach((usedSet) => {
+          for (let gi = 0; gi < amuletGroups.length; gi++) {
+            if (!usedSet.has(gi)) remainingGroupIdxs.add(gi)
+          }
+        })
+
+        remainingGroupIdxs.forEach((groupIdx) => {
+          const groupNumber = amuletGroups[groupIdx]
+          const groupKey = `Group${groupNumber}`
+          if (SkillGroupsData.SkillGroups[groupKey]) {
+            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+              const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+              possibleSkills.add(skillKey)
             })
           }
         })
+      })
 
-        return Array.from(possibleSkills).sort()
-      }
+      // NOTE: previously we filtered out skills whose base name matched an earlier
+      // chosen skill (to prevent selecting the same skill at different levels).
+      // That exclusion has been removed so the select will include already-selected
+      // skills. Keep sorting but do not exclude by base name.
+      const filtered = Array.from(possibleSkills).sort()
 
-      if (slotIndex === 2) {
-        // 第三個 select：同時考慮第一和第二個技能
-        if (!selectedSkills[0]) return []
-
-        const firstSkillGroups = skillToGroupMap[selectedSkills[0]] || []
-        const secondSkillGroups = selectedSkills[1] ? skillToGroupMap[selectedSkills[1]] || [] : []
-        const firstSkillBaseName = selectedSkills[0].split(" Lv.")[0]
-        const secondSkillBaseName = selectedSkills[1] ? selectedSkills[1].split(" Lv.")[0] : null
-        const possibleSkills = new Set()
-
-        // reuse virtualAmulets but filter by selectedSlot if present
-        const matchingAmulets2 = virtualAmulets.filter((a) => {
-          if (!selectedSlot) return true
-          return normalizeSlotKey(selectedSlot) === a.slotKeyNormalized
-        })
-
-        matchingAmulets2.forEach((amulet) => {
-          const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
-
-          const usedSlotIndexes = []
-          let firstAssigned = false
-          for (let i = 0; i < amuletGroups.length; i++) {
-            if (!usedSlotIndexes.includes(i) && firstSkillGroups.includes(amuletGroups[i])) {
-              usedSlotIndexes.push(i)
-              firstAssigned = true
-              break
-            }
-          }
-          if (!firstAssigned) return
-
-          if (selectedSkills[1]) {
-            let secondAssigned = false
-            for (let i = 0; i < amuletGroups.length; i++) {
-              if (!usedSlotIndexes.includes(i) && secondSkillGroups.includes(amuletGroups[i])) {
-                usedSlotIndexes.push(i)
-                secondAssigned = true
-                break
-              }
-            }
-            if (!secondAssigned) return
-          }
-
-          amuletGroups.forEach((groupNumber, slotIndex) => {
-            if (!usedSlotIndexes.includes(slotIndex)) {
-              const groupKey = `Group${groupNumber}`
-              if (SkillGroupsData.SkillGroups[groupKey]) {
-                SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-                  const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
-                  const skillBaseName = skill.SkillName
-                  if (skillBaseName !== firstSkillBaseName && skillBaseName !== secondSkillBaseName) {
-                    possibleSkills.add(skillKey)
-                  }
-                })
-              }
-            }
+      // debug logs in dev to help trace why select3 appears when expected empty
+      try {
+        if (import.meta.env && import.meta.env.DEV) {
+          console.debug("getAvailableSkills debug", {
+            slotIndex,
+            earlierChosen,
+            earlierBaseSet: Array.from(earlierBaseSet),
+            matchingAmuletsCount: matchingAmulets.length,
+            possibleSkillsCount: possibleSkills.size,
+            filteredCount: filtered.length,
+            filteredSample: filtered.slice(0, 10),
           })
-        })
-
-        return Array.from(possibleSkills).sort()
+        }
+      } catch {
+        /* ignore */
       }
 
-      return []
+      return filtered
     },
     [selectedSkills, skillToGroupMap, getAllUniqueSkills, virtualAmulets, selectedSlot, normalizeSlotKey]
   )
@@ -359,13 +374,15 @@ export default function SkillSelector() {
       let changed = false
 
       for (let i = 1; i < 3; i++) {
-        if (copy[i]) {
+        const arr = Array.isArray(copy[i]) ? copy[i] : copy[i] ? [copy[i]] : []
+        if (arr.length > 0) {
           const available = getAvailableSkills(i)
-          if (!available.includes(copy[i])) {
-            // clear this and any subsequent selections
+          // if any selected item is no longer available, clear this and later slots
+          const anyInvalid = arr.some((it) => !available.includes(it))
+          if (anyInvalid) {
             for (let j = i; j < 3; j++) {
-              if (copy[j] !== "") {
-                copy[j] = ""
+              if (Array.isArray(copy[j]) ? copy[j].length > 0 : copy[j]) {
+                copy[j] = []
                 changed = true
               }
             }
@@ -387,87 +404,89 @@ export default function SkillSelector() {
       <div className='grid grid-cols-1 gap-4 mb-4 xl:grid-cols-3'>
         {[0, 1, 2].map((i) => {
           const available = getAvailableSkills(i).length > 0
-          const shouldShow = i === 0 ? available : selectedSkills[i - 1] && available
+          const prev = selectedSkills[i - 1]
+          const prevHas = Array.isArray(prev) ? prev.length > 0 : !!prev
+          const shouldShow = i === 0 ? available : prevHas && available
           if (!shouldShow) return null
 
           const SkillSelectSlot = () => {
             const [localSearch, setLocalSearch] = React.useState("")
 
-            const selectedValue = selectedSkills[i]
-            let selectedDisplay = ""
-            if (selectedValue) {
-              const selName = selectedValue.split(" Lv.")[0]
-              const selLevel = selectedValue.split(" Lv.")[1] || ""
-              const translatedSel = t(`skillTranslations.${selName}`, selName)
-              const groupInfo = getSkillGroupInfo(selectedValue)
-              // show fullwidth parentheses for zh and jaJP locales
-              const useFullwidthParens = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
-              const groupText = useFullwidthParens ? `（${groupInfo}）` : ` (${groupInfo})`
-
-              // Render a small icon (if available) plus the name
-              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName.replace(/\//g, "-"))}.png`
-              const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : selectedValue
-
-              selectedDisplay = (
-                <div className='flex items-center gap-2'>
-                  <img
-                    src={imgSrc}
-                    alt={selName}
-                    className='object-contain w-5 h-5 md:w-7 md:h-7'
-                    onError={(e) => {
-                      try {
-                        if (!e || !e.currentTarget) return
-                        const el = e.currentTarget
-                        // avoid replacing if already placeholder
-                        if (el.src && el.src.indexOf("data:image/svg+xml") === -1) {
-                          el.src = SKILL_PLACEHOLDER_SVG
-                        }
-                      } catch {
-                        /* swallow */
-                      }
-                    }}
-                  />
-                  <span>{nameNode}</span>
-                  <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>{groupText}</span>
-                </div>
-              )
-            }
+            const selectedArray = Array.isArray(selectedSkills[i]) ? selectedSkills[i] : selectedSkills[i] ? [selectedSkills[i]] : []
 
             return (
               <div className='flex flex-col' key={i}>
                 <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label>
                 <div className='flex items-center gap-2'>
-                  <Select
-                    value={selectedSkills[i] ?? ""}
-                    onValueChange={(value) => {
-                      const copy = [...selectedSkills]
-                      const isClear = value === "__clear__" || value === ""
-                      copy[i] = isClear ? "" : value
-                      if (isClear) {
-                        for (let j = i + 1; j < 3; j++) copy[j] = ""
-                      }
-                      setSelectedSkills(copy)
-                      // clear local search when selection changes
-                      setLocalSearch("")
-                    }}>
-                    <SelectTrigger className='w-full h-10 px-3 text-base md:h-14 md:px-4 md:text-lg'>
-                      {/* keep an empty SelectValue so Radix can show the placeholder when no value is selected */}
-                      <SelectValue placeholder={t("skillSelector.selectSkill")} />
-                      {/* render the richer selectedDisplay directly in the trigger so the icon + group text appear immediately after first selection */}
-                      {selectedDisplay ? <div className='flex items-center justify-start w-full'>{selectedDisplay}</div> : null}
+                  <Select value={""} onValueChange={() => {}}>
+                    <SelectTrigger className='w-full h-auto min-h-[40px] px-3 text-base md:min-h-[56px] md:px-4 md:text-lg'>
+                      <div className='flex items-center w-full'>
+                        {/* When nothing selected show the placeholder SelectValue; otherwise show badges */}
+                        {selectedArray.length === 0 ? (
+                          <SelectValue placeholder={t("skillSelector.selectSkill")} />
+                        ) : (
+                          <div className='flex flex-wrap items-center w-full max-w-full gap-2 overflow-hidden'>
+                            {selectedArray.map((sel) => {
+                              const selName = sel.split(" Lv.")[0]
+                              const selLevel = sel.split(" Lv.")[1] || ""
+                              const translatedSel = t(`skillTranslations.${selName}`, selName)
+
+                              const useFullwidthParens = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
+                              const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName.replace(/\//g, "-"))}.png`
+                              const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : sel
+                              return (
+                                <div key={sel} className='flex items-center gap-2 px-2 py-1 bg-gray-100 rounded'>
+                                  <img
+                                    src={imgSrc}
+                                    alt={selName}
+                                    className='object-contain w-5 h-5'
+                                    onError={(e) => (e.currentTarget.src = SKILL_PLACEHOLDER_SVG)}
+                                  />
+                                  <span className='text-sm truncate max-w-[10rem] md:max-w-[14rem]'>{nameNode}</span>
+                                  {/* remove button for this selected skill badge */}
+                                  <button
+                                    type='button'
+                                    aria-label={t("skillSelector.removeSelected", "Remove")}
+                                    onPointerDown={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                    }}
+                                    onMouseDown={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                    }} /* prevent blur and stop Select from handling */
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      const copy = selectedSkills.slice()
+                                      const arr = Array.isArray(copy[i]) ? copy[i].slice() : copy[i] ? [copy[i]] : []
+                                      const idx = arr.indexOf(sel)
+                                      if (idx !== -1) arr.splice(idx, 1)
+                                      copy[i] = arr
+                                      // clear later slots when removing earlier ones
+                                      if (i < 2 && arr.length === 0) {
+                                        for (let j = i + 1; j < 3; j++) copy[j] = []
+                                      }
+                                      setSelectedSkills(copy)
+                                    }}
+                                    className=' px-2 py-0.5 rounded text-sm hover:bg-gray-200'>
+                                    ×
+                                  </button>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
                     </SelectTrigger>
                     <SelectContent side='bottom' position='popper'>
-                      {/* search input with inline clear icon */}
                       <div className='flex items-center gap-2 mb-2'>
                         <Input
                           ref={React.createRef()}
                           type='text'
                           value={localSearch}
                           onChange={(e) => setLocalSearch(e.target.value)}
-                          onKeyDown={(e) => e.stopPropagation()}
-                          onPointerDown={(e) => e.stopPropagation()}
-                          onMouseDown={(e) => e.stopPropagation()}
-                          onClick={(e) => e.stopPropagation()}
+                          // avoid stopping propagation so Radix can manage focus while allowing typing
                           placeholder={t("skillSelector.searchSkill")}
                           className='flex-1'
                         />
@@ -478,9 +497,9 @@ export default function SkillSelector() {
                           onMouseDown={(e) => e.preventDefault()} /* prevent blur */
                           onClick={(e) => {
                             e.stopPropagation()
-                            const copy = [...selectedSkills]
-                            copy[i] = ""
-                            for (let j = i + 1; j < 3; j++) copy[j] = ""
+                            const copy = selectedSkills.slice()
+                            copy[i] = []
+                            for (let j = i + 1; j < 3; j++) copy[j] = []
                             setSelectedSkills(copy)
                             setLocalSearch("")
                           }}>
@@ -488,7 +507,6 @@ export default function SkillSelector() {
                         </button>
                       </div>
 
-                      {/* Custom-rendered search results to avoid interaction conflicts with Radix SelectItem */}
                       <div className='flex flex-col gap-1 p-1 overflow-auto max-h-48 md:max-h-96'>
                         {getAvailableSkills(i)
                           .filter((skillKey) => {
@@ -506,24 +524,31 @@ export default function SkillSelector() {
                             const useFullwidth = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
                             const displayName = useFullwidth ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
                             const groupInfo = getSkillGroupInfo(skillKey)
+                            const isSelected = selectedArray.includes(skillKey)
                             return (
                               <button
                                 key={`custom-${skillKey}`}
                                 type='button'
-                                className='px-2 py-1 text-left rounded hover:bg-gray-100'
+                                className={`px-2 py-1 text-left rounded hover:bg-gray-100 flex items-center justify-between ${
+                                  isSelected ? "bg-blue-50" : ""
+                                }`}
                                 onPointerDown={(e) => e.preventDefault()} /* prevent blur */
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={(e) => {
                                   e.stopPropagation()
-                                  const copy = [...selectedSkills]
-                                  copy[i] = skillKey
-                                  for (let j = i + 1; j < 3; j++) copy[j] = ""
+                                  const copy = selectedSkills.slice()
+                                  const arr = Array.isArray(copy[i]) ? copy[i].slice() : copy[i] ? [copy[i]] : []
+                                  const idx = arr.indexOf(skillKey)
+                                  if (idx === -1) arr.push(skillKey)
+                                  else arr.splice(idx, 1)
+                                  copy[i] = arr
+                                  // clear later slots when toggling earlier ones
+                                  if (i < 2 && arr.length === 0) {
+                                    for (let j = i + 1; j < 3; j++) copy[j] = []
+                                  }
                                   setSelectedSkills(copy)
                                   setLocalSearch("")
-                                  // blur active element to close keyboard/focus (safe check)
-                                  if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
-                                    document.activeElement.blur()
-                                  }
+                                  // keep the select open to allow multiple selections
                                 }}>
                                 <div className='flex items-center gap-2'>
                                   <img
@@ -547,6 +572,7 @@ export default function SkillSelector() {
                                     <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
                                   </div>
                                 </div>
+                                <div className='ml-2 text-sm'>{isSelected ? "✓" : ""}</div>
                               </button>
                             )
                           })}
@@ -554,29 +580,28 @@ export default function SkillSelector() {
                     </SelectContent>
                   </Select>
 
-                  {/* clear button placed to the right of each Select */}
                   <button
                     type='button'
                     aria-label={t("skillSelector.clearSelection", "Clear selection")}
-                    className='h-10 px-4 py-2 text-base rounded md:h-14 md:px-5 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
+                    className='h-auto min-h-[40px] px-4 py-2 text-base rounded md:min-h-[56px] md:px-5 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
                     onMouseDown={(e) => e.preventDefault()} /* prevent focus loss */
                     onClick={(e) => {
                       e.stopPropagation()
-                      const copy = [...selectedSkills]
-                      copy[i] = ""
-                      for (let j = i + 1; j < 3; j++) copy[j] = ""
+                      const copy = selectedSkills.slice()
+                      copy[i] = []
+                      for (let j = i + 1; j < 3; j++) copy[j] = []
                       setSelectedSkills(copy)
                       setLocalSearch("")
                     }}>
                     ×
                   </button>
                 </div>
-                {/* group info now shown inline in the SelectValue */}
               </div>
             )
           }
 
-          return <SkillSelectSlot key={`${i}-${selectedSkills[i]}`} />
+          const keySuffix = Array.isArray(selectedSkills[i]) ? selectedSkills[i].join("|") : selectedSkills[i]
+          return <SkillSelectSlot key={`${i}-${keySuffix}`} />
         })}
       </div>
 
@@ -592,7 +617,7 @@ export default function SkillSelector() {
                 onValueChange={(value) => {
                   setSelectedSlot(value)
                 }}>
-                <SelectTrigger className='w-56 h-10 px-3 text-base md:w-72 md:h-14 md:px-4 md:text-lg'>
+                <SelectTrigger className='w-56 h-auto min-h-[40px] px-3 text-base md:w-72 md:min-h-[56px] md:px-4 md:text-lg'>
                   {/* keep SelectValue only; selected SelectItem content (including images) will be shown by Radix */}
                   <SelectValue placeholder={t("skillSelector.slotAny")} />
                 </SelectTrigger>
@@ -653,7 +678,7 @@ export default function SkillSelector() {
           <button
             type='button'
             aria-label={t("skillSelector.clearSlot", "Clear slot")}
-            className='h-10 px-4 py-2 text-base rounded md:h-14 md:px-5 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
+            className='h-auto min-h-[40px] px-4 py-2 text-base rounded md:min-h-[56px] md:px-5 md:py-3 md:text-lg bg-gray-50 hover:bg-gray-100'
             onMouseDown={(e) => e.preventDefault()} /* prevent focus loss */
             onClick={(e) => {
               e.stopPropagation()
@@ -668,7 +693,7 @@ export default function SkillSelector() {
           variant='outline'
           size='sm'
           onClick={() => {
-            setSelectedSkills(["", "", ""])
+            setSelectedSkills([[], [], []])
             setSelectedSlot("")
             // local searches are per-slot; resetting selectedSkills will remount slots
             // which clears their internal localSearch state.
