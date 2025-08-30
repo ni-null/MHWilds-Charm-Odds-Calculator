@@ -7,7 +7,7 @@ import AmuletListView from "./components/AmuletListView"
 export default function AmuletList() {
   const [expandedIndex, setExpandedIndex] = useState(null)
   // translation handled inside AmuletListView
-  const { selectedSkills, selectedSlot } = useMhwStore()
+  const { selectedSkills, selectedSlot, AvlCharms } = useMhwStore()
 
   const rarityBaseProbability = RarityData
 

@@ -22,11 +22,16 @@ export default function SkillSelector() {
   // Per-slot search inputs are local to each Select to avoid parent re-renders
   // remounting the Input in the SelectContent and causing focus loss.
 
-  const { selectedSkills, setSelectedSkills, selectedSlot, setSelectedSlot } = useMhwStore()
+  // use store values; store defines AvlCharms/setAvlCharms (not Charms/setCharms)
+  const { selectedSkills, setSelectedSkills, selectedSlot, setSelectedSlot, AvlCharms, setAvlCharms } = useMhwStore()
 
   useEffect(() => {
     console.log(selectedSkills)
   }, [selectedSkills])
+
+  useEffect(() => {
+    console.log(AvlCharms)
+  }, [AvlCharms])
 
   // build global list of slot options from rarity data
   const slotOptions = React.useMemo(() => {
@@ -145,6 +150,38 @@ export default function SkillSelector() {
     }
   }, [])
 
+  // helper: get base skill name without level
+  const baseName = useCallback((skillKey) => String(skillKey).split(" Lv.")[0], [])
+
+  // helper: validate that an amulet's groups do not contain the same base skill name in multiple groups
+  const isAmuletGroupsValid = useCallback((amulet) => {
+    const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+    const nameToGroupCount = {}
+    for (let gi = 0; gi < amuletGroups.length; gi++) {
+      const groupNumber = amuletGroups[gi]
+      const groupKey = `Group${groupNumber}`
+      const group = SkillGroupsData.SkillGroups[groupKey]
+      if (!group) continue
+      const seen = new Set()
+      group.data.forEach((skill) => {
+        const b = String(skill.SkillName)
+        if (!seen.has(b)) {
+          seen.add(b)
+          nameToGroupCount[b] = (nameToGroupCount[b] || 0) + 1
+          if (nameToGroupCount[b] > 1) {
+            // duplicate base found across groups -> invalid amulet
+            return
+          }
+        }
+      })
+      // early exit if any duplicate was found
+      for (const k in nameToGroupCount) {
+        if (nameToGroupCount[k] > 1) return false
+      }
+    }
+    return true
+  }, [])
+
   // build a virtual amulet list with parsed slotKey to reuse in both skills and slots filtering
   const virtualAmulets = useMemo(() => {
     const arr = []
@@ -155,14 +192,17 @@ export default function SkillSelector() {
         const slots = (gObj && gObj.slot) || {}
         Object.keys(slots).forEach((slotKey) => {
           const skills = gObj.skills || []
-          arr.push({
+          const amulet = {
             Rarity: rarity,
             slotKeyOriginal: slotKey,
             slotKeyNormalized: normalizeSlotKey(slotKey),
             Skill1Group: skills[0] || null,
             Skill2Group: skills[1] || null,
             Skill3Group: skills[2] || null,
-          })
+          }
+          // include all amulet definitions from data; validation against selected skills
+          // is performed later when computing matches
+          arr.push(amulet)
         })
       })
     })
@@ -216,6 +256,124 @@ export default function SkillSelector() {
     return slotOptions.filter((k) => validSet.has(k))
   }, [selectedSkills, skillToGroupMap, slotOptions, virtualAmulets])
 
+  // When selectedSkills or selectedSlot change, compute matching amulet combinations
+  // and store them into the global store as AvlCharms via setAvlCharms.
+  useEffect(() => {
+    // Build aggregated matches keyed by rarity + groups
+    const chosenPerSlot = selectedSkills.map((s) => (Array.isArray(s) ? s.slice() : s ? [s] : [])).filter((arr) => arr.length > 0)
+
+    const canAssignSelectedToAmulet = (amulet) => {
+      const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+      if (chosenPerSlot.length === 0) return true
+      const used = new Set()
+      const dfs = (slotIdx) => {
+        if (slotIdx >= chosenPerSlot.length) return true
+        const options = chosenPerSlot[slotIdx]
+        for (let oi = 0; oi < options.length; oi++) {
+          const skillKey = options[oi]
+          const groups = skillToGroupMap[skillKey] || []
+          for (let j = 0; j < amuletGroups.length; j++) {
+            if (used.has(j)) continue
+            if (groups.includes(amuletGroups[j])) {
+              used.add(j)
+              if (dfs(slotIdx + 1)) return true
+              used.delete(j)
+            }
+          }
+        }
+        return false
+      }
+      return dfs(0)
+    }
+
+    // map key -> { rarity, groups, matchingSkills:Set, slotKeys:Set }
+    const matchMap = new Map()
+
+    virtualAmulets.forEach((amulet) => {
+      if (selectedSlot && normalizeSlotKey(selectedSlot) !== amulet.slotKeyNormalized) return
+      // We'll enumerate concrete assignments of selected skills to this amulet's groups
+      const groups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
+
+      // if no selected skills, treat as a single assignment with empty matchingSkills
+      const selectedFlat = selectedSkills.flatMap((s) => (Array.isArray(s) ? s : s ? [s] : []))
+      if (selectedFlat.length === 0) {
+        // only include if amulet can be used (no constraint)
+        if (!canAssignSelectedToAmulet(amulet)) return
+        const mapKey = `${amulet.Rarity}|${JSON.stringify(groups)}|[]`
+        if (!matchMap.has(mapKey)) {
+          matchMap.set(mapKey, {
+            rarity: amulet.Rarity,
+            groups: groups.slice(),
+            matchingSkills: new Set(),
+            slotKeys: new Set(),
+          })
+        }
+        matchMap.get(mapKey).slotKeys.add(amulet.slotKeyOriginal)
+        return
+      }
+
+      // build per-slot arrays (preserve original per-slot grouping order)
+      const perSlot = selectedSkills.map((s) => (Array.isArray(s) ? s.slice() : s ? [s] : [])).filter((arr) => arr.length > 0)
+      if (perSlot.length === 0) return
+
+      // enumerate assignments: for each earlier slot choose one selected skill and assign it to a distinct amulet group index
+      const assignments = []
+      const usedIdx = []
+      const chosenSoFar = []
+      const dfsAssign = (si) => {
+        if (si >= perSlot.length) {
+          assignments.push({ chosen: chosenSoFar.slice(), used: new Set(usedIdx) })
+          return
+        }
+        const options = perSlot[si]
+        for (let oi = 0; oi < options.length; oi++) {
+          const optSkillKey = options[oi]
+          const groupsForSkill = skillToGroupMap[optSkillKey] || []
+          for (let j = 0; j < groups.length; j++) {
+            if (usedIdx.includes(j)) continue
+            if (groupsForSkill.includes(groups[j])) {
+              usedIdx.push(j)
+              chosenSoFar.push(optSkillKey)
+              dfsAssign(si + 1)
+              chosenSoFar.pop()
+              usedIdx.pop()
+            }
+          }
+        }
+      }
+
+      dfsAssign(0)
+
+      if (assignments.length === 0) return
+
+      // For each distinct chosen-skills set, aggregate an entry (so different assignments that pick different
+      // selected skills produce separate AvlCharms entries even if rarity+groups are same)
+      assignments.forEach((assignment) => {
+        const chosenSet = Array.from(new Set(assignment.chosen)).slice().sort()
+        const mapKey = `${amulet.Rarity}|${JSON.stringify(groups)}|${JSON.stringify(chosenSet)}`
+        if (!matchMap.has(mapKey)) {
+          matchMap.set(mapKey, {
+            rarity: amulet.Rarity,
+            groups: groups.slice(),
+            matchingSkills: new Set(chosenSet),
+            slotKeys: new Set(),
+          })
+        }
+        matchMap.get(mapKey).slotKeys.add(amulet.slotKeyOriginal)
+      })
+    })
+
+    // convert map entries to final array shape, converting Sets to arrays
+    const aggregated = Array.from(matchMap.values()).map((e) => ({
+      rarity: e.rarity,
+      groups: e.groups,
+      matchingSkills: Array.from(e.matchingSkills).sort(),
+      slotKeys: Array.from(e.slotKeys),
+    }))
+
+    setAvlCharms(aggregated)
+  }, [selectedSkills, selectedSlot, virtualAmulets, skillToGroupMap, normalizeSlotKey, setAvlCharms])
+
   // when filteredSlotOptions changes, ensure selectedSlot is still valid
   // (moved below getAvailableSkills to avoid referencing it before initialization)
 
@@ -256,14 +414,12 @@ export default function SkillSelector() {
       // if no earlier choice, return [] (we require previous slots to be chosen to show dependent options)
       if (earlierChosen.length === 0) return []
 
-      // helper to get base skill name without level (e.g. "Attack Boost" from "Attack Boost Lv.3")
-      const baseName = (skillKey) => String(skillKey).split(" Lv.")[0]
-
       // exclude already chosen earlier skills by base name to catch same skills with different levels
       const earlierBaseSet = new Set(earlierChosen.map(baseName))
 
       const possibleSkills = new Set()
       const matchingAmulets = virtualAmulets.filter((a) => {
+        if (!isAmuletGroupsValid(a)) return false
         if (!selectedSlot) return true
         return normalizeSlotKey(selectedSlot) === a.slotKeyNormalized
       })
@@ -285,21 +441,29 @@ export default function SkillSelector() {
         }
 
         // enumerate all valid assignments (map each earlier slot to a distinct amulet group index)
+        // We record both which group indices are used AND the chosen base skill names for that assignment.
+        // A candidate skill from a remaining group is only allowed if there exists at least one
+        // assignment where the candidate's base name is NOT among the chosen bases in that assignment.
         const assignments = []
         const usedIdx = []
+        const chosenSoFar = []
         const dfsAssign = (si) => {
           if (si >= perSlot.length) {
-            assignments.push(new Set(usedIdx))
+            // store used indexes set and chosen base names set for this assignment
+            assignments.push({ used: new Set(usedIdx), bases: new Set(chosenSoFar.map((k) => baseName(k))) })
             return
           }
           const options = perSlot[si]
           for (let oi = 0; oi < options.length; oi++) {
-            const groups = skillToGroupMap[options[oi]] || []
+            const optSkillKey = options[oi]
+            const groups = skillToGroupMap[optSkillKey] || []
             for (let j = 0; j < amuletGroups.length; j++) {
               if (usedIdx.includes(j)) continue
               if (groups.includes(amuletGroups[j])) {
                 usedIdx.push(j)
+                chosenSoFar.push(optSkillKey)
                 dfsAssign(si + 1)
+                chosenSoFar.pop()
                 usedIdx.pop()
               }
             }
@@ -310,23 +474,60 @@ export default function SkillSelector() {
 
         if (assignments.length === 0) return
 
-        // For each valid assignment, collect skills from remaining groups; union across assignments
-        const remainingGroupIdxs = new Set()
-        assignments.forEach((usedSet) => {
+        // For each assignment, consider remaining groups and add candidate skills only if
+        // the candidate's base name is not present among chosen bases for that assignment.
+        const candidateSkills = new Set()
+        assignments.forEach((assignment) => {
           for (let gi = 0; gi < amuletGroups.length; gi++) {
-            if (!usedSet.has(gi)) remainingGroupIdxs.add(gi)
+            if (assignment.used.has(gi)) continue
+            const groupNumber = amuletGroups[gi]
+            const groupKey = `Group${groupNumber}`
+            if (SkillGroupsData.SkillGroups[groupKey]) {
+              SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
+                const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+                // allow candidate if its base name isn't already chosen in this assignment
+                if (!assignment.bases.has(baseName(skillKey))) candidateSkills.add(skillKey)
+              })
+            }
           }
         })
 
-        remainingGroupIdxs.forEach((groupIdx) => {
-          const groupNumber = amuletGroups[groupIdx]
-          const groupKey = `Group${groupNumber}`
-          if (SkillGroupsData.SkillGroups[groupKey]) {
-            SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
-              const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
-              possibleSkills.add(skillKey)
-            })
+        // For each assignment, we must ensure there exists at least one way to
+        // pick one skill from each remaining group such that no base skill name
+        // is duplicated when combined with the already chosen bases in the assignment.
+        assignments.forEach((assignment) => {
+          const remIdxs = []
+          for (let gi = 0; gi < amuletGroups.length; gi++) {
+            if (!assignment.used.has(gi)) remIdxs.push(gi)
           }
+
+          // DFS over remaining groups to find any full selection of skills without base duplicates
+          const chosenBasesStart = new Set(assignment.bases)
+          const dfsRem = (ri, chosenBases, chosenSkills) => {
+            if (ri >= remIdxs.length) {
+              // record all chosen skills from this successful selection
+              chosenSkills.forEach((s) => possibleSkills.add(s))
+              return
+            }
+            const groupIdx = remIdxs[ri]
+            const groupNumber = amuletGroups[groupIdx]
+            const groupKey = `Group${groupNumber}`
+            if (!SkillGroupsData.SkillGroups[groupKey]) return
+            const data = SkillGroupsData.SkillGroups[groupKey].data
+            for (let si = 0; si < data.length; si++) {
+              const skill = data[si]
+              const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
+              const b = baseName(skillKey)
+              if (chosenBases.has(b)) continue
+              chosenBases.add(b)
+              chosenSkills.push(skillKey)
+              dfsRem(ri + 1, chosenBases, chosenSkills)
+              chosenSkills.pop()
+              chosenBases.delete(b)
+            }
+          }
+
+          dfsRem(0, new Set(chosenBasesStart), [])
         })
       })
 
@@ -355,7 +556,7 @@ export default function SkillSelector() {
 
       return filtered
     },
-    [selectedSkills, skillToGroupMap, getAllUniqueSkills, virtualAmulets, selectedSlot, normalizeSlotKey]
+    [selectedSkills, skillToGroupMap, getAllUniqueSkills, virtualAmulets, selectedSlot, normalizeSlotKey, isAmuletGroupsValid, baseName]
   )
 
   const getSkillGroupInfo = (skillKey) => {
