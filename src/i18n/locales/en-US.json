@@ -50,6 +50,8 @@
   },
   "amulet": {
     "specificSlotProb": "Specific slot probability",
+    "finalOdds": "Final Odds: {{pct}}% (1/{{odds}})",
+    "slotKeys": "Slots",
     "list": "Charm List",
     "matching": "Matching Charms",
     "probability": "Probability",
@@ -61,6 +63,20 @@
     "slotCombinations": "Slot Combinations",
     "noMatches": "No matching charms found, please try different skill combinations",
     "selectSkills": "Please select skills to view matching charms"
+  },
+  "amuletDetails": {
+    "title": "Amulet Details",
+    "name": "Amulet Name",
+    "baseProb": "Base Probability",
+    "charmTypeProb": "Charm Type Probability",
+    "groupProb": "Group Probability",
+    "slotProb": "Slot Probability"
+  },
+
+  "amuletDetailsExtra": {
+    "groupLine": "Group {{group}}:",
+    "groupLineWithCounts": "Group {{group}}: {{counts}}",
+    "excludedLabel": "excluded: {{items}}"
   },
   "probability": {
     "base": "Base Probability",
@@ -108,7 +124,7 @@
       "title": "Probability Calculation Debug Info:",
       "baseProb": "Base Probability",
       "skillGroups": "Skill Groups",
-      "skills": "skills",
+      "skills": "Group probability calc:",
       "skillCombProb": "Skill Combination Probability",
       "finalProb": "Final Probability",
       "finalPercentage": "Final Percentage",

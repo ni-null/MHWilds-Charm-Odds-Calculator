@@ -52,6 +52,7 @@
     "specificSlotProb": "特定スロット確率",
     "list": "護石リスト",
     "matching": "一致する護石",
+    "finalOdds": "最終確率: {{pct}}% (1/{{odds}})",
     "probability": "確率",
     "possibleSkills": "候補スキル",
     "rarity": "レアリティ",
@@ -61,6 +62,14 @@
     "slotCombinations": "スロットの組み合わせ",
     "defaultNormalSlot": "デフォルトのスロット",
     "selectSkills": "護石を表示するにはスキルを選択してください"
+  },
+  "amuletDetails": {
+    "title": "護石の詳細",
+    "name": "護石名",
+    "baseProb": "基本確率",
+    "charmTypeProb": "護石タイプ確率",
+    "groupProb": "グループ確率",
+    "slotProb": "スロット確率"
   },
   "probability": {
     "base": "基本確率",

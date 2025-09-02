@@ -9,6 +9,7 @@ import AmuletList from "./AmuletList"
 import SlotProbability from "./SlotProbability"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import ProbabilityExplanation from "./ProbabilityExplanation"
+import TotalProbability from "./components/TotalProbability"
 
 export default function MHWPage() {
   const { t } = useTranslation()
@@ -36,8 +37,12 @@ export default function MHWPage() {
 
             <SlotProbability />
 
+            {/* 顯示總機率的組件 */}
+            <TotalProbability />
+
             <AmuletList />
             {/* 機率計算說明（從 AmuletList 提出，集中顯示於頁面） */}
+
             <ProbabilityExplanation />
           </div>
         </main>

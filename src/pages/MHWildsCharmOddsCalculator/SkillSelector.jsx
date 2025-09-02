@@ -25,14 +25,14 @@ export default function SkillSelector() {
   // use store values; store defines AvlCharms/setAvlCharms (not Charms/setCharms)
   const { selectedSkills, setSelectedSkills, selectedSlot, setSelectedSlot, AvlCharms, setAvlCharms } = useMhwStore()
 
+  /*   useEffect(() => {
+    console.log(AvlCharms)
+  }, [AvlCharms]) 
+ */
+
   useEffect(() => {
     console.log(selectedSkills)
   }, [selectedSkills])
-
-  useEffect(() => {
-    console.log(AvlCharms)
-  }, [AvlCharms])
-
   // build global list of slot options from rarity data
   const slotOptions = React.useMemo(() => {
     const setKeys = new Set()
@@ -113,6 +113,77 @@ export default function SkillSelector() {
     return Array.from(setKeys).sort(cmp)
   }, [])
 
+  // map each rarity to all slot keys appearing under that rarity in Rarity.json
+  const rarityAllSlots = useMemo(() => {
+    const out = {}
+    Object.entries(rarityBaseProbability).forEach(([rarity, data]) => {
+      const set = new Set()
+      const groups = (data && data.Group) || []
+      groups.forEach((g) => {
+        const slots = (g && g.slot) || {}
+        Object.keys(slots).forEach((k) => set.add(k))
+      })
+
+      // handle possible normalslot structures (some files have nested slot key)
+      if (data && data.normalslot) {
+        const ns = data.normalslot
+        if (ns.slot && typeof ns.slot === "object") {
+          Object.keys(ns.slot).forEach((k) => set.add(k))
+        } else if (typeof ns === "object") {
+          Object.keys(ns).forEach((k) => set.add(k))
+        }
+      }
+
+      out[rarity] = Array.from(set)
+    })
+    return out
+  }, [])
+
+  // helper: find slot keys for a specific rarity + group combination
+  const getSlotsForGroups = useCallback(
+    (rarity, groups) => {
+      try {
+        const r = rarityBaseProbability[rarity]
+        if (!r) return []
+        const groupsJson = JSON.stringify(groups || [])
+        const out = new Set()
+
+        const gArr = (r && r.Group) || []
+        gArr.forEach((g) => {
+          try {
+            const gSkills = g.skills || []
+            if (JSON.stringify(gSkills) === groupsJson) {
+              const gSlotObj = (g && g.slot) || {}
+              Object.keys(gSlotObj).forEach((k) => out.add(k))
+            }
+          } catch {
+            // ignore
+          }
+        })
+
+        // if we found nothing, try normalslot for the rarity
+        if (out.size === 0) {
+          try {
+            const ns = r.normalslot || {}
+            if (ns && typeof ns === "object") Object.keys(ns).forEach((k) => out.add(k))
+          } catch {
+            /* ignore */
+          }
+        }
+
+        // fallback to the precomputed rarityAllSlots
+        if (out.size === 0 && rarityAllSlots[rarity]) {
+          rarityAllSlots[rarity].forEach((k) => out.add(k))
+        }
+
+        return Array.from(out)
+      } catch {
+        return []
+      }
+    },
+    [rarityAllSlots]
+  )
+
   // 建立技能(含等級)到群組號的映射（只需在此組件內部）
   const skillToGroupMap = useMemo(() => {
     const map = {}
@@ -152,35 +223,6 @@ export default function SkillSelector() {
 
   // helper: get base skill name without level
   const baseName = useCallback((skillKey) => String(skillKey).split(" Lv.")[0], [])
-
-  // helper: validate that an amulet's groups do not contain the same base skill name in multiple groups
-  const isAmuletGroupsValid = useCallback((amulet) => {
-    const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
-    const nameToGroupCount = {}
-    for (let gi = 0; gi < amuletGroups.length; gi++) {
-      const groupNumber = amuletGroups[gi]
-      const groupKey = `Group${groupNumber}`
-      const group = SkillGroupsData.SkillGroups[groupKey]
-      if (!group) continue
-      const seen = new Set()
-      group.data.forEach((skill) => {
-        const b = String(skill.SkillName)
-        if (!seen.has(b)) {
-          seen.add(b)
-          nameToGroupCount[b] = (nameToGroupCount[b] || 0) + 1
-          if (nameToGroupCount[b] > 1) {
-            // duplicate base found across groups -> invalid amulet
-            return
-          }
-        }
-      })
-      // early exit if any duplicate was found
-      for (const k in nameToGroupCount) {
-        if (nameToGroupCount[k] > 1) return false
-      }
-    }
-    return true
-  }, [])
 
   // build a virtual amulet list with parsed slotKey to reuse in both skills and slots filtering
   const virtualAmulets = useMemo(() => {
@@ -369,10 +411,27 @@ export default function SkillSelector() {
       groups: e.groups,
       matchingSkills: Array.from(e.matchingSkills).sort(),
       slotKeys: Array.from(e.slotKeys),
+      AllslotKey: getSlotsForGroups(e.rarity, e.groups),
     }))
 
-    setAvlCharms(aggregated)
-  }, [selectedSkills, selectedSlot, virtualAmulets, skillToGroupMap, normalizeSlotKey, setAvlCharms])
+    //輸出 selectedSkills 去除空陣列得長度
+    const nonEmptySkills = selectedSkills.filter((skill) => skill && skill.length > 0)
+
+    //aggregated 內每個  matchingSkills的長度 不可以小於 nonEmptySkills.length ，如果小於要被排除
+    const filtered = aggregated.filter((entry) => entry.matchingSkills.length >= nonEmptySkills.length)
+    //如果 matchingSkills 包含重復名稱的技能(不同等級) 也要被排除
+    const finalFiltered = filtered.filter((entry) => {
+      const skillCounts = new Map()
+      for (const skill of entry.matchingSkills) {
+        const baseName = skill.split(" Lv.")[0]
+        skillCounts.set(baseName, (skillCounts.get(baseName) || 0) + 1)
+      }
+      // 如果有重複名稱的技能，則排除
+      return Array.from(skillCounts.values()).every((count) => count === 1)
+    })
+
+    setAvlCharms(finalFiltered)
+  }, [selectedSkills, selectedSlot, virtualAmulets, skillToGroupMap, normalizeSlotKey, setAvlCharms, rarityAllSlots, getSlotsForGroups])
 
   // when filteredSlotOptions changes, ensure selectedSlot is still valid
   // (moved below getAvailableSkills to avoid referencing it before initialization)
@@ -419,7 +478,11 @@ export default function SkillSelector() {
 
       const possibleSkills = new Set()
       const matchingAmulets = virtualAmulets.filter((a) => {
-        if (!isAmuletGroupsValid(a)) return false
+        // include all amulets (optionally filtered by selectedSlot)
+        // previously we filtered out amulets where multiple groups shared the same
+        // base skill name via isAmuletGroupsValid — that excluded valid group
+        // combinations like [2,1,8]. Remove that check so dependent skill
+        // options (e.g. group1 skills after picking a group2 skill) appear.
         if (!selectedSlot) return true
         return normalizeSlotKey(selectedSlot) === a.slotKeyNormalized
       })
@@ -556,7 +619,7 @@ export default function SkillSelector() {
 
       return filtered
     },
-    [selectedSkills, skillToGroupMap, getAllUniqueSkills, virtualAmulets, selectedSlot, normalizeSlotKey, isAmuletGroupsValid, baseName]
+    [selectedSkills, skillToGroupMap, getAllUniqueSkills, virtualAmulets, selectedSlot, normalizeSlotKey, baseName]
   )
 
   const getSkillGroupInfo = (skillKey) => {

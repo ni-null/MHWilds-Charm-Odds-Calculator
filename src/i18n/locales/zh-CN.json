@@ -50,6 +50,7 @@
   },
   "amulet": {
     "specificSlotProb": "特定插槽机率",
+    "finalOdds": "最终概率: {{pct}}% (1/{{odds}})",
     "list": "护石列表",
     "matching": "匹配的护石",
     "probability": "概率",
@@ -61,6 +62,20 @@
     "slotCombinations": "插槽组合",
     "noMatches": "没有找到匹配的护石，请尝试不同的技能组合",
     "selectSkills": "请选择技能来查看匹配的护石"
+  },
+  "amuletDetails": {
+    "title": "护石详情",
+    "name": "护石名称",
+    "baseProb": "基础概率",
+    "charmTypeProb": "护石类型概率",
+    "groupProb": "技能群组概率",
+    "slotProb": "插槽概率"
+  },
+
+  "amuletDetailsExtra": {
+    "groupLine": "群组 {{group}}:",
+    "groupLineWithCounts": "群组 {{group}}: {{counts}}",
+    "excludedLabel": "排除: {{items}}"
   },
   "probability": {
     "base": "基础概率",
