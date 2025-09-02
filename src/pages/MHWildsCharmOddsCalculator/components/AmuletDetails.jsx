@@ -34,50 +34,52 @@ export default function AmuletDetails({ charm, t }) {
   }
 
   return (
-    <div className='p-4 bg-white rounded-md shadow-sm'>
+    <div className='p-4 rounded-md shadow-sm'>
       <div className='flex flex-col gap-3'>
         <div className='flex items-center gap-2 text-sm'>
-          <span className='font-semibold text-gray-600'>{t("amuletDetails.baseProb")}</span>
-          <span className='text-gray-900'>{fmt(computed.baseProb ?? charm?.baseProbability)}</span>
+          <span className='font-semibold text-gray-400'>{t("amuletDetails.baseProb")}</span>
+          <span className='font-bold text-yellow-500'>{fmt(computed.baseProb ?? charm?.baseProbability)}</span>
         </div>
 
         <div className='flex items-center gap-2 text-sm'>
-          <span className='font-semibold text-gray-600'>{t("amuletDetails.charmTypeProb")}</span>
-          <span className='text-gray-900'>{fmt(computed.charmTypeProb)}</span>
+          <span className='font-semibold text-gray-400'>{t("amuletDetails.charmTypeProb")}</span>
+          <span className='font-bold text-yellow-500'>{fmt(computed.charmTypeProb)}</span>
         </div>
 
         <div className='flex flex-col text-sm'>
           <div className='flex items-center gap-2'>
-            <span className='font-semibold text-gray-600'>{t("amuletDetails.groupProb")}</span>
-            <span className='text-gray-900'>{fmt(computed.groupProb)}</span>
+            <span className='font-semibold text-gray-400'>{t("amuletDetails.groupProb")}</span>
+            <span className='font-bold text-yellow-500'>{fmt(computed.groupProb)}</span>
           </div>
-          {groupInfo ? (
-            <>
-              <div className='mt-1 font-mono text-xs text-gray-700 break-words'>{groupInfo.formula}</div>
-              <div className='mt-1 text-xs text-gray-600'>
-                {groupInfo.details.map((d) => {
-                  const counts = d.total === d.available ? `${d.available}` : `${d.total} -> ${d.available}`
-                  const translatedExcluded =
-                    d.excluded && d.excluded.length > 0
-                      ? d.excluded.map((name) => t(`skillTranslations.${name}`, { defaultValue: name })).join(", ")
-                      : null
-                  return (
-                    <div key={d.key} className='mb-1'>
-                      <span className='font-mono text-xs text-gray-700'>
-                        {t("amuletDetailsExtra.groupLineWithCounts", { group: d.group, counts })}
-                        {translatedExcluded ? `    ${t("amuletDetailsExtra.excludedLabel", { items: translatedExcluded })}` : ""}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            </>
-          ) : null}
+          <div className='ml-10'>
+            {groupInfo ? (
+              <>
+                <div className='mt-1 font-mono text-xs text-gray-400 break-words'>{groupInfo.formula}</div>
+                <div className='mt-1 text-xs text-gray-400'>
+                  {groupInfo.details.map((d) => {
+                    const counts = d.total === d.available ? `${d.available}` : `${d.total} -> ${d.available}`
+                    const translatedExcluded =
+                      d.excluded && d.excluded.length > 0
+                        ? d.excluded.map((name) => t(`skillTranslations.${name}`, { defaultValue: name })).join(", ")
+                        : null
+                    return (
+                      <div key={d.key} className='mb-1'>
+                        <span className='font-mono text-xs text-gray-400'>
+                          {t("amuletDetailsExtra.groupLineWithCounts", { group: d.group, counts })}
+                          {translatedExcluded ? `    ${t("amuletDetailsExtra.excludedLabel", { items: translatedExcluded })}` : ""}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            ) : null}
+          </div>
         </div>
 
         <div className='flex items-center gap-2 text-sm'>
-          <span className='font-semibold text-gray-600'>{t("amuletDetails.slotProb")}</span>
-          <span className='text-gray-900'>{fmt(computed.SlotProb)}</span>
+          <span className='font-semibold text-gray-400'>{t("amuletDetails.slotProb")}</span>
+          <span className='font-bold text-yellow-500'>{fmt(computed.SlotProb)}</span>
         </div>
       </div>
 
