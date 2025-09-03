@@ -39,7 +39,7 @@ export default function AmuletDetails({ charm, t, className = "" }) {
   }
 
   return (
-    <div className={`p-3 sm:p-4 w-full xl:w-auto xl:min-w-96 rounded-md shadow-sm bg-gray-800 bg-opacity-50 ${className}`}>
+    <div className={`p-3 sm:p-4 w-full xl:w-auto xl:min-w-96 rounded-md shadow-sm bg-black ${className}`}>
       <div className='flex flex-col gap-2 sm:gap-3'>
         <div className='flex items-center gap-2 text-xs sm:text-sm'>
           <span className='font-semibold text-gray-400'>{t("amuletDetails.baseProb")}</span>
@@ -67,11 +67,21 @@ export default function AmuletDetails({ charm, t, className = "" }) {
                       d.excluded && d.excluded.length > 0
                         ? d.excluded.map((name) => t(`skillTranslations.${name}`, { defaultValue: name })).join(", ")
                         : null
+                    const matchedNames =
+                      d.matched && d.matched.length > 0
+                        ? d.matched
+                            .map((full) => {
+                              const base = full.split(" Lv.")[0]
+                              return t(`skillTranslations.${base}`, { defaultValue: base })
+                            })
+                            .join(", ")
+                        : null
                     return (
                       <div key={d.key} className='mb-1'>
                         <span className='font-mono text-xs text-gray-400'>
                           {t("amuletDetailsExtra.groupLineWithCounts", { group: d.group, counts })}
                           {translatedExcluded ? `    ${t("amuletDetailsExtra.excludedLabel", { items: translatedExcluded })}` : ""}
+                          {matchedNames ? ` — ${t("amuletDetailsExtra.matchedLabel", { items: matchedNames })}` : ""}
                         </span>
                       </div>
                     )
@@ -80,11 +90,6 @@ export default function AmuletDetails({ charm, t, className = "" }) {
               </>
             ) : null}
           </div>
-        </div>
-
-        <div className='flex items-center gap-2 text-sm'>
-          <span className='font-semibold text-gray-400'>{t("amuletDetails.slotProb")}</span>
-          <span className='font-bold text-yellow-500'>{fmt(computed.SlotProb)}</span>
         </div>
       </div>
 
