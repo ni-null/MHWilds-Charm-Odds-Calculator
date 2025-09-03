@@ -1,5 +1,4 @@
 {
-  "title": "护石技能筛选器",
   "navigation": {
     "home": "首页",
     "mhwCalculator": "护石计算器",
@@ -49,40 +48,21 @@
     "clearSlot": "清除插槽"
   },
   "amulet": {
-    "specificSlotProb": "特定插槽机率",
     "finalOdds": "最终概率: {{pct}}% (1/{{odds}})",
-    "list": "护石列表",
-    "matching": "匹配的护石",
-    "probability": "概率",
-    "possibleSkills": "可能技能",
-    "rarity": "稀有度",
-    "groups": "组别",
-    "skillGroups": "技能组",
-    "matchingSkills": "匹配技能",
-    "slotCombinations": "插槽组合",
-    "noMatches": "没有找到匹配的护石，请尝试不同的技能组合",
-    "selectSkills": "请选择技能来查看匹配的护石"
+    "skillGroups": "技能群组",
+    "slotCombos": "插槽组合"
   },
   "amuletDetails": {
-    "title": "护石详情",
-    "name": "护石名称",
     "baseProb": "基础概率",
     "charmTypeProb": "护石类型概率",
     "groupProb": "技能群组概率",
     "slotProb": "插槽概率"
   },
-
   "amuletDetailsExtra": {
-    "groupLine": "群组 {{group}}:",
     "groupLineWithCounts": "群组 {{group}}: {{counts}}",
     "excludedLabel": "排除: {{items}}"
   },
   "probability": {
-    "base": "基础概率",
-    "individual": "个别概率",
-    "percentage": "%",
-    "charmTypeProb": "护石类型概率",
-    "approximately": "约",
     "calculation": {
       "title": "计算方法：",
       "subtitle": "最终概率 = 稀有度基础概率 × 护石类型概率 × 技能组合概率",
@@ -108,7 +88,6 @@
         "result": "最终概率 = 27% × (1/7) × (1/35) × (1/34) × (1/9) ≈ 0.009%"
       },
       "rarityBase": "稀有度基础概率：",
-      "groupCount": "技能组数量：该组中所有可用技能的数量",
       "charmTypeCounts": "护石类型数量: RARE[5]=6种 ， RARE[6]=7种 ， RARE[7]=8种 ， RARE[8]=8种"
     },
     "note": {
@@ -118,29 +97,12 @@
       "line3": "• 实际游戏机制可能与此简化模型有所差异",
       "line4": "• 计算结果为估算值，仅供参考，不保证准确性",
       "line5": "• 护石槽位分配采用贪婪匹配算法"
-    },
-    "debug": {
-      "title": "概率计算调试信息：",
-      "baseProb": "基础概率",
-      "skillGroups": "技能组",
-      "skills": "技能",
-      "skillCombProb": "技能组合概率",
-      "finalProb": "最终概率",
-      "finalPercentage": "最终百分比",
-      "total": "总",
-      "available": "可用",
-      "excluded": "排除"
     }
   },
   "common": {
-    "unknown": "未知",
     "none": "无",
     "level": "Lv.",
-    "group": "组",
-    "details": "详细",
-    "collapse": "收起",
-    "total": "总",
-    "count": "个"
+    "probability": "概率"
   },
   "charmTypes": {
     "title": "护石种类",
@@ -158,7 +120,6 @@
     },
     "labels": {
       "skillGroups": "技能组",
-      "slotCombinations": "插槽组合",
       "combinationCount": "组合数量"
     },
     "dialog": {
@@ -185,16 +146,6 @@
   "actions": {
     "close": "关闭"
   },
-  "slotLabels": {
-    "[1]": "装备插槽 1",
-    "[1, 1]": "装备插槽 1+1",
-    "[2]": "装备插槽 2",
-    "[2, 1]": "装备插槽 2+1",
-    "[3]": "装备插槽 3",
-    "[\"W1\"]": "武器插槽 1",
-    "[\"W1\", 1]": "武器插槽 1 + 装备插槽 1",
-    "[\"W1\", 1, 1]": "武器插槽 1 + 装备插槽 1 + 装备插槽 1"
-  },
   "skillGroups": {
     "title": "技能组",
     "totalGroups": "技能组",
@@ -204,17 +155,7 @@
     "searchResults": "找到 {{count}} 个组别",
     "skillCount": "共 {{count}} 个技能",
     "noResults": "找不到符合搜索条件的技能组",
-    "clearSearch": "清除搜索",
-    "group1": "组1",
-    "group2": "组2",
-    "group3": "组3",
-    "group4": "组4",
-    "group5": "组5",
-    "group6": "组6",
-    "group7": "组7",
-    "group8": "组8",
-    "group9": "组9",
-    "group10": "组10"
+    "clearSearch": "清除搜索"
   },
   "skillTranslations": {
     "Artillery": "炮术",

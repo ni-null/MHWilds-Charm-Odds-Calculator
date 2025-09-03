@@ -1,5 +1,4 @@
 {
-  "title": "護石スキルフィルター",
   "navigation": {
     "home": "ホーム",
     "mhwCalculator": "護石計算機",
@@ -49,34 +48,17 @@
     "clearSlot": "スロットをクリア"
   },
   "amulet": {
-    "specificSlotProb": "特定スロット確率",
-    "list": "護石リスト",
-    "matching": "一致する護石",
     "finalOdds": "最終確率: {{pct}}% (1/{{odds}})",
-    "probability": "確率",
-    "possibleSkills": "候補スキル",
-    "rarity": "レアリティ",
-    "groups": "グループ",
     "skillGroups": "スキルグループ",
-    "matchingSkills": "一致スキル",
-    "slotCombinations": "スロットの組み合わせ",
-    "defaultNormalSlot": "デフォルトのスロット",
-    "selectSkills": "護石を表示するにはスキルを選択してください"
+    "slotCombos": "スロット組み合わせ"
   },
   "amuletDetails": {
-    "title": "護石の詳細",
-    "name": "護石名",
     "baseProb": "基本確率",
     "charmTypeProb": "護石タイプ確率",
     "groupProb": "グループ確率",
     "slotProb": "スロット確率"
   },
   "probability": {
-    "base": "基本確率",
-    "individual": "個別確率",
-    "percentage": "%",
-    "charmTypeProb": "護石タイプ確率",
-    "approximately": "約",
     "calculation": {
       "title": "計算方法：",
       "subtitle": "最終確率 = レアリティ基礎確率 × 護石タイプ確率 × スキル組み合わせ確率",
@@ -102,7 +84,6 @@
         "result": "最終確率 = 27% × (1/7) × (1/35) × (1/34) × (1/9) ≈ 0.009%"
       },
       "rarityBase": "レアリティ基礎確率：",
-      "groupCount": "スキルグループ数：そのグループ内の利用可能スキル数",
       "charmTypeCounts": "護石タイプ数: RARE[5]=6種 ， RARE[6]=7種 ， RARE[7]=8種 ， RARE[8]=8種"
     },
     "note": {
@@ -112,29 +93,12 @@
       "line3": "• 実際のゲーム挙動はこの単純化モデルと異なる場合があります",
       "line4": "• 結果は参考用の推定値であり、正確性を保証するものではありません",
       "line5": "• 護石のスロット割り当ては貪欲マッチングアルゴリズムを採用しています"
-    },
-    "debug": {
-      "title": "確率計算デバッグ情報：",
-      "baseProb": "基礎確率",
-      "skillGroups": "スキルグループ",
-      "skills": "スキル",
-      "skillCombProb": "スキル組み合わせ確率",
-      "finalProb": "最終確率",
-      "finalPercentage": "最終百分率",
-      "total": "合計",
-      "available": "利用可能",
-      "excluded": "除外"
     }
   },
   "common": {
-    "unknown": "不明",
     "none": "なし",
     "level": "Lv.",
-    "group": "グループ",
-    "details": "詳細",
-    "collapse": "折りたたむ",
-    "total": "合計",
-    "count": ""
+    "probability": "確率"
   },
   "charmTypes": {
     "title": "護石タイプ",
@@ -152,7 +116,6 @@
     },
     "labels": {
       "skillGroups": "スキルグループ",
-      "slotCombinations": "スロット組み合わせ",
       "combinationCount": "コンビネーション数"
     },
     "dialog": {
@@ -179,16 +142,6 @@
   "actions": {
     "close": "閉じる"
   },
-  "slotLabels": {
-    "[1]": "装備スロット 1",
-    "[1, 1]": "装備スロット 1+1",
-    "[2]": "装備スロット 2",
-    "[2, 1]": "装備スロット 2+1",
-    "[3]": "装備スロット 3",
-    "[\"W1\"]": "武器スロット 1",
-    "[\"W1\", 1]": "武器スロット 1 + 装備スロット 1",
-    "[\"W1\", 1, 1]": "武器スロット 1 + 装備スロット 1 + 装備スロット 1"
-  },
   "skillGroups": {
     "title": "スキルグループ",
     "totalGroups": "グループ数",
@@ -198,17 +151,7 @@
     "searchResults": "{{count}} 件のグループが見つかりました",
     "skillCount": "合計 {{count}} スキル",
     "noResults": "検索条件に一致するスキルグループはありません",
-    "clearSearch": "検索をクリア",
-    "group1": "グループ1",
-    "group2": "グループ2",
-    "group3": "グループ3",
-    "group4": "グループ4",
-    "group5": "グループ5",
-    "group6": "グループ6",
-    "group7": "グループ7",
-    "group8": "グループ8",
-    "group9": "グループ9",
-    "group10": "グループ10"
+    "clearSearch": "検索をクリア"
   },
   "skillTranslations": {
     "Artillery": "砲術",

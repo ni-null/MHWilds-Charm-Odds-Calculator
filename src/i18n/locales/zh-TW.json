@@ -1,5 +1,7 @@
 {
-  "title": "護石技能篩選器",
+  "rarity": "稀有度",
+  "skill": "技能",
+  "skills": "技能",
   "navigation": {
     "home": "首頁",
     "mhwCalculator": "護石計算器",
@@ -30,9 +32,6 @@
       "referenceLink": "巴哈 - rongchingl 攻略"
     }
   },
-  "rarity": "稀有度",
-  "skill": "技能",
-  "skills": "技能",
   "skillSelector": {
     "title": "選擇技能組合",
     "maxSkills": "(最多3個)",
@@ -49,41 +48,21 @@
     "clearSlot": "清除插槽"
   },
   "amulet": {
-    "specificSlotProb": "特定插槽機率",
     "finalOdds": "最終機率: {{pct}}% (1/{{odds}})",
-    "slotKeys": "插槽",
-    "list": "護石列表",
-    "matching": "匹配的護石",
-    "probability": "機率",
-    "possibleSkills": "可能技能",
-    "rarity": "稀有度",
-    "groups": "群組",
     "skillGroups": "技能群組",
-    "matchingSkills": "匹配技能",
-    "slotCombinations": "插槽組合",
-    "noMatches": "沒有找到匹配的護石，請嘗試不同的技能組合",
-    "selectSkills": "請選擇技能來查看匹配的護石"
+    "slotCombos": "插槽組合"
   },
   "amuletDetails": {
-    "title": "護石詳細",
-    "name": "護石名稱",
     "baseProb": "基礎機率",
     "charmTypeProb": "護石類型機率",
     "groupProb": "技能群組機率",
     "slotProb": "插槽機率"
   },
-
   "amuletDetailsExtra": {
-    "groupLine": "群組 {{group}}:",
     "groupLineWithCounts": "群組 {{group}}: {{counts}}",
     "excludedLabel": "排除: {{items}}"
   },
   "probability": {
-    "base": "基礎機率",
-    "individual": "個別機率",
-    "percentage": "%",
-    "charmTypeProb": "護石類型機率",
-    "approximately": "約",
     "calculation": {
       "title": "計算方法：",
       "subtitle": "最終機率 = 稀有度基礎機率 × 護石類型機率 × 技能組合機率",
@@ -109,7 +88,6 @@
         "result": "最終機率 = 27% × (1/7) × (1/35) × (1/34) × (1/9) ≈ 0.009%"
       },
       "rarityBase": "稀有度基礎機率：",
-      "groupCount": "技能群組數量：該群組中所有可用技能的數量",
       "charmTypeCounts": "護石類型數量: RARE[5]=6種 ， RARE[6]=7種 ， RARE[7]=8種 ， RARE[8]=8種"
     },
     "note": {
@@ -120,28 +98,12 @@
       "line4": "• 計算結果為估算值，僅供參考，不保證準確性",
       "line5": "• 護石槽位分配採用貪婪匹配演算法"
     },
-    "debug": {
-      "title": "機率計算除錯資訊：",
-      "baseProb": "基礎機率",
-      "skillGroups": "技能群組",
-      "skills": "群組機率計算：",
-      "skillCombProb": "技能組合機率",
-      "finalProb": "最終機率",
-      "finalPercentage": "最終百分比",
-      "total": "總",
-      "available": "可用",
-      "excluded": "排除"
-    }
+    "debug": {}
   },
   "common": {
-    "unknown": "未知",
     "none": "無",
     "level": "Lv.",
-    "group": "群組",
-    "details": "詳細",
-    "collapse": "收合",
-    "total": "總",
-    "count": "個"
+    "probability": "機率"
   },
   "charmTypes": {
     "title": "護石種類",
@@ -159,7 +121,6 @@
     },
     "labels": {
       "skillGroups": "技能群組",
-      "slotCombinations": "插槽組合",
       "combinationCount": "組合數量"
     },
     "dialog": {
@@ -195,28 +156,9 @@
     "searchResults": "找到 {{count}} 個群組",
     "skillCount": "共 {{count}} 個技能",
     "noResults": "找不到符合搜索條件的技能群組",
-    "clearSearch": "清除搜索",
-    "group1": "群組1",
-    "group2": "群組2",
-    "group3": "群組3",
-    "group4": "群組4",
-    "group5": "群組5",
-    "group6": "群組6",
-    "group7": "群組7",
-    "group8": "群組8",
-    "group9": "群組9",
-    "group10": "群組10"
+    "clearSearch": "清除搜索"
   },
-  "slotLabels": {
-    "[1]": "裝備插槽 1",
-    "[1, 1]": "裝備插槽 1+1",
-    "[2]": "裝備插槽 2",
-    "[2, 1]": "裝備插槽 2+1",
-    "[3]": "裝備插槽 3",
-    "[\"W1\"]": "武器插槽 1",
-    "[\"W1\", 1]": "武器插槽 1 + 裝備插槽 1",
-    "[\"W1\", 1, 1]": "武器插槽 1 + 裝備插槽 1 + 裝備插槽 1"
-  },
+  "slotLabels": {},
   "skillTranslations": {
     "Artillery": "砲術",
     "Attack Boost": "攻擊",

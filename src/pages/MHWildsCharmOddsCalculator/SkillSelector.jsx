@@ -831,9 +831,56 @@ export default function SkillSelector() {
                                       }
                                     }}
                                   />
-                                  <div>
-                                    {displayName}
-                                    <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
+
+                                  <div className='flex-1 min-w-0'>
+                                    <div>
+                                      {displayName}
+                                      <span style={{ color: "#888", fontSize: "0.8em", marginLeft: "0.5em" }}>（{groupInfo}）</span>
+                                    </div>
+
+                                    {/* 技能等級小方格顯示：根據 SkillGroupsData 找到 SkillMax 與等級 */}
+                                    <div className='flex items-center mt-1' aria-hidden>
+                                      {(() => {
+                                        let meta = null
+                                        if (SkillGroupsData && SkillGroupsData.SkillGroups) {
+                                          for (const gk of Object.keys(SkillGroupsData.SkillGroups)) {
+                                            const group = SkillGroupsData.SkillGroups[gk]
+                                            if (!group || !Array.isArray(group.data)) continue
+                                            const found = group.data.find((o) => o.SkillName === skillName)
+                                            if (found) {
+                                              meta = found
+                                              break
+                                            }
+                                          }
+                                        }
+
+                                        const maxSlotsOpt = (meta && Number(meta.SkillMax)) || 3
+                                        let levelNum = 0
+                                        try {
+                                          const m = String(skillKey)
+                                          const lvMatch = m.match(/Lv\.(\d+)/)
+                                          if (lvMatch) levelNum = Math.max(0, Number(lvMatch[1]))
+                                        } catch (e) {
+                                          void e
+                                        }
+                                        if (!levelNum && meta && meta.SkillLevel) {
+                                          const lv = Number(meta.SkillLevel)
+                                          if (!isNaN(lv)) levelNum = lv
+                                        }
+                                        levelNum = Math.min(maxSlotsOpt, Math.max(0, Number(levelNum) || 0))
+
+                                        return Array.from({ length: maxSlotsOpt }).map((_, ii) => (
+                                          <span
+                                            key={ii}
+                                            title={t("common.empty", "empty")}
+                                            className={
+                                              "inline-block mr-1.5 w-3.5 h-3.5 rounded-[3px] " + (ii < levelNum ? "bg-amber-400" : "bg-gray-600")
+                                            }
+                                            style={{ boxShadow: "none" }}
+                                          />
+                                        ))
+                                      })()}
+                                    </div>
                                   </div>
                                 </div>
                                 <div className='ml-2 text-sm'>{isSelected ? "✓" : ""}</div>
