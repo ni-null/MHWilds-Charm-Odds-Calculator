@@ -814,7 +814,7 @@ export default function SkillSelector() {
                                   setLocalSearch("")
                                   // keep the select open to allow multiple selections
                                 }}>
-                                <div className='flex items-center gap-2'>
+                                <div className='flex items-center gap-2 my-1'>
                                   <img
                                     src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, "-"))}.png`}
                                     alt={skillName}

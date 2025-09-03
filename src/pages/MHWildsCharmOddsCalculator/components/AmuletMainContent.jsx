@@ -60,7 +60,7 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
   return (
     <div>
       <div className='flex flex-col w-full p-5 sm:flex-row'>
-        <div className='flex flex-col  text-white rounded-lg w-full sm:w-auto md:w-[400px]'>
+        <div className='flex flex-col justify-center text-white rounded-lg w-full sm:w-auto md:w-[400px]'>
           <div className='flex items-center min-w-[140px]  mb-2 md:mb-0 md:mr-4'>
             <div className='flex flex-col items-center justify-center mr-3'>
               <img
