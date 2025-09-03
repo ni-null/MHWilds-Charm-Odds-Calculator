@@ -874,7 +874,7 @@ export default function SkillSelector() {
                                             key={ii}
                                             title={t("common.empty", "empty")}
                                             className={
-                                              "inline-block mr-1.5 w-3.5 h-3.5 rounded-[3px] " + (ii < levelNum ? "bg-amber-400" : "bg-gray-600")
+                                              "inline-block mr-1.5 w-2 h-2 rounded-[3px] " + (ii < levelNum ? "bg-amber-400" : "bg-gray-600")
                                             }
                                             style={{ boxShadow: "none" }}
                                           />

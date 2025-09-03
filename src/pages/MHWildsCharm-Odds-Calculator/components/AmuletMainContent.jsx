@@ -158,7 +158,7 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                           <div className='flex items-center justify-between flex-1 min-w-0'>
                             <div className='text-base font-medium truncate' title={skillBase}>
                               {t(`skillTranslations.${skillBase}`, skillBase)}
-                              {skillLevel > 0 ? ` Lv.${skillLevel}` : null}
+                              {skillLevel > 0 ? ` LV.${skillLevel}` : null}
                             </div>
                           </div>
 
@@ -257,9 +257,7 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                                 }}>
                                 <SelectTrigger className='px-2 py-1 text-sm text-white bg-gray-800 border-none rounded h-7'>
                                   <SelectValue placeholder={`-- ${t("amulet.selectSkill", "選擇技能")} --`}>
-                                    {selected ? t(`skillTranslations.${selected}`, selected) : null}
-
-                                    {levelChoice > 0 ? ` Lv.${levelChoice}` : null}
+                                    {selected ? `${t(`skillTranslations.${selected}`, selected)}${levelChoice > 0 ? ` LV.${levelChoice}` : ""}` : null}
                                   </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent
@@ -311,10 +309,7 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                                                 }}
                                               />
                                               <div className='flex-1 min-w-0'>
-                                                <div className='text-sm truncate'>
-                                                  {t(`skillTranslations.${opt}`, opt)}
-                                                  {levelOpt > 0 ? ` Lv.${levelOpt}` : null}
-                                                </div>
+                                                <div className='text-sm truncate'>{t(`skillTranslations.${opt}`, opt)}</div>
                                                 <div className='flex items-center mt-1' aria-hidden>
                                                   {Array.from({ length: maxSlotsOpt }).map((_, ii) => (
                                                     <span
