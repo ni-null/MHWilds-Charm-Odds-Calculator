@@ -661,7 +661,7 @@ export default function SkillSelector() {
 
   return (
     <section className='w-full p-5 mb-8 bg-white md:p-10 rounded-xl'>
-      <h2 className='mb-4 text-xl font-semibold'>
+      <h2 className='flex items-center mb-4 text-xl font-semibold'>
         {t("skillSelector.title")} {t("skillSelector.maxSkills")}
       </h2>
 
@@ -680,7 +680,8 @@ export default function SkillSelector() {
 
             return (
               <div className='flex flex-col' key={i}>
-                <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label>
+                {/*              <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label> */}
+                <label className='mb-2 text-sm font-medium'>技能 {i + 1} (多選)</label>
                 <div className='flex items-center gap-2'>
                   <Select value={""} onValueChange={() => {}}>
                     <SelectTrigger className='w-full h-auto min-h-[40px] px-3 text-base md:min-h-[56px] md:px-4 md:text-lg'>
@@ -918,7 +919,7 @@ export default function SkillSelector() {
 
       {/* Slot selector row placed below skills, single full-width row */}
       <div className='mt-2 mb-6'>
-        <label className='block mb-2 text-sm font-medium'>{t("skillSelector.slotFilter")}</label>
+        <label className='block mb-2 text-sm font-medium'>{t("skillSelector.slotFilterSingle")}</label>
         <div className='flex items-center gap-2'>
           {(() => {
             const selectValueProp = selectedSlot ?? ""
@@ -999,7 +1000,8 @@ export default function SkillSelector() {
           </button>
         </div>
       </div>
-      <div className='flex justify-end'>
+
+      <div className='flex justify-between '>
         <Button
           variant='outline'
           size='sm'

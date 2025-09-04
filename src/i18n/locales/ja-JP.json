@@ -44,6 +44,7 @@
     "groupInfo": "グループ",
     "searchSkill": "スキルを検索...",
     "slotFilter": "スロットフィルター",
+    "slotFilterSingle": "スロットフィルター（単一選択）",
     "slotAny": "-- 任意スロット --",
     "clearSlot": "スロットをクリア"
   },
@@ -94,6 +95,12 @@
       "line4": "• 結果は参考用の推定値であり、正確性を保証するものではありません",
       "line5": "• 護石のスロット割り当ては貪欲マッチングアルゴリズムを採用しています"
     }
+  },
+  "totalProbability": {
+    "title": "総確率",
+    "noSlot": "スキル",
+    "withSlot": "スキル+スロット",
+    "byRarity": "レア度別"
   },
   "common": {
     "none": "なし",

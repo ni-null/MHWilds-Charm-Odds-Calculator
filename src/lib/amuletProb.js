@@ -248,9 +248,11 @@ export function computeCharmProb(charm, selectedSkills = [], selectedSlot = "") 
     groupProb = 1
   }
 
-  // now that groupProb is known, compute finalWithSlot / finalNoSlot
-  finalWithSlotValue = baseProb * charmTypeProb * groupProb
-  finalNoSlotValue = finalWithSlotValue * slotProbFromRarity
+  // now that groupProb is known, compute finalNoSlot and finalWithSlot
+  // finalNoSlot: chance to get the charm with the skill (regardless of desired slot)
+  finalNoSlotValue = baseProb * charmTypeProb * groupProb
+  // finalWithSlot: chance to get the charm with the skill and the requested slot(s)
+  finalWithSlotValue = finalNoSlotValue * slotProbFromRarity
 
   // early return when no combos: finalWithSlot uses rarity normalslot mapping
   if (!combos || combos.length === 0) {

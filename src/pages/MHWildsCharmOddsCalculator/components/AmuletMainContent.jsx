@@ -439,7 +439,6 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
             <div className='flex flex-col gap-2'>
               {Array.isArray(charm.AllslotKey) && charm.AllslotKey.length > 0 ? (
                 charm.AllslotKey.map((slotKey, si) => {
-                  console.log(charm.groups)
                   const slotImgSrcs = []
                   let display = String(slotKey)
                   try {

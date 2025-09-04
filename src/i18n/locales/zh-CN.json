@@ -44,6 +44,7 @@
     "groupInfo": "组别",
     "searchSkill": "搜索技能...",
     "slotFilter": "插槽筛选",
+    "slotFilterSingle": "插槽筛选（单选）",
     "slotAny": "-- 任意插槽 --",
     "clearSlot": "清除插槽"
   },
@@ -98,6 +99,12 @@
       "line4": "• 计算结果为估算值，仅供参考，不保证准确性",
       "line5": "• 护石槽位分配采用贪婪匹配算法"
     }
+  },
+  "totalProbability": {
+    "title": "总机率",
+    "noSlot": "技能",
+    "withSlot": "技能+插槽",
+    "byRarity": "按稀有度统计"
   },
   "common": {
     "none": "无",

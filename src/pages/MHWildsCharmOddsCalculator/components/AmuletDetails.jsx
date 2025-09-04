@@ -38,8 +38,23 @@ export default function AmuletDetails({ charm, t, className = "" }) {
     return String(v)
   }
 
+  // fmtDecimal: format only the decimal number without percentage or extra text
+  const fmtDecimal = (v) => {
+    if (v === undefined || v === null || Number.isNaN(v)) return "-"
+    if (typeof v === "number") {
+      // Format to up to 8 decimal places, then strip trailing zeros
+      return v
+        .toFixed(8)
+        .replace(/\. ?0+$/, "")
+        .replace(/\.?0+$/, "")
+        .replace(/\.$/, "")
+    }
+    // If it's a string that already looks like a number, return as-is
+    return String(v)
+  }
+
   return (
-    <div className={`p-3 sm:p-4 w-full xl:w-auto xl:min-w-96 rounded-md shadow-sm bg-black ${className}`}>
+    <div className={`p-3 sm:p-4 w-full xl:w-auto 2xl:w-80 rounded-md shadow-sm bg-black ${className}`}>
       <div className='flex flex-col gap-2 sm:gap-3'>
         <div className='flex items-center gap-2 text-xs sm:text-sm'>
           <span className='font-semibold text-gray-400'>{t("amuletDetails.baseProb")}</span>
@@ -91,9 +106,17 @@ export default function AmuletDetails({ charm, t, className = "" }) {
             ) : null}
           </div>
         </div>
-      </div>
 
-      {/* Add more details as needed */}
+        <div className='items-center gap-2 text-xs sm:text-sm'>
+          <span className='font-semibold text-gray-400 text-nowrap'>技能機率</span>
+          <div>
+            <span className='font-mono text-xs text-gray-400 break-words'>
+              {`${fmtDecimal(computed.baseProb)} * ${fmtDecimal(computed.charmTypeProb)} * ${fmtDecimal(computed.groupProb)} = `}
+            </span>
+            <span className='font-bold text-yellow-500'>{fmt(computed.finalNoSlot)}</span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

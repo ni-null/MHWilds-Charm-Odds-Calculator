@@ -44,6 +44,7 @@
     "groupInfo": "Group",
     "searchSkill": "Search skill...",
     "slotFilter": "Slot filter",
+    "slotFilterSingle": "Slot filter (single)",
     "slotAny": "-- Any slot --",
     "clearSlot": "Clear slot"
   },
@@ -98,6 +99,12 @@
       "line4": "• Results are estimates for reference only, not guaranteed accuracy",
       "line5": "• Charm slot assignments follow a greedy matching algorithm"
     }
+  },
+  "totalProbability": {
+    "title": "Total Probability",
+    "noSlot": "Skill",
+    "withSlot": "Skill + slots",
+    "byRarity": "By rarity"
   },
   "common": {
     "none": "None",

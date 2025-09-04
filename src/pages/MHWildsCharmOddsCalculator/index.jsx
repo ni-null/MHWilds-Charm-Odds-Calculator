@@ -35,7 +35,7 @@ export default function MHWPage() {
 
             <SkillSelector />
 
-            <SlotProbability />
+            {/*   <SlotProbability /> */}
 
             {/* 顯示總機率的組件 */}
             <TotalProbability />

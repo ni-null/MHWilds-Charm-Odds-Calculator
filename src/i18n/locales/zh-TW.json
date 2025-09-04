@@ -44,6 +44,7 @@
     "groupInfo": "群組",
     "searchSkill": "搜尋技能...",
     "slotFilter": "插槽篩選",
+    "slotFilterSingle": "插槽篩選（單選）",
     "slotAny": "-- 任意插槽 --",
     "clearSlot": "清除插槽"
   },
@@ -99,6 +100,12 @@
       "line5": "• 護石槽位分配採用貪婪匹配演算法"
     },
     "debug": {}
+  },
+  "totalProbability": {
+    "title": "總機率",
+    "noSlot": "技能",
+    "withSlot": "技能+插槽",
+    "byRarity": "按稀有度統計"
   },
   "common": {
     "none": "無",
