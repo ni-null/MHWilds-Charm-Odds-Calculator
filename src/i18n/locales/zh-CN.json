@@ -33,8 +33,9 @@
   "skill": "技能",
   "skills": "技能",
   "skillSelector": {
-    "title": "选择技能组合",
-    "maxSkills": "(最多3个)",
+    "header": "筛选护石，技能(最多3个)",
+    "skillSlot": "技能",
+    "multiSelect": "多选",
     "skill1": "技能 1",
     "skill2": "技能 2",
     "skill3": "技能 3",
@@ -61,7 +62,9 @@
   },
   "amuletDetailsExtra": {
     "groupLineWithCounts": "群组 {{group}}: {{counts}}",
-    "excludedLabel": "排除: {{items}}"
+    "excludedLabel": "排除: {{items}}",
+    "matchedLabel": "已匹配: {{items}}",
+    "matchedLabel2": "个技能"
   },
   "probability": {
     "calculation": {

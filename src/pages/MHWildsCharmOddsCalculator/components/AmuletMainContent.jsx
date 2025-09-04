@@ -3,6 +3,7 @@ import clsx from "clsx"
 import SkillGroupsData from "../../../data/SkillGroups.json"
 import RarityData from "../../../data/Rarity.json"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { decimalToFraction } from "../../../lib/fractionUtils"
 
 export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
   const groups = Array.isArray(charm.groups) ? charm.groups : []
@@ -58,10 +59,10 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
   }, [groups.length, matchingSkillsKey, matchingSkills])
 
   return (
-    <div>
+    <div className='w-full'>
       <div className='flex flex-col w-full p-5 sm:flex-row'>
         <div className='flex flex-col justify-center text-white rounded-lg w-full sm:w-auto md:w-[400px]'>
-          <div className='flex items-center min-w-[140px]  mb-2 md:mb-0 md:mr-4'>
+          <div className='flex items-center min-w-[140px]   justify-between  sm:justify-start  mb-2 md:mb-0 md:mr-4'>
             <div className='flex flex-col items-center justify-center mr-3'>
               <img
                 src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(charm.rarity || "unknown")}.png`}
@@ -89,7 +90,17 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                   const groupId = groups[gi]
                   const groupKey = `Group${groupId}`
                   const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
-                  const options = (gd.data && Array.isArray(gd.data) ? gd.data : []).map((d) => d.SkillName)
+                  const allOptions = (gd.data && Array.isArray(gd.data) ? gd.data : []).map((d) => d.SkillName)
+
+                  // 過濾掉已經匹配的技能選項
+                  const availableOptions = allOptions.filter((opt) => {
+                    const alreadyMatched = matchingSkills.some((skill) => {
+                      const skillBase = String(skill).split(" Lv.")[0]
+                      return skillBase === opt
+                    })
+                    return !alreadyMatched
+                  })
+
                   const selected = selectedPerGroup[gi] || ""
 
                   // 如果該群組是由 matchingSkills 提供（lockedPerGroup[gi]），顯示靜態不可編輯；
@@ -271,11 +282,14 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                                   <SelectGroup>
                                     <SelectLabel>
                                       {t("amulet.group", "群組")} {groupId}
+                                      <span className='ml-3 text-xs text-gray-400'>
+                                        {availableOptions.length} {t("common.skills", "技能")}
+                                      </span>
                                     </SelectLabel>
-                                    {options.length === 0 ? (
+                                    {availableOptions.length === 0 ? (
                                       <SelectItem value=''>{t("common.none", "無")}</SelectItem>
                                     ) : (
-                                      options.map((opt) => {
+                                      availableOptions.map((opt) => {
                                         // find meta
                                         let metaOpt = (gd.data && gd.data.find((o) => o.SkillName === opt)) || null
                                         if (!metaOpt && SkillGroupsData && SkillGroupsData.SkillGroups) {
@@ -399,7 +413,7 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                               }}
                               className='px-2 py-1 text-sm text-white bg-gray-800 rounded'>
                               <option value=''>-- {t("amulet.selectSkill", "選擇技能")} --</option>
-                              {options.map((opt) => (
+                              {availableOptions.map((opt) => (
                                 <option key={opt} value={opt}>
                                   {t(`skillTranslations.${opt}`, opt)}
                                 </option>
@@ -557,12 +571,13 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
                                 const finalNoSlot = Number(finalNoSlotRaw) || 0
                                 if (finalNoSlot > 0) {
                                   const combined = Number(slotProb) * finalNoSlot
-                                  const odds = combined > 0 ? Math.round(1 / combined) : Infinity
-                                  return (
-                                    <span className='text-sm text-gray-300' title={`combined: ${combined}`}>
-                                      &nbsp;•&nbsp;1/{odds === Infinity ? "∞" : odds}
-                                    </span>
-                                  )
+                                  if (combined > 0) {
+                                    return (
+                                      <span className='text-sm text-gray-300' title={`combined: ${combined}`}>
+                                        &nbsp;•&nbsp;{decimalToFraction(combined)}
+                                      </span>
+                                    )
+                                  }
                                 }
                               } catch (e) {
                                 void e
@@ -583,72 +598,57 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
         </div>
       </div>
 
-      <div className='flex'>
+      <div className='flex flex-col w-full sm:flex-row '>
         {/*顯示 最終機率 finalNoSlot */}
-        <div className='text-2xl font-bold '>
+        <div className='mr-0 text-2xl font-bold md:pr-3'>
           {(() => {
             const raw = charm && charm.computed && (charm.computed.finalNoSlot || 0)
+            const chance = Number(raw)
 
-            let oddsDisplay = "0"
-            try {
-              const chance = Number(raw)
-              if (chance > 0) {
-                const odds = Math.round(1 / chance)
-                oddsDisplay = odds.toString()
-              } else {
-                oddsDisplay = "∞"
-              }
-            } catch {
-              oddsDisplay = "?"
+            if (!chance || chance <= 0) {
+              return <div>{t("common.skillProbability", "技能機率")}: 1/∞</div>
             }
 
             return (
-              <>
-                <div>
-                  {t("common.skillProbability", "技能機率")}: {`1/${oddsDisplay}`}
-                </div>
-              </>
+              <div>
+                {t("common.skillProbability", "技能機率")}: {decimalToFraction(chance)}
+              </div>
             )
           })()}
         </div>
 
-        <div className='flex items-center justify-center ml-10 '>
-          <div className='text-base '>
-            <span className='text-xl'>{t("amulet.skillGroups", "技能群組")}:</span>
-          </div>
-          <div className='flex flex-wrap gap-2 ml-5'>
-            {groups.map((g, i) => {
-              const groupKey = `Group${g}`
-              const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
-              const bg = gd.bgColor || "#374151" // 文字顏色
-              const text = gd.color || "#ffffff" // 背景顏色
+        <div className='flex gap-2 '>
+          {groups.map((g, i) => {
+            const groupKey = `Group${g}`
+            const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
+            const bg = gd.bgColor || "#374151" // 文字顏色
+            const text = gd.color || "#ffffff" // 背景顏色
 
-              // 將 HEX 轉為 RGBA，並添加透明度
-              const hexToRgba = (hex, alpha) => {
-                let cleanHex = hex.replace("#", "")
-                if (cleanHex.length === 3) {
-                  cleanHex = cleanHex
-                    .split("")
-                    .map((c) => c + c)
-                    .join("")
-                }
-                const r = parseInt(cleanHex.slice(0, 2), 16)
-                const g = parseInt(cleanHex.slice(2, 4), 16)
-                const b = parseInt(cleanHex.slice(4, 6), 16)
-                return `rgba(${r}, ${g}, ${b}, ${alpha})`
+            // 將 HEX 轉為 RGBA，並添加透明度
+            const hexToRgba = (hex, alpha) => {
+              let cleanHex = hex.replace("#", "")
+              if (cleanHex.length === 3) {
+                cleanHex = cleanHex
+                  .split("")
+                  .map((c) => c + c)
+                  .join("")
               }
+              const r = parseInt(cleanHex.slice(0, 2), 16)
+              const g = parseInt(cleanHex.slice(2, 4), 16)
+              const b = parseInt(cleanHex.slice(4, 6), 16)
+              return `rgba(${r}, ${g}, ${b}, ${alpha})`
+            }
 
-              return (
-                <div
-                  key={i}
-                  className='inline-flex items-center gap-2 px-2 py-1 text-sm rounded'
-                  style={{ backgroundColor: hexToRgba(text, 0.5), color: bg }}>
-                  <span className='font-semibold'>{t("amulet.group", "群組")}</span>
-                  <span>{g}</span>
-                </div>
-              )
-            })}
-          </div>
+            return (
+              <div
+                key={i}
+                className='inline-flex items-center gap-2 px-2 py-1 text-sm rounded'
+                style={{ backgroundColor: hexToRgba(text, 0.5), color: bg }}>
+                <span className='font-semibold'>{t("amulet.group", "群組")}</span>
+                <span>{g}</span>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

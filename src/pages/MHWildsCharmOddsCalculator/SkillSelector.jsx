@@ -25,14 +25,6 @@ export default function SkillSelector() {
   // use store values; store defines AvlCharms/setAvlCharms (not Charms/setCharms)
   const { selectedSkills, setSelectedSkills, selectedSlot, setSelectedSlot, AvlCharms, setAvlCharms } = useMhwStore()
 
-  /*   useEffect(() => {
-    console.log(AvlCharms)
-  }, [AvlCharms]) 
- */
-
-  useEffect(() => {
-    console.log(selectedSkills)
-  }, [selectedSkills])
   // build global list of slot options from rarity data
   const slotOptions = React.useMemo(() => {
     const setKeys = new Set()
@@ -661,9 +653,7 @@ export default function SkillSelector() {
 
   return (
     <section className='w-full p-5 mb-8 bg-white md:p-10 rounded-xl'>
-      <h2 className='flex items-center mb-4 text-xl font-semibold'>
-        {t("skillSelector.title")} {t("skillSelector.maxSkills")}
-      </h2>
+      <h2 className='flex items-center mb-4 text-xl font-semibold'>{t("skillSelector.header", "篩選護石，技能(最多3個)")}</h2>
 
       <div className='grid grid-cols-1 gap-4 mb-4 xl:grid-cols-3'>
         {[0, 1, 2].map((i) => {
@@ -680,8 +670,9 @@ export default function SkillSelector() {
 
             return (
               <div className='flex flex-col' key={i}>
-                {/*              <label className='mb-2 text-sm font-medium'>{t(`skillSelector.skill${i + 1}`)}</label> */}
-                <label className='mb-2 text-sm font-medium'>技能 {i + 1} (多選)</label>
+                <label className='mb-2 text-sm font-medium'>
+                  {t("skillSelector.skillSlot", "技能")} {i + 1} ({t("skillSelector.multiSelect", "多選")})
+                </label>
                 <div className='flex items-center gap-2'>
                   <Select value={""} onValueChange={() => {}}>
                     <SelectTrigger className='w-full h-auto min-h-[40px] px-3 text-base md:min-h-[56px] md:px-4 md:text-lg'>
@@ -708,9 +699,10 @@ export default function SkillSelector() {
                                     onError={(e) => (e.currentTarget.src = SKILL_PLACEHOLDER_SVG)}
                                   />
                                   <span className='text-sm truncate max-w-[10rem] md:max-w-[14rem]'>{nameNode}</span>
-                                  {/* remove button for this selected skill badge */}
-                                  <button
-                                    type='button'
+                                  {/* remove button for this selected skill badge - using span to avoid nested button issue */}
+                                  <span
+                                    role='button'
+                                    tabIndex={0}
                                     aria-label={t("skillSelector.removeSelected", "Remove")}
                                     onPointerDown={(e) => {
                                       e.preventDefault()
@@ -734,9 +726,25 @@ export default function SkillSelector() {
                                       }
                                       setSelectedSkills(copy)
                                     }}
-                                    className=' px-2 py-0.5 rounded text-sm hover:bg-gray-200'>
+                                    onKeyDown={(e) => {
+                                      if (e.key === "Enter" || e.key === " ") {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        const copy = selectedSkills.slice()
+                                        const arr = Array.isArray(copy[i]) ? copy[i].slice() : copy[i] ? [copy[i]] : []
+                                        const idx = arr.indexOf(sel)
+                                        if (idx !== -1) arr.splice(idx, 1)
+                                        copy[i] = arr
+                                        // clear later slots when removing earlier ones
+                                        if (i < 2 && arr.length === 0) {
+                                          for (let j = i + 1; j < 3; j++) copy[j] = []
+                                        }
+                                        setSelectedSkills(copy)
+                                      }
+                                    }}
+                                    className='px-2 py-0.5 rounded text-sm hover:bg-gray-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-500'>
                                     ×
-                                  </button>
+                                  </span>
                                 </div>
                               )
                             })}

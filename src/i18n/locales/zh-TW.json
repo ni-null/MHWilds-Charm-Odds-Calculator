@@ -33,8 +33,9 @@
     }
   },
   "skillSelector": {
-    "title": "選擇技能組合",
-    "maxSkills": "(最多3個)",
+    "header": "篩選護石，技能(最多3個)",
+    "skillSlot": "技能",
+    "multiSelect": "多選",
     "skill1": "技能 1",
     "skill2": "技能 2",
     "skill3": "技能 3",
@@ -61,7 +62,9 @@
   },
   "amuletDetailsExtra": {
     "groupLineWithCounts": "群組 {{group}}: {{counts}}",
-    "excludedLabel": "排除: {{items}}"
+    "excludedLabel": "排除: {{items}}",
+    "matchedLabel": "已配對: {{items}}",
+    "matchedLabel2": "個技能"
   },
   "probability": {
     "calculation": {

@@ -33,8 +33,9 @@
   "skill": "スキル",
   "skills": "スキル",
   "skillSelector": {
-    "title": "スキル組み合わせを選択",
-    "maxSkills": "(最大3つ)",
+    "header": "護石フィルター — スキル (最大3つ)",
+    "skillSlot": "スキル",
+    "multiSelect": "複数選択",
     "skill1": "スキル 1",
     "skill2": "スキル 2",
     "skill3": "スキル 3",

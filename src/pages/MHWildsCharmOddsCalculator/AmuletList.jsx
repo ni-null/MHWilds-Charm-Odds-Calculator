@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { useTranslation } from "react-i18next"
 import { motion } from "framer-motion"
 import AmuletMainContent from "./components/AmuletMainContent"
@@ -7,11 +7,6 @@ import AmuletDetails from "./components/AmuletDetails"
 
 export default function AmuletList() {
   const { AvlCharms } = useMhwStore()
-  const [_expandedId, _setExpandedId] = useState(null)
-
-  useEffect(() => {
-    console.log(AvlCharms)
-  }, [AvlCharms])
 
   const charms = Array.isArray(AvlCharms) ? AvlCharms : []
 
@@ -56,17 +51,10 @@ export default function AmuletList() {
   function AmuletListView() {
     return (
       <div>
-        <div className='p-6 mb-6 bg-white rounded-lg'>
-          <h2 className='text-2xl font-semibold'>
-            {t("amulet.listTitle", "可用護符")} ({charms.length})
-          </h2>
-        </div>
-
         <div className=''>
           <motion.ul variants={containerVariants} initial='hidden' whileInView='visible' viewport={{ once: false, margin: "100px" }}>
             {charms.map((charm, idx) => {
               const key = `${charm.rarity || "unknown"}-${idx}`
-              // groups and matchingSkills moved into AmuletMainContent
 
               return (
                 <React.Fragment key={key}>
@@ -77,7 +65,9 @@ export default function AmuletList() {
                     exit='hidden'
                     viewport={{ once: false, margin: "50px" }}
                     className='flex flex-col bg-[#251d12] px-3 sm:px-4 md:px-6 my-10 text-white rounded-lg items-start justify-between gap-4 py-4 border-b xl:flex-row md:items-center md:gap-6'>
-                    <AmuletMainContent charm={charm} t={t} SKILL_PLACEHOLDER_SVG={SKILL_PLACEHOLDER_SVG} />
+                    <div className='flex-1 w-full'>
+                      <AmuletMainContent charm={charm} t={t} SKILL_PLACEHOLDER_SVG={SKILL_PLACEHOLDER_SVG} />
+                    </div>
 
                     <AmuletDetails charm={charm} t={t} />
                   </motion.li>

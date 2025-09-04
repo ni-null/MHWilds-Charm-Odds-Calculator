@@ -1,6 +1,9 @@
-import React from "react"
+import React, { useState } from "react"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export default function AmuletDetails({ charm, t, className = "" }) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
   // safe access to computed values
   const computed = charm?.computed || {}
 
@@ -53,68 +56,99 @@ export default function AmuletDetails({ charm, t, className = "" }) {
     return String(v)
   }
 
+  const DetailsContent = () => (
+    <div className='flex flex-col gap-2 sm:gap-3'>
+      <div className='flex items-center gap-2 text-xs sm:text-sm'>
+        <span className='font-semibold text-gray-400'>{t("amuletDetails.baseProb")}</span>
+        <span className='font-bold text-yellow-500 truncate'>{fmt(computed.baseProb ?? charm?.baseProbability)}</span>
+      </div>
+
+      <div className='flex items-center gap-2 text-xs sm:text-sm'>
+        <span className='font-semibold text-gray-400'>{t("amuletDetails.charmTypeProb")}</span>
+        <span className='font-bold text-yellow-500'>{fmt(computed.charmTypeProb)}</span>
+      </div>
+
+      <div className='flex flex-col text-sm'>
+        <div className='flex items-center gap-2'>
+          <span className='font-semibold text-gray-400'>{t("amuletDetails.groupProb")}</span>
+          <span className='font-bold text-yellow-500'>{fmt(computed.groupProb)}</span>
+        </div>
+        <div className='ml-10'>
+          {groupInfo ? (
+            <>
+              <div className='mt-1 font-mono text-xs text-gray-400 break-words'>{groupInfo.formula}</div>
+              <div className='mt-1 text-xs text-gray-400'>
+                {groupInfo.details.map((d) => {
+                  const counts = d.total === d.available ? `${d.available}` : `${d.total} -> ${d.available}`
+                  const translatedExcluded =
+                    d.excluded && d.excluded.length > 0
+                      ? d.excluded.map((name) => t(`skillTranslations.${name}`, { defaultValue: name })).join(", ")
+                      : null
+                  const matchedNames =
+                    d.matched && d.matched.length > 0
+                      ? d.matched
+                          .map((full) => {
+                            const base = full.split(" Lv.")[0]
+                            return t(`skillTranslations.${base}`, { defaultValue: base })
+                          })
+                          .join(", ")
+                      : null
+                  return (
+                    <div key={d.key} className='mb-1'>
+                      <span className='font-mono text-xs text-gray-400'>
+                        {t("amuletDetailsExtra.groupLineWithCounts", { group: d.group, counts })}{" "}
+                        <span className='ml-1'>{t("amuletDetailsExtra.matchedLabel2", "個技能")}</span>
+                        {translatedExcluded ? `    ${t("amuletDetailsExtra.excludedLabel", { items: translatedExcluded })}` : ""}
+                        {matchedNames ? ` — ${t("amuletDetailsExtra.matchedLabel", { items: matchedNames })}` : ""}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+
+      <div className='items-center gap-2 text-xs sm:text-sm'>
+        <span className='font-semibold text-gray-400 text-nowrap'>技能機率</span>
+        <div>
+          <span className='font-mono text-xs text-gray-400 break-words'>
+            {`${fmtDecimal(computed.baseProb)} * ${fmtDecimal(computed.charmTypeProb)} * ${fmtDecimal(computed.groupProb)} = `}
+          </span>
+          <span className='font-bold text-yellow-500'>{fmt(computed.finalNoSlot)}</span>
+        </div>
+      </div>
+    </div>
+  )
+
   return (
-    <div className={`p-3 sm:p-4 w-full xl:w-auto 2xl:w-80 rounded-md shadow-sm bg-black ${className}`}>
-      <div className='flex flex-col gap-2 sm:gap-3'>
-        <div className='flex items-center gap-2 text-xs sm:text-sm'>
-          <span className='font-semibold text-gray-400'>{t("amuletDetails.baseProb")}</span>
-          <span className='font-bold text-yellow-500 truncate'>{fmt(computed.baseProb ?? charm?.baseProbability)}</span>
-        </div>
+    <div className={`w-full xl:w-auto ${className}`}>
+      {/* 小屏幕使用 Collapsible 折疊功能 */}
+      <div className='block sm:hidden'>
+        <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
+          <CollapsibleTrigger className='flex items-center justify-center w-full px-4 py-2 text-sm text-white transition-colors bg-gray-700 rounded-md hover:bg-gray-600'>
+            <span className='mr-2'>{isExpanded ? t("common.hideDetails", "隱藏詳情") : t("common.showDetails", "顯示詳情")}</span>
+            <svg
+              className={`w-4 h-4 transform transition-transform ${isExpanded ? "rotate-180" : ""}`}
+              fill='none'
+              stroke='currentColor'
+              viewBox='0 0 24 24'>
+              <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
+            </svg>
+          </CollapsibleTrigger>
+          <CollapsibleContent className='mt-4'>
+            <div className='w-full p-3 bg-black rounded-md shadow-sm sm:p-4 xl:w-auto 2xl:w-80'>
+              <DetailsContent />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
 
-        <div className='flex items-center gap-2 text-xs sm:text-sm'>
-          <span className='font-semibold text-gray-400'>{t("amuletDetails.charmTypeProb")}</span>
-          <span className='font-bold text-yellow-500'>{fmt(computed.charmTypeProb)}</span>
-        </div>
-
-        <div className='flex flex-col text-sm'>
-          <div className='flex items-center gap-2'>
-            <span className='font-semibold text-gray-400'>{t("amuletDetails.groupProb")}</span>
-            <span className='font-bold text-yellow-500'>{fmt(computed.groupProb)}</span>
-          </div>
-          <div className='ml-10'>
-            {groupInfo ? (
-              <>
-                <div className='mt-1 font-mono text-xs text-gray-400 break-words'>{groupInfo.formula}</div>
-                <div className='mt-1 text-xs text-gray-400'>
-                  {groupInfo.details.map((d) => {
-                    const counts = d.total === d.available ? `${d.available}` : `${d.total} -> ${d.available}`
-                    const translatedExcluded =
-                      d.excluded && d.excluded.length > 0
-                        ? d.excluded.map((name) => t(`skillTranslations.${name}`, { defaultValue: name })).join(", ")
-                        : null
-                    const matchedNames =
-                      d.matched && d.matched.length > 0
-                        ? d.matched
-                            .map((full) => {
-                              const base = full.split(" Lv.")[0]
-                              return t(`skillTranslations.${base}`, { defaultValue: base })
-                            })
-                            .join(", ")
-                        : null
-                    return (
-                      <div key={d.key} className='mb-1'>
-                        <span className='font-mono text-xs text-gray-400'>
-                          {t("amuletDetailsExtra.groupLineWithCounts", { group: d.group, counts })}
-                          {translatedExcluded ? `    ${t("amuletDetailsExtra.excludedLabel", { items: translatedExcluded })}` : ""}
-                          {matchedNames ? ` — ${t("amuletDetailsExtra.matchedLabel", { items: matchedNames })}` : ""}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
-              </>
-            ) : null}
-          </div>
-        </div>
-
-        <div className='items-center gap-2 text-xs sm:text-sm'>
-          <span className='font-semibold text-gray-400 text-nowrap'>技能機率</span>
-          <div>
-            <span className='font-mono text-xs text-gray-400 break-words'>
-              {`${fmtDecimal(computed.baseProb)} * ${fmtDecimal(computed.charmTypeProb)} * ${fmtDecimal(computed.groupProb)} = `}
-            </span>
-            <span className='font-bold text-yellow-500'>{fmt(computed.finalNoSlot)}</span>
-          </div>
+      {/* 大屏幕直接顯示 */}
+      <div className='hidden sm:block'>
+        <div className='w-full p-3 bg-black rounded-md shadow-sm sm:p-4 xl:w-auto 2xl:w-80'>
+          <DetailsContent />
         </div>
       </div>
     </div>

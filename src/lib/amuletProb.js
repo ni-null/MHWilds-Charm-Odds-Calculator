@@ -53,9 +53,6 @@ const findGroupsForSkill = (skillKey) => {
 }
 
 export function computeCharmProb(charm, selectedSkills = [], selectedSlot = "") {
-  console.log(charm)
-  console.log(selectedSkills)
-  console.log(selectedSlot)
   const rarity = charm && charm.rarity
   const baseProb = (RarityData[rarity] && RarityData[rarity].probability) || 0.01
 

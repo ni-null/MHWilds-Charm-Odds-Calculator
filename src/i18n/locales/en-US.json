@@ -33,8 +33,9 @@
   "skill": "Skill",
   "skills": "Skills",
   "skillSelector": {
-    "title": "Select Skill Combinations",
-    "maxSkills": "(Max 3)",
+    "header": "Charm filter — skills (max 3)",
+    "skillSlot": "Skill",
+    "multiSelect": "Multi-select",
     "skill1": "Skill 1",
     "skill2": "Skill 2",
     "skill3": "Skill 3",
@@ -61,7 +62,9 @@
   },
   "amuletDetailsExtra": {
     "groupLineWithCounts": "Group {{group}}: {{counts}}",
-    "excludedLabel": "excluded: {{items}}"
+    "excludedLabel": "excluded: {{items}}",
+    "matchedLabel": "matched: {{items}}",
+    "matchedLabel2": "skills"
   },
   "probability": {
     "calculation": {

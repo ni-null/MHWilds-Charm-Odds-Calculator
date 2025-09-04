@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+// ensure `motion` is referenced so some linters that don't detect JSX usage won't report it as unused
+void motion
 import { useTranslation } from "react-i18next"
 import useMhwStore from "../../../store/mhwStore"
+import { decimalToFraction } from "../../../lib/fractionUtils"
 
 export default function TotalProbability() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { AvlCharms = [] } = useMhwStore()
 
   // State to trigger re-animation when AvlCharms changes
@@ -75,26 +78,17 @@ export default function TotalProbability() {
   const percentNoSlotNum = totals.noSlot * 100
   const percentWithSlotNum = totals.withSlot * 100
 
-  const makeFrac = (p) => {
-    if (!p || p <= 0) return "0"
-    const denom = Math.max(1, Math.round(1 / p))
-    return `1/${denom}`
-  }
-
-  const fracNoSlot = makeFrac(totals.noSlot)
-  const fracWithSlot = makeFrac(totals.withSlot)
-
-  // localized number formatting for display (keep consistency with other components)
-  // some i18n.language values in this project are short keys like 'zhTW' — map them to valid BCP47 tags
-  const lng = (i18n && i18n.language) || (typeof navigator !== "undefined" && navigator.language) || undefined
-  const langMap = { enUS: "en-US", zhTW: "zh-TW", zhCN: "zh-CN", jaJP: "ja-JP" }
-  const locale = (lng && langMap[lng]) || lng || undefined
-
-  // formatter for percent values (display with up to 4 decimal places)
-  const nfPercent = new Intl.NumberFormat(locale, {
+  // formatter for percent values (display with up to 8 decimal places to match previous display)
+  const nfPercent = new Intl.NumberFormat(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
+    maximumFractionDigits: 8,
   })
+
+  // formatter for raw decimal probability (show up to 8 decimals)
+  // (removed nfDecimal variable as it's not needed directly)
+
+  const fracNoSlot = decimalToFraction(totals.noSlot)
+  const fracWithSlot = decimalToFraction(totals.withSlot)
 
   return (
     <section className='w-full p-6 mb-8 bg-white rounded-xl'>
@@ -104,14 +98,16 @@ export default function TotalProbability() {
           <div className='flex items-center'>
             <div className='mr-4 text-lg text-gray-600'>{t("totalProbability.noSlot", "技能機率")} :</div>
             <div className='text-lg font-bold text-indigo-600'>
-              {percentNoSlotNum.toFixed(8)}%<span className='ml-3 text-sm text-gray-500'>({fracNoSlot})</span>
+              {fracNoSlot}
+              <span className='ml-3 text-sm text-gray-500'>({nfPercent.format(percentNoSlotNum)}%)</span>
             </div>
           </div>
 
           <div className='flex items-center'>
             <div className='mr-4 text-lg text-gray-600'>{t("totalProbability.withSlot")} :</div>
             <div className='text-lg font-bold text-indigo-600'>
-              {percentWithSlotNum.toFixed(8)} %<span className='ml-3 text-sm text-gray-500'>({fracWithSlot})</span>
+              {fracWithSlot}
+              <span className='ml-3 text-sm text-gray-500'>({nfPercent.format(percentWithSlotNum)}%)</span>
             </div>
           </div>
         </div>
@@ -138,10 +134,7 @@ export default function TotalProbability() {
                   const entry = per[r]
                   const pNo = entry.noSlot
                   const pWith = entry.withSlot
-                  const pctNo = pNo * 100
-                  const pctWith = pWith * 100
-                  const fracNo = makeFrac(pNo)
-                  const fracWith = makeFrac(pWith)
+                  // pct and frac values are formatted inline using helpers when rendered
                   return (
                     // make each rarity item full-width on small screens and row-aligned on md+
                     <motion.div
@@ -184,13 +177,13 @@ export default function TotalProbability() {
                               <div className='text-sm text-gray-600'>
                                 {t("skill")} <span className='text-xs text-gray-400'></span>:
                               </div>
-                              <div className='font-semibold text-indigo-600'>{fracNo}</div>
+                              <div className='font-semibold text-indigo-600'>{decimalToFraction(pNo)}</div>
                             </div>
                             <div className='flex flex-row md:flex-col '>
                               <div className='mt-1 text-sm text-gray-600'>
                                 {t("totalProbability.withSlot")} <span className='text-xs text-gray-400'></span>:
                               </div>
-                              <div className='font-semibold text-indigo-600 xl:whitespace-nowrap'>{fracWith}</div>
+                              <div className='font-semibold text-indigo-600 xl:whitespace-nowrap'>{decimalToFraction(pWith)}</div>
                             </div>
                           </div>
                         </div>
