@@ -68,8 +68,10 @@
     "matchedLabel2": "skills"
   },
   "huntTimeCalculator": {
-    "title": "Hunt Time Calculator",
+    "title": "Time Calculator",
     "description": "Calculate hunting time and charm probability",
+    "skillOdds": "Skill Odds",
+    "skillWithSlotOdds": "Skill + Slot Odds",
     "selectMonster": "Select Monster",
     "monsters": "Monsters",
     "huntTime": "Hunt Time (minutes)",
@@ -105,11 +107,9 @@
         "title": "Detailed Explanation:",
         "step1": "1. Each charm has 1-3 skill slots, each slot belongs to a specific skill group",
         "step2": "2. Charms with the same rarity have different skill group combinations (e.g., [1,6,6], [1,7,null], [1,8,6])",
-        "step3": "3. The system assigns each selected skill sequentially to an available slot that contains the required skill group",
-        "step4": "4. Each slot can only be assigned to one skill (no duplicate slot usage)",
-        "step5": "5. For each assigned slot, calculate 1/(available skill count in that group) as the skill probability",
-        "step6": "6. Important: Already assigned skills in the same group are excluded, reducing available skill count for subsequent assignments",
-        "step7": "7. Multiply all individual slot probabilities to get the final skill combination probability"
+        "step3": "5. For each assigned slot, calculate 1/(available skill count in that group) as the skill probability",
+        "step4": "6. Important: Already assigned skills in the same group are excluded, reducing available skill count for subsequent assignments",
+        "step5": "7. Multiply all individual slot probabilities to get the final skill combination probability"
       },
       "example": {
         "title": "Example:",

@@ -174,7 +174,6 @@ export default function HuntTimeCalculator() {
     <div>
       <div className='p-6 '>
         <h2 className='text-2xl font-bold text-gray-800'>{t("huntTimeCalculator.title", "Hunt Time Calculator")}</h2>
-        <p className='mt-2 text-gray-600'>{t("huntTimeCalculator.description", "Calculate hunting time and charm probability")}</p>
       </div>
 
       <div className='p-6'>
@@ -208,9 +207,9 @@ export default function HuntTimeCalculator() {
                               }
                             }}
                           />
-                          <span className='text-2xl font-bold truncate '>{t(`monsters.${selectedMonster}`, selectedMonster)}</span>
+                          <span className='text-xl font-bold truncate '>{t(`monsters.${selectedMonster}`, selectedMonster)}</span>
                           {MonsterData[selectedMonster] && (
-                            <span className='text-xl gray-500 text-'>
+                            <span className='text-base gray-500 text-'>
                               ({MonsterData[selectedMonster].MIN}-{MonsterData[selectedMonster].MAX} {t("amulet.unit", "護石")})
                             </span>
                           )}
@@ -301,10 +300,10 @@ export default function HuntTimeCalculator() {
             {/* 機率顯示與計算結果 */}
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               {/* 無插槽機率與結果 */}
-              <div className='p-6 rounded-lg bg-blue-50'>
+              <div className='p-6 rounded-lg bg-sky-50'>
                 <div className='flex mb-4 text-2xl '>
-                  <h3 className='font-semibold text-blue-800 '>技能 出現機率</h3>
-                  <p className='ml-3 font-bold text-blue-600 '>1/{totalCharmDenominator.toLocaleString()}</p>
+                  <h3 className='font-semibold text-sky-700 '>{t("huntTimeCalculator.skillOdds", "技能 出現機率")}</h3>
+                  <p className='ml-3 font-bold text-sky-700 '>1/{totalCharmDenominator.toLocaleString()}</p>
                 </div>
 
                 {/* 無插槽計算結果 */}
@@ -312,7 +311,7 @@ export default function HuntTimeCalculator() {
                   <div className='flex w-full gap-3'>
                     <div className='flex-1 p-3 text-center rounded-md bg-white/70'>
                       <div className='text-xs text-gray-600'>{t("huntTimeCalculator.Min", "Min")}</div>
-                      <div className='text-lg font-bold text-green-600'>
+                      <div className='text-lg font-bold text-emerald-600'>
                         {calculateHuntCounts.minHunts} {t("huntTimeCalculator.hunts", "hunts")}
                       </div>
                       <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateTotalTime.minTime)}</div>
@@ -320,7 +319,7 @@ export default function HuntTimeCalculator() {
 
                     <div className='flex-1 p-3 text-center rounded-md bg-white/70'>
                       <div className='text-xs text-gray-600'>{t("huntTimeCalculator.Avg", "Avg")}</div>
-                      <div className='text-lg font-bold text-yellow-600'>
+                      <div className='text-lg font-bold text-amber-600'>
                         {calculateHuntCounts.avgHunts} {t("huntTimeCalculator.hunts", "hunts")}
                       </div>
                       <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateTotalTime.avgTime)}</div>
@@ -328,7 +327,7 @@ export default function HuntTimeCalculator() {
 
                     <div className='flex-1 p-3 text-center rounded-md bg-white/70'>
                       <div className='text-xs text-gray-600'>{t("huntTimeCalculator.Max", "Max")}</div>
-                      <div className='text-lg font-bold text-red-600'>
+                      <div className='text-lg font-bold text-rose-600'>
                         {calculateHuntCounts.maxHunts} {t("huntTimeCalculator.hunts", "hunts")}
                       </div>
                       <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateTotalTime.maxTime)}</div>
@@ -339,10 +338,10 @@ export default function HuntTimeCalculator() {
 
               {/* 帶插槽機率與結果 */}
               {totalWithSlotDenominator && (
-                <div className='p-6 rounded-lg bg-purple-50'>
+                <div className='p-6 rounded-lg bg-fuchsia-50'>
                   <div className='flex mb-4 text-2xl '>
-                    <h3 className='font-semibold text-blue-800 '>技能+插槽 出現機率</h3>
-                    <p className='ml-3 font-bold text-blue-600 '>1/{totalWithSlotDenominator.toLocaleString()}</p>
+                    <h3 className='font-semibold text-fuchsia-700 '>{t("huntTimeCalculator.skillWithSlotOdds", "技能+插槽 出現機率")}</h3>
+                    <p className='ml-3 font-bold text-fuchsia-700 '>1/{totalWithSlotDenominator.toLocaleString()}</p>
                   </div>
 
                   {/* 帶插槽計算結果 */}
@@ -350,7 +349,7 @@ export default function HuntTimeCalculator() {
                     <div className='flex w-full gap-3'>
                       <div className='flex-1 p-3 text-center rounded-md bg-white/70'>
                         <div className='text-xs text-gray-600'>{t("huntTimeCalculator.Min", "Min")}</div>
-                        <div className='text-lg font-bold text-green-600'>
+                        <div className='text-lg font-bold text-emerald-600'>
                           {calculateWithSlotHuntCounts.minHunts} {t("huntTimeCalculator.hunts", "hunts")}
                         </div>
                         <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateWithSlotTotalTime.minTime)}</div>
@@ -358,7 +357,7 @@ export default function HuntTimeCalculator() {
 
                       <div className='flex-1 p-3 text-center rounded-md bg-white/70'>
                         <div className='text-xs text-gray-600'>{t("huntTimeCalculator.Avg", "Avg")}</div>
-                        <div className='text-lg font-bold text-yellow-600'>
+                        <div className='text-lg font-bold text-amber-600'>
                           {calculateWithSlotHuntCounts.avgHunts} {t("huntTimeCalculator.hunts", "hunts")}
                         </div>
                         <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateWithSlotTotalTime.avgTime)}</div>
@@ -366,7 +365,7 @@ export default function HuntTimeCalculator() {
 
                       <div className='flex-1 p-3 text-center rounded-md bg-white/70'>
                         <div className='text-xs text-gray-600'>{t("huntTimeCalculator.Max", "Max")}</div>
-                        <div className='text-lg font-bold text-red-600'>
+                        <div className='text-lg font-bold text-rose-600'>
                           {calculateWithSlotHuntCounts.maxHunts} {t("huntTimeCalculator.hunts", "hunts")}
                         </div>
                         <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateWithSlotTotalTime.maxTime)}</div>

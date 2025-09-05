@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { motion } from "framer-motion"
 // ensure `motion` is referenced so some linters that don't detect JSX usage won't report it as unused
 void motion
@@ -10,12 +10,45 @@ export default function TotalProbability() {
   const { t } = useTranslation()
   const { AvlCharms = [] } = useMhwStore()
 
-  // State to trigger re-animation when AvlCharms changes
-  const [animationKey, setAnimationKey] = useState(0)
+  // State to track which items are visible
+  const [visibleItems, setVisibleItems] = useState(new Set())
+  const observerRef = useRef(null)
 
-  // Trigger animation whenever AvlCharms changes
+  // Setup Intersection Observer
   useEffect(() => {
-    setAnimationKey((prev) => prev + 1)
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const itemId = entry.target.getAttribute("data-rarity")
+          if (itemId) {
+            setVisibleItems((prev) => {
+              const newSet = new Set(prev)
+              if (entry.isIntersecting) {
+                newSet.add(itemId)
+              } else {
+                newSet.delete(itemId)
+              }
+              return newSet
+            })
+          }
+        })
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the item is visible
+        rootMargin: "50px", // Start animation 50px before the item enters viewport
+      }
+    )
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [])
+
+  // Reset visible items when AvlCharms changes
+  useEffect(() => {
+    setVisibleItems(new Set())
   }, [AvlCharms])
 
   /*   
@@ -89,17 +122,28 @@ export default function TotalProbability() {
                   const entry = per[r]
                   const pNo = entry.noSlot
                   const pWith = entry.withSlot
+                  const isVisible = visibleItems.has(r)
+
                   // pct and frac values are formatted inline using helpers when rendered
                   return (
                     // make each rarity item full-width on small screens and row-aligned on md+
                     <motion.div
-                      key={`${r}-${animationKey}`}
+                      key={`${r}-${AvlCharms.length}`}
                       className='w-full p-2 rounded'
+                      data-rarity={r}
+                      ref={(el) => {
+                        if (el && observerRef.current) {
+                          observerRef.current.observe(el)
+                        }
+                      }}
                       initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      animate={{
+                        opacity: isVisible ? 1 : 0,
+                        y: isVisible ? 0 : 8,
+                      }}
                       transition={{
                         duration: 0.4,
-                        delay: idx * 0.15,
+                        delay: isVisible ? idx * 0.15 : 0,
                         ease: "easeOut",
                       }}>
                       <div

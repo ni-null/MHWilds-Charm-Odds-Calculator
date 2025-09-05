@@ -31,11 +31,10 @@ export default function ProbabilityExplanation() {
             <div className='pl-2 space-y-1 text-sm'>
               <div>{t("probability.calculation.explanation.step1")}</div>
               <div>{t("probability.calculation.explanation.step2")}</div>
+
               <div>{t("probability.calculation.explanation.step3")}</div>
               <div>{t("probability.calculation.explanation.step4")}</div>
               <div>{t("probability.calculation.explanation.step5")}</div>
-              <div>{t("probability.calculation.explanation.step6")}</div>
-              <div>{t("probability.calculation.explanation.step7")}</div>
             </div>
           </div>
 

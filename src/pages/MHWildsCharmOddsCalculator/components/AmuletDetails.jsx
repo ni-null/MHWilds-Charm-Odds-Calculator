@@ -111,19 +111,19 @@ export default function AmuletDetails({ charm, t, className = "" }) {
       </div>
 
       <div className='items-center gap-2 text-xs sm:text-sm'>
-        <span className='font-semibold text-gray-400 text-nowrap'>技能機率</span>
+        <span className='font-semibold text-gray-400 text-nowrap'>技能機率</span>{" "}
+        <span className='font-bold text-yellow-500'>{fmt(computed.finalNoSlot)}</span>
         <div>
           <span className='font-mono text-xs text-gray-400 break-words'>
-            {`${fmtDecimal(computed.baseProb)} * ${fmtDecimal(computed.charmTypeProb)} * ${fmtDecimal(computed.groupProb)} = `}
+            {`${fmtDecimal(computed.baseProb)} * ${fmtDecimal(computed.charmTypeProb)} * ${fmtDecimal(computed.groupProb)}   `}
           </span>
-          <span className='font-bold text-yellow-500'>{fmt(computed.finalNoSlot)}</span>
         </div>
       </div>
     </div>
   )
 
   return (
-    <div className={`w-full xl:w-auto ${className}`}>
+    <div className={`w-full xl:w-auto   ${className}`}>
       {/* 小屏幕使用 Collapsible 折疊功能 */}
       <div className='block sm:hidden'>
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>

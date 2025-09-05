@@ -4,6 +4,7 @@ import SkillGroupsData from "../../../data/SkillGroups.json"
 import RarityData from "../../../data/Rarity.json"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { decimalToFraction } from "../../../lib/fractionUtils"
+import { Ban } from "lucide-react"
 
 export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
   const groups = Array.isArray(charm.groups) ? charm.groups : []
@@ -62,25 +63,69 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
     <div className='w-full'>
       <div className='flex flex-col w-full p-5 sm:flex-row'>
         <div className='flex flex-col justify-center text-white rounded-lg w-full sm:w-auto md:w-[400px]'>
-          <div className='flex items-center min-w-[140px]   justify-between  sm:justify-start  mb-2 md:mb-0 md:mr-4'>
-            <div className='flex flex-col items-center justify-center mr-3'>
-              <img
-                src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(charm.rarity || "unknown")}.png`}
-                alt={charm.rarity}
-                style={{ width: 56, height: 56, objectFit: "contain" }}
-                className='rounded'
-                onError={(e) => {
-                  try {
-                    if (!e || !e.currentTarget) return
-                    e.currentTarget.style.display = "none"
-                  } catch (err) {
-                    console.debug("img onError hide failed", err)
-                  }
-                }}
-              />
-              <div className='mt-1 text-base font-medium'>{charm.rarity}</div>
-            </div>
+          <div className='flex items-center min-w-[140px]  justify-around   sm:justify-start  mb-2 md:mb-0 md:mr-4'>
+            <div className='flex flex-col '>
+              <div className='flex flex-col items-center justify-center '>
+                <img
+                  src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(charm.rarity || "unknown")}.png`}
+                  alt={charm.rarity}
+                  style={{ width: 56, height: 56, objectFit: "contain" }}
+                  className='rounded'
+                  onError={(e) => {
+                    try {
+                      if (!e || !e.currentTarget) return
+                      e.currentTarget.style.display = "none"
+                    } catch (err) {
+                      console.debug("img onError hide failed", err)
+                    }
+                  }}
+                />
+                <div className='text-base font-medium  md:mt-1'>{charm.rarity}</div>
+              </div>
+              <div className='flex gap-2 md:mt-3 md:w-52 '>
+                {groups.map((g, i) => {
+                  const groupKey = `Group${g}`
+                  const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
+                  const bg = gd.bgColor || "#374151" // 文字顏色
+                  const text = gd.color || "#ffffff" // 背景顏色
 
+                  // 將 HEX 轉為 RGBA，並添加透明度
+                  const hexToRgba = (hex, alpha) => {
+                    let cleanHex = hex.replace("#", "")
+                    if (cleanHex.length === 3) {
+                      cleanHex = cleanHex
+                        .split("")
+                        .map((c) => c + c)
+                        .join("")
+                    }
+                    const r = parseInt(cleanHex.slice(0, 2), 16)
+                    const g = parseInt(cleanHex.slice(2, 4), 16)
+                    const b = parseInt(cleanHex.slice(4, 6), 16)
+                    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+                  }
+
+                  return (
+                    <div
+                      key={i}
+                      className='inline-flex items-center justify-center w-16 gap-1 px-1 py-1 text-sm text-center rounded'
+                      style={{ backgroundColor: hexToRgba(text, 0.5), color: bg }}>
+                      <div className='flex '>
+                        <span className='hidden font-semibold md:block'>{t("amulet.group", "群組")}</span>
+                        <span>{g}</span>{" "}
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {groups.length < 3 && (
+                  <div className='inline-flex bg-[#2f2f2f] items-center justify-center w-16 gap-1 px-1 py-1 text-sm text-center rounded'>
+                    <div className='flex '>
+                      <Ban className='w-4 h-4' />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
             {/* 顯示匹配的技能名稱與等級方塊（參考 UI 排版與配色） */}
             <div className='flex flex-col gap-1 ml-2'>
               {groups.length === 0 ? (
@@ -445,160 +490,107 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
         </div>
 
         {/* 顯示組別 和 組別可能存在的插槽組合圖示 (使用 charm.AllslotKey) */}
-        <div className='flex items-start gap-4 mx-auto lg:ml-10 '>
-          <div className='flex flex-col'>
-            <div className='mb-2 text-base'>
-              <span className='font-medium'>{t("amulet.slotCombos", "插槽組合")}:</span>
-            </div>
-            <div className='flex flex-col gap-2'>
-              {Array.isArray(charm.AllslotKey) && charm.AllslotKey.length > 0 ? (
-                charm.AllslotKey.map((slotKey, si) => {
-                  const slotImgSrcs = []
-                  let display = String(slotKey)
+        <div className='flex flex-col w-full gap-2 mx-auto mt-5 md:w-auto'>
+          {Array.isArray(charm.AllslotKey) && charm.AllslotKey.length > 0 ? (
+            charm.AllslotKey.map((slotKey, si) => {
+              const slotImgSrcs = []
+              let display = String(slotKey)
+
+              try {
+                const arr = typeof slotKey === "string" ? JSON.parse(slotKey) : slotKey
+                if (Array.isArray(arr)) {
+                  display = `[${arr.join(", ")}]`
+                  arr.forEach((v) => {
+                    if (typeof v === "string" && v.startsWith("W")) slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
+                    else if (typeof v === "number") slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${Math.min(Math.max(1, v), 3)}.png`)
+                  })
+                }
+              } catch {
+                if (typeof slotKey === "string" && slotKey.includes("W")) slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
+                else if (!isNaN(Number(slotKey)))
+                  slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${Math.min(Math.max(1, Number(slotKey)), 3)}.png`)
+              }
+
+              const getSlotProbability = (rk, groupsArr, sk) => {
+                try {
+                  const rarityObj = (RarityData && RarityData[rk]) || {}
+                  const rawKey = String(sk)
+                  let normKeyJson = rawKey
+                  let normKeyNoSpace = rawKey.replace(/\s+/g, "")
                   try {
-                    const arr = typeof slotKey === "string" ? JSON.parse(slotKey) : slotKey
-                    if (Array.isArray(arr)) {
-                      display = `[${arr.join(", ")}]`
-                      arr.forEach((v) => {
-                        if (typeof v === "string" && v.startsWith("W")) {
-                          slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
-                        } else if (typeof v === "number") {
-                          const idx = Math.min(Math.max(1, v), 3)
-                          slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${idx}.png`)
-                        }
-                      })
-                    }
-                  } catch {
-                    if (typeof slotKey === "string" && slotKey.indexOf("W") !== -1) {
-                      slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
-                    } else if (!isNaN(Number(slotKey))) {
-                      const idx = Math.min(Math.max(1, Number(slotKey)), 3)
-                      slotImgSrcs.push(`${import.meta.env.BASE_URL}image/slot/${idx}.png`)
+                    const parsed = typeof sk === "string" ? JSON.parse(sk) : sk
+                    normKeyJson = JSON.stringify(parsed)
+                    normKeyNoSpace = normKeyJson.replace(/\s+/g, "")
+                  } catch {}
+
+                  const groups = Array.isArray(rarityObj.Group) ? rarityObj.Group : []
+                  for (const g of groups) {
+                    const skills = Array.isArray(g.skills) ? g.skills : []
+                    if (skills.length === groupsArr.length && skills.every((v, i) => Number(v) === Number(groupsArr[i])) && g.slot) {
+                      const keysToTry = [normKeyJson, normKeyNoSpace, rawKey]
+                      for (const kk of keysToTry) if (g.slot[kk] != null) return Number(g.slot[kk]) || 0
                     }
                   }
 
-                  // compute per-slot probability from Rarity data when possible
-                  const getSlotProbability = (rk, groupsArr, sk) => {
-                    try {
-                      const rarityObj = (RarityData && RarityData[rk]) || {}
-                      // normalize key to several comparable forms when possible
-                      const rawKey = String(sk)
-                      let normKeyJson = rawKey
-                      let normKeyNoSpace = rawKey.replace(/\s+/g, "")
-                      try {
-                        const parsed = typeof sk === "string" ? JSON.parse(sk) : sk
-                        normKeyJson = JSON.stringify(parsed)
-                        normKeyNoSpace = normKeyJson.replace(/\s+/g, "")
-                      } catch {
-                        // keep fallbacks
-                      }
+                  let normals = rarityObj.normalslot?.slot || {}
+                  const keysToTry = [normKeyJson, normKeyNoSpace, rawKey]
+                  for (const kk of keysToTry) if (normals[kk] != null) return Number(normals[kk]) || 0
 
-                      // try to find an exact group match first
-                      const groups = Array.isArray(rarityObj.Group) ? rarityObj.Group : []
-                      if (Array.isArray(groupsArr) && groupsArr.length > 0) {
-                        for (const g of groups) {
-                          const skills = Array.isArray(g.skills) ? g.skills : []
-                          // require exact numeric equality of arrays
-                          if (skills.length === groupsArr.length) {
-                            let same = true
-                            for (let i = 0; i < skills.length; i++) {
-                              if (Number(skills[i]) !== Number(groupsArr[i])) {
-                                same = false
-                                break
-                              }
-                            }
-                            if (same && g.slot) {
-                              // try multiple normalized keys to match data variants
-                              const slotObj = g.slot
-                              const keysToTry = [normKeyJson, normKeyNoSpace, rawKey]
-                              for (const kk of keysToTry) {
-                                if (Object.prototype.hasOwnProperty.call(slotObj, kk)) return Number(slotObj[kk]) || 0
-                              }
-                            }
+                  return null
+                } catch {
+                  return null
+                }
+              }
+
+              const slotProb = getSlotProbability(charm.rarity, charm.groups, slotKey)
+
+              // 單一扁平化 container
+              return (
+                <div key={si} className='flex items-center justify-between gap-2 sm:justify-start'>
+                  <div className='flex items-center'>
+                    {slotImgSrcs.map((src, idx) => (
+                      <img
+                        key={idx}
+                        src={src}
+                        alt='slot'
+                        className='object-contain w-8 h-8'
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none"
+                        }}
+                      />
+                    ))}
+                    <span className='ml-3 text-sm text-gray-200'>{display}</span>
+                    <span className='ml-3 text-sm text-gray-400'>({(slotProb * 100).toFixed(2)}%)</span>
+                  </div>
+
+                  {slotProb != null && (
+                    <>
+                      {(() => {
+                        try {
+                          const finalNoSlot = Number(charm?.computed?.finalNoSlot || 0)
+                          if (finalNoSlot > 0) {
+                            const combined = slotProb * finalNoSlot
+                            if (combined > 0)
+                              return (
+                                <span className='text-sm text-gray-300' title={`combined: ${combined}`}>
+                                  &nbsp;•&nbsp;{decimalToFraction(combined)}
+                                </span>
+                              )
                           }
-                        }
-                      }
-
-                      // fallback to normalslot mapping - try normalized keys
-                      let normals = rarityObj.normalslot || {}
-                      if (normals && normals.slot) normals = normals.slot
-                      if (normals) {
-                        const keysToTry = [normKeyJson, normKeyNoSpace, rawKey]
-                        for (const kk of keysToTry) {
-                          if (Object.prototype.hasOwnProperty.call(normals, kk)) return Number(normals[kk]) || 0
-                        }
-                      }
-
-                      return null
-                    } catch {
-                      return null
-                    }
-                  }
-
-                  const slotProb = getSlotProbability(charm.rarity, charm.groups, slotKey)
-
-                  return (
-                    <div key={si} className='inline-flex items-center gap-2'>
-                      {slotImgSrcs.length > 0 ? (
-                        <div className='flex items-center gap-1'>
-                          {slotImgSrcs.map((src, idx) => (
-                            <img
-                              key={`${si}-${idx}`}
-                              src={src}
-                              alt='slot'
-                              className='object-contain w-8 h-8'
-                              onError={(e) => {
-                                try {
-                                  if (!e || !e.currentTarget) return
-                                  e.currentTarget.style.display = "none"
-                                } catch {
-                                  /* ignore */
-                                }
-                              }}
-                            />
-                          ))}
-                        </div>
-                      ) : null}
-                      <div className='flex items-center gap-2'>
-                        <span className='text-sm text-gray-200'>{display}</span>
-                        {slotProb != null ? (
-                          <>
-                            <span className='text-sm text-gray-400'>({(Number(slotProb) * 100).toFixed(2)}%)</span>
-                            {/* show combined probability with finalNoSlot if available */}
-                            {(() => {
-                              try {
-                                const finalNoSlotRaw = charm && charm.computed && (charm.computed.finalNoSlot || 0)
-                                const finalNoSlot = Number(finalNoSlotRaw) || 0
-                                if (finalNoSlot > 0) {
-                                  const combined = Number(slotProb) * finalNoSlot
-                                  if (combined > 0) {
-                                    return (
-                                      <span className='text-sm text-gray-300' title={`combined: ${combined}`}>
-                                        &nbsp;•&nbsp;{decimalToFraction(combined)}
-                                      </span>
-                                    )
-                                  }
-                                }
-                              } catch (e) {
-                                void e
-                              }
-                              return null
-                            })()}
-                          </>
-                        ) : null}
-                      </div>
-                    </div>
-                  )
-                })
-              ) : (
-                <span className='ml-2 text-sm text-gray-400'>{t("common.none", "無")}</span>
-              )}
-            </div>
-          </div>
+                        } catch {}
+                        return null
+                      })()}
+                    </>
+                  )}
+                </div>
+              )
+            })
+          ) : (
+            <span className='ml-2 text-sm text-gray-400'>{t("common.none", "無")}</span>
+          )}
         </div>
       </div>
-
-      <div className='flex flex-col w-full sm:flex-row '>
+      <div className='flex flex-row justify-between w-full'>
         {/*顯示 最終機率 finalNoSlot */}
         <div className='mr-0 text-2xl font-bold md:pr-3'>
           {(() => {
@@ -615,40 +607,6 @@ export default function AmuletMainContent({ charm, t, SKILL_PLACEHOLDER_SVG }) {
               </div>
             )
           })()}
-        </div>
-
-        <div className='flex gap-2 '>
-          {groups.map((g, i) => {
-            const groupKey = `Group${g}`
-            const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
-            const bg = gd.bgColor || "#374151" // 文字顏色
-            const text = gd.color || "#ffffff" // 背景顏色
-
-            // 將 HEX 轉為 RGBA，並添加透明度
-            const hexToRgba = (hex, alpha) => {
-              let cleanHex = hex.replace("#", "")
-              if (cleanHex.length === 3) {
-                cleanHex = cleanHex
-                  .split("")
-                  .map((c) => c + c)
-                  .join("")
-              }
-              const r = parseInt(cleanHex.slice(0, 2), 16)
-              const g = parseInt(cleanHex.slice(2, 4), 16)
-              const b = parseInt(cleanHex.slice(4, 6), 16)
-              return `rgba(${r}, ${g}, ${b}, ${alpha})`
-            }
-
-            return (
-              <div
-                key={i}
-                className='inline-flex items-center gap-2 px-2 py-1 text-sm rounded'
-                style={{ backgroundColor: hexToRgba(text, 0.5), color: bg }}>
-                <span className='font-semibold'>{t("amulet.group", "群組")}</span>
-                <span>{g}</span>
-              </div>
-            )
-          })}
         </div>
       </div>
     </div>
