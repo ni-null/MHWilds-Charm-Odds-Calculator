@@ -51,6 +51,7 @@
   },
   "amulet": {
     "finalOdds": "最終確率: {{pct}}% (1/{{odds}})",
+    "unit": "護石",
     "skillGroups": "スキルグループ",
     "slotCombos": "スロット組み合わせ"
   },
@@ -198,6 +199,33 @@
     "Stamina Thief": "スタミナ奪取",
     "Tetrad Shot": "第四射撃",
     "Thunder Attack": "雷属性攻撃",
+    "huntTimeCalculator": {
+      "title": "Hunt Time Calculator",
+      "description": "Calculate hunting time and charm probability",
+      "selectMonster": "Select Monster",
+      "monsters": "Monsters",
+      "huntTime": "Hunt Time (minutes)",
+      "restTime": "Rest Time (minutes)",
+      "Min": "Min",
+      "Avg": "Avg",
+      "Max": "Max",
+      "hunts": "hunts",
+      "hours": "hours",
+      "note": "Note",
+      "explanation": "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods.",
+      "noData": "No charm data available. Please select skills first."
+    },
+    "monsters": {
+      "Uth Duna": "波衣竜",
+      "Rey Dau": "煌雷竜",
+      "Arkveld": "鎖刃竜",
+      "Nu Udra": "獄焔蛸",
+      "Mizutsune": "泡狐竜",
+      "Seregios": "千刃竜",
+      "Jin Dahaad": "凍峰竜",
+      "Gore Magala": "黒蝕竜",
+      "Lagiacrus": "海竜"
+    },
     "Water Attack": "水属性攻撃",
     "Airborne": "飛燕",
     "Blast Functionality": "爆破瓶追加",

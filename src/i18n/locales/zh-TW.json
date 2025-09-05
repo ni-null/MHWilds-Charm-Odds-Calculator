@@ -51,6 +51,7 @@
   },
   "amulet": {
     "finalOdds": "最終機率: {{pct}}% (1/{{odds}})",
+    "unit": "護石",
     "skillGroups": "技能群組",
     "slotCombos": "插槽組合"
   },
@@ -65,6 +66,33 @@
     "excludedLabel": "排除: {{items}}",
     "matchedLabel": "已配對: {{items}}",
     "matchedLabel2": "個技能"
+  },
+  "huntTimeCalculator": {
+    "title": "保存時間計算器",
+    "description": "計算拉取保存時間的時間和機率",
+    "selectMonster": "選擇怪物",
+    "monsters": "怪物",
+    "huntTime": "狩獵時間（分鐘）",
+    "restTime": "休息時間（分鐘）",
+    "Min": "最小",
+    "Avg": "平均",
+    "Max": "最大",
+    "hunts": "次數",
+    "hours": "小時",
+    "note": "註解",
+    "explanation": "計算基於怪物的獲取範圍及選擇的時間設定。時間包括狩獵和休息時間。",
+    "noData": "無保存資料。請先選擇技能。"
+  },
+  "monsters": {
+    "Uth Duna": "波衣龍",
+    "Rey Dau": "煌雷龍",
+    "Arkveld": "鎖刃龍",
+    "Nu Udra": "獄焰鱆",
+    "Mizutsune": "泡狐龍",
+    "Seregios": "千刃龍",
+    "Jin Dahaad": "凍峰龍",
+    "Gore Magala": "黑蝕龍",
+    "Lagiacrus": "海龍"
   },
   "probability": {
     "calculation": {

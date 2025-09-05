@@ -51,6 +51,7 @@
   },
   "amulet": {
     "finalOdds": "Final Odds: {{pct}}% (1/{{odds}})",
+    "unit": "charm",
     "skillGroups": "Skill Groups",
     "slotCombos": "Slot Combinations"
   },
@@ -65,6 +66,33 @@
     "excludedLabel": "excluded: {{items}}",
     "matchedLabel": "matched: {{items}}",
     "matchedLabel2": "skills"
+  },
+  "huntTimeCalculator": {
+    "title": "Hunt Time Calculator",
+    "description": "Calculate hunting time and charm probability",
+    "selectMonster": "Select Monster",
+    "monsters": "Monsters",
+    "huntTime": "Hunt Time (minutes)",
+    "restTime": "Rest Time (minutes)",
+    "Min": "Min",
+    "Avg": "Avg",
+    "Max": "Max",
+    "hunts": "hunts",
+    "hours": "hours",
+    "note": "Note",
+    "explanation": "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods.",
+    "noData": "No charm data available. Please select skills first."
+  },
+  "monsters": {
+    "Uth Duna": "Uth Duna",
+    "Rey Dau": "Rey Dau",
+    "Arkveld": "Arkveld",
+    "Nu Udra": "Nu Udra",
+    "Mizutsune": "Mizutsune",
+    "Seregios": "Seregios",
+    "Jin Dahaad": "Jin Dahaad",
+    "Gore Magala": "Gore Magala",
+    "Lagiacrus": "Lagiacrus"
   },
   "probability": {
     "calculation": {

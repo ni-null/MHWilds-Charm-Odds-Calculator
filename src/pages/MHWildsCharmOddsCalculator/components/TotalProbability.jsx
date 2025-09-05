@@ -61,56 +61,11 @@ export default function TotalProbability() {
   const charms = Array.isArray(AvlCharms) ? AvlCharms : []
   if (!charms || charms.length === 0) return null
 
-  // compute both totals so we can show skill-only and skill+slot probabilities
-  const totals = charms.reduce(
-    (acc, c) => {
-      const comp = c && c.computed
-      if (!comp) return acc
-      acc.noSlot += comp.finalNoSlot || 0
-      acc.withSlot += comp.finalWithSlot || 0
-      return acc
-    },
-    { noSlot: 0, withSlot: 0 }
-  )
-
-  // percentage and 1/x formatting
-  // compute numeric percent values first, then format with Intl for locale correctness
-  const percentNoSlotNum = totals.noSlot * 100
-  const percentWithSlotNum = totals.withSlot * 100
-
-  // formatter for percent values (display with up to 8 decimal places to match previous display)
-  const nfPercent = new Intl.NumberFormat(undefined, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 8,
-  })
-
-  // formatter for raw decimal probability (show up to 8 decimals)
-  // (removed nfDecimal variable as it's not needed directly)
-
-  const fracNoSlot = decimalToFraction(totals.noSlot)
-  const fracWithSlot = decimalToFraction(totals.withSlot)
-
   return (
-    <section className='w-full p-6 mb-8 bg-white rounded-xl'>
-      <h2 className='mb-4 text-xl font-semibold'>{t("totalProbability.title", "總機率")}</h2>
-      <div className='flex flex-col'>
-        <div className='space-y-3'>
-          <div className='flex items-center'>
-            <div className='mr-4 text-lg text-gray-600'>{t("totalProbability.noSlot", "技能機率")} :</div>
-            <div className='text-lg font-bold text-indigo-600'>
-              {fracNoSlot}
-              <span className='ml-3 text-sm text-gray-500'>({nfPercent.format(percentNoSlotNum)}%)</span>
-            </div>
-          </div>
+    <div>
+      <h2 className='p-6 text-2xl font-bold text-gray-800'>護石稀有度</h2>
 
-          <div className='flex items-center'>
-            <div className='mr-4 text-lg text-gray-600'>{t("totalProbability.withSlot")} :</div>
-            <div className='text-lg font-bold text-indigo-600'>
-              {fracWithSlot}
-              <span className='ml-3 text-sm text-gray-500'>({nfPercent.format(percentWithSlotNum)}%)</span>
-            </div>
-          </div>
-        </div>
+      <div className='flex flex-col'>
         {/* 使用 AvlCharms 的資料統計個別 rarity 組別顯示組別的總機率 */}
         <div className='pt-2 mt-2 '>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-4'>
@@ -195,6 +150,6 @@ export default function TotalProbability() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

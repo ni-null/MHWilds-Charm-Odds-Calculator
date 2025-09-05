@@ -10,6 +10,7 @@ import SlotProbability from "./SlotProbability"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import ProbabilityExplanation from "./ProbabilityExplanation"
 import TotalProbability from "./components/TotalProbability"
+import HuntTimeCalculator from "./components/HuntTimeCalculator"
 
 export default function MHWPage() {
   const { t } = useTranslation()
@@ -37,8 +38,13 @@ export default function MHWPage() {
 
             {/*   <SlotProbability /> */}
 
-            {/* 顯示總機率的組件 */}
-            <TotalProbability />
+            <section className='w-full p-6 mb-8 bg-white rounded-xl'>
+              {/* 怪物討伐需要時間計算 */}
+              <HuntTimeCalculator />
+
+              {/* 顯示總機率的組件 */}
+              <TotalProbability />
+            </section>
 
             <AmuletList />
             {/* 機率計算說明（從 AmuletList 提出，集中顯示於頁面） */}
