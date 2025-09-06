@@ -70,8 +70,8 @@
   "huntTimeCalculator": {
     "title": "時間計算器",
     "description": "計算拉取保存時間的時間和機率",
-    "skillOdds": "技能 出現機率",
-    "skillWithSlotOdds": "技能+插槽 出現機率",
+    "skillOdds": "技能",
+    "skillWithSlotOdds": "技能+插槽",
     "selectMonster": "選擇怪物",
     "monsters": "怪物",
     "huntTime": "狩獵時間（分鐘）",
@@ -83,6 +83,7 @@
     "hours": "小時",
     "note": "註解",
     "explanation": "計算基於怪物的獲取範圍及選擇的時間設定。時間包括狩獵和休息時間。",
+    "baseRewardNote": "任務額外獎勵：每次討伐怪物後額外獲得 1-3 個護石，已計入總護石數量計算中。",
     "noData": "無保存資料。請先選擇技能。"
   },
   "monsters": {

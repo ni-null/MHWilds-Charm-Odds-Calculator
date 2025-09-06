@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-
+import SlotList from "./SlotList"
 export default function AmuletDetails({ charm, t, className = "" }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -138,6 +138,7 @@ export default function AmuletDetails({ charm, t, className = "" }) {
             </svg>
           </CollapsibleTrigger>
           <CollapsibleContent className='mt-4'>
+            <SlotList charm={charm} t={t} />
             <div className='w-full p-3 bg-black rounded-md shadow-sm sm:p-4 xl:w-auto 2xl:w-80'>
               <DetailsContent />
             </div>

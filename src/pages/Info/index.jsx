@@ -17,12 +17,12 @@ const InfoPage = () => {
     <div>
       <div className='flex min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50'>
         <Sidebar isOpen={isSidebarOpen} onToggle={handleSidebarToggle} />
-        <div className='flex flex-col flex-1 lg:ml-64'>
+        <div className={`flex flex-col flex-1 xl:ml-64  w-full ${isSidebarOpen ? "ml-64" : ""}`}>
           <Header onMenuToggle={handleSidebarToggle} title={t("info.title") || "資訊"} />
           <main className='flex-1 p-4 sm:p-6'>
-            <div className='container mx-auto max-w-7xl'>
+            <div className='container mx-auto max-w-9xl'>
               <div className='mb-6 sm:mb-8'>
-                <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 lg:block'>{t("info.title") || "資訊"}</h1>
+                <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 xl:block'>{t("info.title") || "資訊"}</h1>
 
                 <div className='gap-6 sm:gap-8'>
                   <div className='p-4 bg-white rounded-lg shadow sm:p-6'>
@@ -47,7 +47,7 @@ const InfoPage = () => {
                   <div className='p-4 mt-6 bg-white rounded-lg shadow sm:p-6 sm:mt-10'>
                     <h2 className='mb-2 text-lg font-semibold text-gray-700'>{t("info.calculation.title") || "機率計算"}</h2>
                     <p className='mb-4 text-sm text-gray-600 sm:text-base'>{t("info.calculation.description") || "本專案使用以下機率計算公式："}</p>
-                    <div className='p-4 mb-4 text-sm bg-gray-50 rounded-lg sm:text-base font-mono'>
+                    <div className='p-4 mb-4 font-mono text-sm rounded-lg bg-gray-50 sm:text-base'>
                       <div className='text-center'>
                         {t("info.calculation.formula") || "P(特定護石) = P(稀有度) × P(模板 | 稀有度) × P(技能組合 | 模板)"}
                       </div>

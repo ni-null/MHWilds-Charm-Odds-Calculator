@@ -96,8 +96,6 @@ export default function TotalProbability() {
 
   return (
     <div>
-      <h2 className='p-6 text-2xl font-bold text-gray-800'>護石稀有度</h2>
-
       <div className='flex flex-col'>
         {/* 使用 AvlCharms 的資料統計個別 rarity 組別顯示組別的總機率 */}
         <div className='pt-2 mt-2 '>

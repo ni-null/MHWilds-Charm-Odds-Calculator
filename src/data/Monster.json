@@ -1,38 +1,44 @@
 {
-  "Uth Duna": {
-    "MAX": 5,
-    "MIN": 2
+  "Base": {
+    "MAX": 3,
+    "MIN": 1
   },
-  "Rey Dau": {
-    "MAX": 5,
-    "MIN": 2
-  },
-  "Arkveld": {
-    "MAX": 5,
-    "MIN": 2
-  },
-  "Nu Udra": {
-    "MAX": 5,
-    "MIN": 2
-  },
-  "Mizutsune": {
-    "MAX": 5,
-    "MIN": 2
-  },
-  "Seregios": {
-    "MAX": 10,
-    "MIN": 4
-  },
-  "Jin Dahaad": {
-    "MAX": 10,
-    "MIN": 4
-  },
-  "Gore Magala": {
-    "MAX": 10,
-    "MIN": 4
-  },
-  "Lagiacrus": {
-    "MAX": 10,
-    "MIN": 4
+  "Monster": {
+    "Uth Duna": {
+      "MAX": 5,
+      "MIN": 2
+    },
+    "Rey Dau": {
+      "MAX": 5,
+      "MIN": 2
+    },
+    "Arkveld": {
+      "MAX": 5,
+      "MIN": 2
+    },
+    "Nu Udra": {
+      "MAX": 5,
+      "MIN": 2
+    },
+    "Mizutsune": {
+      "MAX": 5,
+      "MIN": 2
+    },
+    "Seregios": {
+      "MAX": 10,
+      "MIN": 4
+    },
+    "Jin Dahaad": {
+      "MAX": 10,
+      "MIN": 4
+    },
+    "Gore Magala": {
+      "MAX": 10,
+      "MIN": 4
+    },
+    "Lagiacrus": {
+      "MAX": 10,
+      "MIN": 4
+    }
   }
 }

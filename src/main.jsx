@@ -6,6 +6,7 @@ import MHWPage from "./pages/MHWildsCharmOddsCalculator/index"
 import SkillGroupsPage from "./pages/MHWildsCharmSkillGroups/index"
 import CharmTypePage from "./pages/MHWildsCharmType/index"
 import InfoPage from "./pages/Info/index"
+import FavoriteCharmsPage from "./pages/FavoriteCharms/index"
 import "./i18n"
 
 // 统一使用 HashRouter，无论开发还是生产环境
@@ -18,6 +19,7 @@ createRoot(document.getElementById("root")).render(
         <Route path='/skill-groups' element={<SkillGroupsPage />} />
         <Route path='/charm-types' element={<CharmTypePage />} />
         <Route path='/info' element={<InfoPage />} />
+        <Route path='/favorites' element={<FavoriteCharmsPage />} />
       </Routes>
     </HashRouter>
   </StrictMode>

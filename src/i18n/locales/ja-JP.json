@@ -213,6 +213,7 @@
       "hours": "hours",
       "note": "Note",
       "explanation": "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods.",
+      "baseRewardNote": "クエストボーナス：モンスター討伐ごとに追加で1-3個の護石を獲得、総護石数計算に既に含まれています。",
       "noData": "No charm data available. Please select skills first."
     },
     "monsters": {

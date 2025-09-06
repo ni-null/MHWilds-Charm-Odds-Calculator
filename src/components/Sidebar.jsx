@@ -25,13 +25,14 @@ const Sidebar = ({ isOpen, onToggle }) => {
     { to: "/", label: t("navigation.mhwCalculator") },
     { to: "/skill-groups", label: t("navigation.skillGroups") },
     { to: "/charm-types", label: t("navigation.charmTypes") },
+    { to: "/favorites", label: t("navigation.favorites", "收藏護石") },
     { to: "/info", label: t("navigation.info") },
   ]
 
   return (
     <>
       {/* 移動端遮罩 */}
-      {isOpen && <div className='fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden' onClick={onToggle} />}
+      {isOpen && <div className='fixed inset-0 z-20 bg-black bg-opacity-50 xl:hidden' onClick={onToggle} />}
 
       {/* Sidebar */}
       <aside
@@ -40,7 +41,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900
         border-r border-yellow-600/30
         transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:z-20
+        xl:translate-x-0 xl:z-20
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
         style={{
@@ -78,7 +79,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 `}
                 onClick={() => {
                   // 在移動端點擊導航後關閉 sidebar
-                  if (window.innerWidth < 1024) {
+                  if (window.innerWidth < 1280) {
                     onToggle()
                   }
                 }}>

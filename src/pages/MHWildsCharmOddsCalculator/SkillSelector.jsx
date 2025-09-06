@@ -695,6 +695,7 @@ export default function SkillSelector() {
                                   <img
                                     src={imgSrc}
                                     alt={selName}
+                                    loading='lazy'
                                     className='object-contain w-5 h-5'
                                     onError={(e) => (e.currentTarget.src = SKILL_PLACEHOLDER_SVG)}
                                   />
@@ -827,6 +828,7 @@ export default function SkillSelector() {
                                   <img
                                     src={`${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(skillName.replace(/\//g, "-"))}.png`}
                                     alt={skillName}
+                                    loading='lazy'
                                     className='object-contain w-5 h-5 mr-2 md:w-6 md:h-6'
                                     onError={(e) => {
                                       try {
@@ -977,6 +979,7 @@ export default function SkillSelector() {
                                 <img
                                   key={`${src}-${idx}`}
                                   src={src}
+                                  loading='lazy'
                                   alt=''
                                   className='object-contain w-6 h-6 xl:w-8 xl:h-8 '
                                   onError={(e) => {
