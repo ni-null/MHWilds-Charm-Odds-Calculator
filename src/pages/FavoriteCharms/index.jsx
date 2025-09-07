@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { AlertTriangle, Calculator } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import AmuletList from "../components/AmuletList"
@@ -13,6 +14,7 @@ import CharmExportImportControls from "./CharmExportImportControls"
 export default function FavoriteCharmsPage() {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
+  const navigate = useNavigate()
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -61,11 +63,7 @@ export default function FavoriteCharmsPage() {
                   {t("favorites.emptyDescription", "您還沒有收藏任何護石。前往主頁探索並收藏您喜歡的護石吧！")}
                 </p>
                 <div className='flex gap-4'>
-                  <Button
-                    onClick={() => (window.location.href = `${import.meta.env.BASE_URL}charm-type`)}
-                    variant='outline'
-                    size='sm'
-                    className='flex items-center gap-2'>
+                  <Button onClick={() => navigate("/charm-types")} variant='outline' size='sm' className='flex items-center gap-2'>
                     <Calculator className='w-4 h-4' />
                     {t("favorites.goToCalculator", "前往護石計算器")}
                   </Button>
