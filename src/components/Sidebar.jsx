@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { Calculator, Grid3x3, Diamond, Star, Info } from "lucide-react"
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const location = useLocation()
@@ -22,16 +23,17 @@ const Sidebar = ({ isOpen, onToggle }) => {
     : null
 
   const navs = [
-    { to: "/", label: t("navigation.mhwCalculator") },
-    { to: "/skill-groups", label: t("navigation.skillGroups") },
-    { to: "/charm-types", label: t("navigation.charmTypes") },
-    { to: "/info", label: t("navigation.info") },
+    { to: "/", label: t("navigation.mhwSearch"), icon: Calculator },
+    { to: "/skill-groups", label: t("navigation.skillGroups"), icon: Grid3x3 },
+    { to: "/charm-types", label: t("navigation.charmTypes"), icon: Diamond },
+    { to: "/favorites", label: t("navigation.favorites", "收藏護石"), icon: Star },
+    { to: "/info", label: t("navigation.info"), icon: Info },
   ]
 
   return (
     <>
       {/* 移動端遮罩 */}
-      {isOpen && <div className='fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden' onClick={onToggle} />}
+      {isOpen && <div className='fixed inset-0 z-20 bg-black bg-opacity-50 xl:hidden' onClick={onToggle} />}
 
       {/* Sidebar */}
       <aside
@@ -40,7 +42,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900
         border-r border-yellow-600/30
         transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:z-20
+        xl:translate-x-0 xl:z-20
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
         style={{
@@ -55,7 +57,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         }}>
         <div className='flex items-center justify-center h-20 border-b border-yellow-500/30 bg-black/30'>
           <div className='flex flex-col items-center'>
-            <span className='text-xl font-bold tracking-wider text-yellow-400 drop-shadow-lg'>MHWildsCharm</span>
+            <span className='text-xl font-bold tracking-wider text-yellow-400 drop-shadow-lg'>MH Wilds Charm</span>
             <span className='text-sm font-medium tracking-widest text-yellow-300/80'>ODDS CALCULATOR</span>
           </div>
         </div>
@@ -78,7 +80,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 `}
                 onClick={() => {
                   // 在移動端點擊導航後關閉 sidebar
-                  if (window.innerWidth < 1024) {
+                  if (window.innerWidth < 1280) {
                     onToggle()
                   }
                 }}>
@@ -88,9 +90,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                   }`}
                 />
                 <span className='relative z-10 flex items-center'>
-                  <div className='flex-shrink-0 w-2 h-2 mr-3 rounded-full'>
-                    {isActive && <div className='w-full h-full bg-yellow-400 rounded-full shadow-sm animate-pulse' />}
-                  </div>
+                  <nav.icon className={`flex-shrink-0 w-5 h-5 mr-3 ${isActive ? "text-yellow-400" : "text-yellow-100/70"}`} />
                   {nav.label}
                 </span>
               </Link>
@@ -124,7 +124,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* 版本資訊區域 */}
         <div className='px-4 py-2 text-xs border-t text-yellow-400/60 border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <div className='space-y-1 text-center'>
-            <div className='text-yellow-400/60'>{t("version.logic")} 1.5</div>
+            <div className='text-yellow-400/60'>{t("version.logic")} 2.1</div>
             <div className='text-yellow-400/60'>{t("version.data")} 2025.08.20</div>
             <div className='text-yellow-400/60'>
               {buildLabel}: {buildTime ?? unknownLabel}

@@ -1,12 +1,13 @@
 {
-  "title": "護石スキルフィルター",
   "navigation": {
     "home": "ホーム",
+    "mhwSearch": "護石検索器",
     "mhwCalculator": "護石計算機",
     "skillGroups": "スキルグループ",
     "charmTypes": "護石タイプ",
     "languageLabel": "言語",
-    "info": "情報"
+    "info": "情報",
+    "favorites": "お気に入り護石"
   },
   "info": {
     "title": "情報",
@@ -34,8 +35,9 @@
   "skill": "スキル",
   "skills": "スキル",
   "skillSelector": {
-    "title": "スキル組み合わせを選択",
-    "maxSkills": "(最大3つ)",
+    "header": "護石フィルター — スキル (最大3つ)",
+    "skillSlot": "スキル",
+    "multiSelect": "複数選択",
     "skill1": "スキル 1",
     "skill2": "スキル 2",
     "skill3": "スキル 3",
@@ -45,29 +47,61 @@
     "groupInfo": "グループ",
     "searchSkill": "スキルを検索...",
     "slotFilter": "スロットフィルター",
+    "slotFilterSingle": "スロットフィルター（単一選択）",
     "slotAny": "-- 任意スロット --",
     "clearSlot": "スロットをクリア"
   },
   "amulet": {
-    "specificSlotProb": "特定スロット確率",
-    "list": "護石リスト",
-    "matching": "一致する護石",
-    "probability": "確率",
-    "possibleSkills": "候補スキル",
-    "rarity": "レアリティ",
-    "groups": "グループ",
+    "finalOdds": "最終確率: {{pct}}% (1/{{odds}})",
+    "unit": "護石",
     "skillGroups": "スキルグループ",
-    "matchingSkills": "一致スキル",
-    "slotCombinations": "スロットの組み合わせ",
-    "defaultNormalSlot": "デフォルトのスロット",
-    "selectSkills": "護石を表示するにはスキルを選択してください"
+    "slotCombos": "スロット組み合わせ"
+  },
+  "amuletDetails": {
+    "baseProb": "基本確率",
+    "charmTypeProb": "護石タイプ確率",
+    "groupProb": "グループ確率",
+    "slotProb": "スロット確率"
+  },
+  "amuletDetailsExtra": {
+    "groupLineWithCounts": "グループ {{group}}: {{counts}}",
+    "excludedLabel": "除外: {{items}}",
+    "matchedLabel": "一致: {{items}}",
+    "matchedLabel2": "個スキル"
+  },
+  "huntTimeCalculator": {
+    "title": "時間計算器",
+    "description": "狩猟時間と護石確率を計算",
+    "skillOdds": "スキル 出現確率",
+    "skillWithSlotOdds": "スキル+スロット 出現確率",
+    "selectMonster": "モンスターを選択",
+    "monsters": "モンスター",
+    "huntTime": "狩猟時間 (分)",
+    "restTime": "休憩時間 (分)",
+    "Min": "最小",
+    "Avg": "平均",
+    "Max": "最大",
+    "hunts": "狩猟回数",
+    "hours": "時間",
+    "note": "注意",
+    "explanation": "モンスターの報酬範囲と選択された時間設定に基づく計算。時間には狩猟と休憩の両方が含まれます。",
+    "baseRewardNote": "クエストボーナス：モンスター討伐ごとに追加で1-3個の護石を獲得、総護石数計算に既に含まれています。",
+    "disclaimer": "この計算機は参考のみで、確率の推定は概算に基づいています。",
+    "noData": "護石データがありません。まずスキルを選択してください。",
+    "slotCombinationDetails": "スロット組み合わせ詳細"
+  },
+  "monsters": {
+    "Uth Duna": "波衣竜",
+    "Rey Dau": "煌雷竜",
+    "Arkveld": "鎖刃竜",
+    "Nu Udra": "獄焔蛸",
+    "Mizutsune": "泡狐竜",
+    "Seregios": "千刃竜",
+    "Jin Dahaad": "凍峰竜",
+    "Gore Magala": "黒蝕竜",
+    "Lagiacrus": "海竜"
   },
   "probability": {
-    "base": "基本確率",
-    "individual": "個別確率",
-    "percentage": "%",
-    "charmTypeProb": "護石タイプ確率",
-    "approximately": "約",
     "calculation": {
       "title": "計算方法：",
       "subtitle": "最終確率 = レアリティ基礎確率 × 護石タイプ確率 × スキル組み合わせ確率",
@@ -78,11 +112,9 @@
         "title": "詳細説明：",
         "step1": "1. 各護石は1〜3のスキルスロットを持ち、各スロットは特定のスキルグループに属します",
         "step2": "2. 同じレアリティの護石でも異なるスキルグループの組み合わせがあります（例：[1,6,6]、[1,7,null]、[1,8,6]）",
-        "step3": "3. 選択した各スキルは、必要なスキルグループを含む利用可能なスロットに順に割り当てられます",
-        "step4": "4. 各スロットは一つのスキルしか割り当てられません（スロットの重複使用不可）",
-        "step5": "5. 割り当てられた各スロットについて、1/(そのグループの利用可能スキル数) をスキル確率とします",
-        "step6": "6. 重要：同一グループ内で既に割り当てられたスキルは除外され、次の割り当て時に利用可能数が減少します",
-        "step7": "7. すべての個別スロット確率を掛け合わせて最終的なスキル組み合わせ確率を得ます"
+        "step3": "5. 割り当てられた各スロットについて、1/(そのグループの利用可能スキル数) をスキル確率とします",
+        "step4": "6. 重要：同一グループ内で既に割り当てられたスキルは除外され、次の割り当て時に利用可能数が減少します",
+        "step5": "7. すべての個別スロット確率を掛け合わせて最終的なスキル組み合わせ確率を得ます"
       },
       "example": {
         "title": "例：",
@@ -93,7 +125,6 @@
         "result": "最終確率 = 27% × (1/7) × (1/35) × (1/34) × (1/9) ≈ 0.009%"
       },
       "rarityBase": "レアリティ基礎確率：",
-      "groupCount": "スキルグループ数：そのグループ内の利用可能スキル数",
       "charmTypeCounts": "護石タイプ数: RARE[5]=6種 ， RARE[6]=7種 ， RARE[7]=8種 ， RARE[8]=8種"
     },
     "note": {
@@ -103,27 +134,19 @@
       "line3": "• 実際のゲーム挙動はこの単純化モデルと異なる場合があります",
       "line4": "• 結果は参考用の推定値であり、正確性を保証するものではありません",
       "line5": "• 護石のスロット割り当ては貪欲マッチングアルゴリズムを採用しています"
-    },
-    "debug": {
-      "title": "確率計算デバッグ情報：",
-      "baseProb": "基礎確率",
-      "skillGroups": "スキルグループ",
-      "skills": "スキル",
-      "skillCombProb": "スキル組み合わせ確率",
-      "finalProb": "最終確率",
-      "finalPercentage": "最終百分率",
-      "excluded": "除外"
     }
   },
+  "totalProbability": {
+    "title": "総確率",
+    "noSlot": "スキル",
+    "withSlot": "スキル+スロット",
+    "byRarity": "レア度別"
+  },
   "common": {
-    "unknown": "不明",
     "none": "なし",
     "level": "Lv.",
-    "group": "グループ",
-    "details": "詳細",
-    "collapse": "折りたたむ",
-    "total": "合計",
-    "count": ""
+    "probability": "確率",
+    "skillProbability": "スキル確率"
   },
   "charmTypes": {
     "title": "護石タイプ",
@@ -141,7 +164,6 @@
     },
     "labels": {
       "skillGroups": "スキルグループ",
-      "slotCombinations": "スロット組み合わせ",
       "combinationCount": "コンビネーション数"
     },
     "dialog": {
@@ -168,16 +190,6 @@
   "actions": {
     "close": "閉じる"
   },
-  "slotLabels": {
-    "[1]": "装備スロット 1",
-    "[1, 1]": "装備スロット 1+1",
-    "[2]": "装備スロット 2",
-    "[2, 1]": "装備スロット 2+1",
-    "[3]": "装備スロット 3",
-    "[\"W1\"]": "武器スロット 1",
-    "[\"W1\", 1]": "武器スロット 1 + 装備スロット 1",
-    "[\"W1\", 1, 1]": "武器スロット 1 + 装備スロット 1 + 装備スロット 1"
-  },
   "skillGroups": {
     "title": "スキルグループ",
     "totalGroups": "グループ数",
@@ -187,18 +199,9 @@
     "searchResults": "{{count}} 件のグループが見つかりました",
     "skillCount": "合計 {{count}} スキル",
     "noResults": "検索条件に一致するスキルグループはありません",
-    "clearSearch": "検索をクリア",
-    "group1": "グループ1",
-    "group2": "グループ2",
-    "group3": "グループ3",
-    "group4": "グループ4",
-    "group5": "グループ5",
-    "group6": "グループ6",
-    "group7": "グループ7",
-    "group8": "グループ8",
-    "group9": "グループ9",
-    "group10": "グループ10"
+    "clearSearch": "検索をクリア"
   },
+  "slotLabels": {},
   "skillTranslations": {
     "Artillery": "砲術",
     "Attack Boost": "攻撃",
@@ -316,5 +319,49 @@
   "version": {
     "logic": "ロジックバージョン",
     "data": "データバージョン"
+  },
+  "amuletList": {
+    "addAllToFavorites": "すべてをお気に入りに追加",
+    "removeAllFromFavorites": "すべてのお気に入りから削除",
+    "list": "護石リスト",
+    "probability": "総確率",
+    "showAll": "すべて表示",
+    "showSimple": "簡易表示",
+    "selectSkillsFirst": "まずスキルを選択して総確率統計を表示してください"
+  },
+  "MHWildsCharmOddsCalculator": {
+    "title": "護石検索器"
+  },
+  "favorites": {
+    "title": "お気に入り護石",
+    "emptyTitle": "お気に入りリストが空です",
+    "emptyDescription": "まだお気に入りの護石がありません。メインページで護石を探して、お気に入りに追加しましょう！",
+    "goToCalculator": "護石計算機へ",
+    "backupNotice": "護石データはローカルブラウザにのみ保存されます。データ損失を防ぐため、定期的にエクスポートしてバックアップしてください。"
+  },
+  "charmExportImport": {
+    "exportButton": "エクスポート",
+    "importButton": "インポート",
+    "clearButton": "お気に入りをクリア",
+    "okButton": "確定",
+    "cancelButton": "キャンセル",
+    "confirmClearButton": "クリアを確認",
+    "clearDialogTitle": "クリアの確認",
+    "clearDialogDescription": "すべての保護石をお気に入りから削除してもよろしいですか？この操作は元に戻せません。",
+    "exportSuccessTitle": "エクスポート成功",
+    "exportFailedTitle": "エクスポート失敗",
+    "importSuccessTitle": "インポート成功",
+    "importFailedTitle": "インポート失敗",
+    "hint": "ヒント",
+    "clearSuccess": "クリア成功",
+    "clearMessage": "すべての保護石をお気に入りから削除しました",
+    "alreadyEmpty": "お気に入りリストは既に空です",
+    "noFavoritesToExport": "エクスポートするお気に入りがありません",
+    "exportSuccess": "お気に入りのエクスポートに成功しました！",
+    "exportFailed": "エクスポートに失敗しました",
+    "noFileSelected": "ファイルが選択されていません",
+    "invalidFormat": "インポートするデータの形式が無効です",
+    "importSuccess": "お気に入りのインポートに成功しました！",
+    "parseError": "JSONファイルの解析に失敗しました"
   }
 }

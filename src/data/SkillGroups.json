@@ -6,151 +6,188 @@
       "data": [
         {
           "SkillName": "Artillery",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Attack Boost",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Ballistics",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bludgeoner",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Charge Master",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Draw",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Element",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Eye",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Critical Status",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Dragon Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Fire Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Focus",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard Up",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Handicraft",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Horn Maestro",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Ice Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Load Shells",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Mind's Eye",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Offensive Guard",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Opening Shot",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Paralysis Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Power Prolonger",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Protective Polish",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Punishing Draw",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Rapid Morph",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Razor Sharp",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Slugger",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Special Ammo Boost",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Speed Sharpening",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Stamina Thief",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tetrad Shot",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Attack",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         }
       ]
     },
@@ -160,175 +197,218 @@
       "data": [
         {
           "SkillName": "Airborne",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Artillery",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Attack Boost",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Ballistics",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Functionality",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Bludgeoner",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Charge Master",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Charge Up",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Critical Draw",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Element",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Eye",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Critical Status",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Dragon Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Exhaust Functionality",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Fire Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Focus",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard Up",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Handicraft",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Horn Maestro",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Ice Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Load Shells",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Mind's Eye",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Offensive Guard",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Opening Shot",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 1
         },
         {
           "SkillName": "Paralysis Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Duration Up",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Poison Functionality",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Power Prolonger",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Protective Polish",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Punishing Draw",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Rapid Morph",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Razor Sharp",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Slugger",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Special Ammo Boost",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Speed Sharpening",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Stamina Thief",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tetrad Shot",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         }
       ]
     },
@@ -338,163 +418,203 @@
       "data": [
         {
           "SkillName": "Artillery",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Attack Boost",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Ballistics",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bludgeoner",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Charge Master",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Draw",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Element",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Eye",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Critical Status",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Dragon Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Fire Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Focus",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard Up",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Handicraft",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Ice Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Master's Touch",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Mind's Eye",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Normal Shots",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Offensive Guard",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Opening Shot",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 1
         },
         {
           "SkillName": "Para Functionality",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Paralysis Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Piercing Shots",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Poison Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Power Prolonger",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Protective Polish",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Punishing Draw",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Rapid Fire Up",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Rapid Morph",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Razor Sharp",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Functionality",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Slugger",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Spread/Power Shots",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 1
         },
         {
           "SkillName": "Stamina Thief",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tetrad Shot",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Attack",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         }
       ]
     },
@@ -504,87 +624,108 @@
       "data": [
         {
           "SkillName": "Attack Boost",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Ballistics",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Boost",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Critical Element",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Critical Eye",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Dragon Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Fire Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Guard Up",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Handicraft",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Ice Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Opening Shot",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 1
         },
         {
           "SkillName": "Paralysis Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Protective Polish",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Razor Sharp",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tetrad Shot",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Attack",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         }
       ]
     },
@@ -594,151 +735,188 @@
       "data": [
         {
           "SkillName": "Adaptability",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Antivirus",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Aquatic/Oilsilt Mobility",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Bind Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bleeding Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bombardier",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Botanist",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 4
         },
         {
           "SkillName": "Constitution",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Defense Boost",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 7
         },
         {
           "SkillName": "Divine Blessing",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Dragon Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Fire Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Flinch Free",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Free Meal",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Geologist",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Hunger Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Ice Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Intimidator",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Iron Skin",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Item Prolonger",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Marathon Runner",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Paralysis Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Quick Sheathe",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Recovery Speed",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Recovery Up",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Speed Eating",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Stench Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 2
         },
         {
           "SkillName": "Stun Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Survival Expert",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tremor Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Wide-Range",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Windproof",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         }
       ]
     },
@@ -748,151 +926,188 @@
       "data": [
         {
           "SkillName": "Adaptability",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Antivirus",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Aquatic/Oilsilt Mobility",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Bind Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bleeding Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bombardier",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Botanist",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 4
         },
         {
           "SkillName": "Constitution",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Defense Boost",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 7
         },
         {
           "SkillName": "Divine Blessing",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Dragon Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Fire Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Flinch Free",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Free Meal",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Geologist",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Hunger Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Ice Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Intimidator",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Iron Skin",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Item Prolonger",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Marathon Runner",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Paralysis Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Quick Sheathe",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Recovery Speed",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Recovery Up",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Speed Eating",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Stench Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         },
         {
           "SkillName": "Stun Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Survival Expert",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tremor Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Wide-Range",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Windproof",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         }
       ]
     },
@@ -902,139 +1117,173 @@
       "data": [
         {
           "SkillName": "Antivirus",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bind Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blast Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bleeding Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Bombardier",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Botanist",
-          "SkillLevel": 4
+          "SkillLevel": 4,
+          "SkillMax": 4
         },
         {
           "SkillName": "Constitution",
-          "SkillLevel": 4
+          "SkillLevel": 4,
+          "SkillMax": 5
         },
         {
           "SkillName": "Defense Boost",
-          "SkillLevel": 4
+          "SkillLevel": 4,
+          "SkillMax": 7
         },
         {
           "SkillName": "Divine Blessing",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Dragon Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Fire Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Flinch Free",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Free Meal",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Geologist",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Hunger Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Ice Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Intimidator",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Iron Skin",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Item Prolonger",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Marathon Runner",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Paralysis Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Poison Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Quick Sheathe",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Recovery Speed",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Recovery Up",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Sleep Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Speed Eating",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Stun Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Survival Expert",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Thunder Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tremor Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Water Resistance",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         },
         {
           "SkillName": "Wide-Range",
-          "SkillLevel": 4
+          "SkillLevel": 4,
+          "SkillMax": 4
         },
         {
           "SkillName": "Windproof",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 3
         }
       ]
     },
@@ -1044,63 +1293,78 @@
       "data": [
         {
           "SkillName": "Ambush",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blight Resistance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Coalescence",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Counterstrike",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Earplugs",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Evade Extender",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Evade Window",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Heroics",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Maximum Might",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Mushroomancer",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Partbreaker",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Peak Performance",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Resentment",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Stamina Surge",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tool Specialist",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 2
         }
       ]
     },
@@ -1110,63 +1374,78 @@
       "data": [
         {
           "SkillName": "Ambush",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Blight Resistance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Coalescence",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Counterstrike",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Earplugs",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Evade Extender",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Evade Window",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Heroics",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 5
         },
         {
           "SkillName": "Maximum Might",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Mushroomancer",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Partbreaker",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Peak Performance",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Resentment",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 5
         },
         {
           "SkillName": "Stamina Surge",
-          "SkillLevel": 2
+          "SkillLevel": 2,
+          "SkillMax": 3
         },
         {
           "SkillName": "Tool Specialist",
-          "SkillLevel": 3
+          "SkillLevel": 3,
+          "SkillMax": 2
         }
       ]
     },
@@ -1176,39 +1455,48 @@
       "data": [
         {
           "SkillName": "Adrenaline Rush",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Agitator",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Burst",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Convert Element",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Elemental Absorption",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 3
         },
         {
           "SkillName": "Flayer",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Foray",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Latent Power",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         },
         {
           "SkillName": "Weakness Exploit",
-          "SkillLevel": 1
+          "SkillLevel": 1,
+          "SkillMax": 5
         }
       ]
     }

@@ -136,13 +136,13 @@ const CharmTypePage = () => {
   return (
     <div className='flex min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50'>
       <Sidebar isOpen={isSidebarOpen} onToggle={handleSidebarToggle} />
-      <div className='flex flex-col flex-1 lg:ml-64'>
+      <div className={`flex flex-col flex-1 xl:ml-64 w-full ${isSidebarOpen ? "ml-64" : ""}`}>
         <Header onMenuToggle={handleSidebarToggle} title={t("charmTypes.title")} />
         <main className='flex-1 p-6'>
-          <div className='container mx-auto max-w-7xl'>
+          <div className='container mx-auto max-w-9xl'>
             {/* 頁面標題和統計 */}
             <div className='mb-8'>
-              <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 lg:block'>{t("charmTypes.title")}</h1>
+              <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 xl:block'>{t("charmTypes.title")}</h1>
               <div className='grid grid-cols-1 gap-4 mb-6 md:grid-cols-3'>
                 <div className='p-4 text-center bg-white rounded-lg shadow'>
                   <div className='text-2xl font-bold text-blue-600'>{charmAnalysis.totalCharms}</div>

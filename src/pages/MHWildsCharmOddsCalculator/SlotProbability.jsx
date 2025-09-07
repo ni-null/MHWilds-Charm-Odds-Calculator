@@ -9,7 +9,8 @@ export default function SlotProbability() {
   const rarityBaseProbability = RarityBaseProbabilityData
 
   // Guard: only render when a slot is selected and no skills are selected
-  if (!selectedSlot || (selectedSkills && selectedSkills.filter(Boolean).length > 0)) return null
+  const anySkillChosen = (selectedSkills || []).some((a) => (Array.isArray(a) ? a.length > 0 : !!a))
+  if (!selectedSlot || anySkillChosen) return null
 
   // Calculate total final probability across rarities
   const totalFinalProbability = Object.entries(rarityBaseProbability).reduce((sum, [, data]) => {
