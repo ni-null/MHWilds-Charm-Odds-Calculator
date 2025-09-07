@@ -1,27 +1,25 @@
-# MHWilds Charm Odds Calculator
+# MH Wilds Charm Odds Calculator
 
-**🌐 Try it online:** [https://ni-null.github.io/MHWilds-Charm-Odds-Calculator/](https://ni-null.github.io/MHWilds-Charm-Odds-Calculator/)
+**🌐 Try it online:**
+[https://ni-null.github.io/MHWilds-Charm-Odds-Calculator/](https://ni-null.github.io/MHWilds-Charm-Odds-Calculator/)
+
+
+
 
 A small tool for calculating skill probabilities and combination chances of Charms in Monster Hunter: Wilds.
 
-<img width="1892" height="979" alt="Snipaste_2025-08-25_16-40-41" src="https://github.com/user-attachments/assets/39dae9ad-8a2e-4531-924a-fae03507ceff" />
+Select skills to find possible charm combinations
+Supports matching multiple selected skills
+![Snipaste_2025-09-07_15-30-37](https://github.com/user-attachments/assets/9381eff0-d98c-4f6a-8ee1-b67631ecfdf9)
 
-<img width="1884" height="971" alt="Snipaste_2025-08-25_16-40-55" src="https://github.com/user-attachments/assets/2ce0fad2-600f-4aad-b01d-191f2c6f9741" />
+View charm skill combinations
+![Snipaste_2025-09-07_15-31-14](https://github.com/user-attachments/assets/950d6591-1e21-4af3-8a29-3498336f4f01)
 
-<img width="1884" height="966" alt="Snipaste_2025-08-25_16-41-13" src="https://github.com/user-attachments/assets/fe60479b-8db5-4e87-be1f-9271a8f111d7" />
+View available skills in each group
+![Snipaste_2025-09-07_15-31-21](https://github.com/user-attachments/assets/97489c3f-0dd2-424c-87e8-a2ab1df4b5d6)
 
-## Features
 
-- Display a list of available Charms and their skill combinations
-- Calculate and present probability distributions across different rarities and numbers of skills
-- Multi-language support (Traditional Chinese / English)
+Save target charms (supports import)
+![Snipaste_2025-09-07_15-30-57](https://github.com/user-attachments/assets/5df781c4-8a88-4619-abc0-541c94d0a2e3)
 
----
 
-一個用來計算 Monster Hunter 系列中「護石（Charm）」的技能機率與組合機率的小工具。
-
-## 主要功能
-
-- 顯示可選護石（Charm）清單與其技能組合
-- 計算並顯示不同稀有度與技能數量下的機率分佈
-- 多語系支援
