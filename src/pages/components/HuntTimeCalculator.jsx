@@ -4,6 +4,8 @@ import RarityData from "../../data/Rarity.json"
 import { useTranslation } from "react-i18next"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { ChevronDown } from "lucide-react"
 
 export default function HuntTimeCalculator({ AvlCharms }) {
   const { t } = useTranslation()
@@ -12,6 +14,7 @@ export default function HuntTimeCalculator({ AvlCharms }) {
   const [selectedMonster, setSelectedMonster] = useState("Uth Duna")
   const [huntTime, setHuntTime] = useState(10) // 討伐時間(分鐘)
   const [restTime, setRestTime] = useState(2) // 休息時間(分鐘)
+  const [isSlotOpen, setIsSlotOpen] = useState(false) // 控制插槽組合展開/摺疊
   console.log(AvlCharms)
 
   // 通用計算護石機率總和分母的函數
@@ -83,7 +86,6 @@ export default function HuntTimeCalculator({ AvlCharms }) {
 
   // 解構獲取兩個分母值
   const totalCharmDenominator = calculateCharmDenominator.noSlot
-  const totalWithSlotDenominator = calculateCharmDenominator.withSlot
 
   // 計算需要的討伐次數 (無插槽)
   const calculateHuntCounts = useMemo(() => {
@@ -105,26 +107,6 @@ export default function HuntTimeCalculator({ AvlCharms }) {
     return { minHunts, maxHunts, avgHunts, monster }
   }, [totalCharmDenominator, selectedMonster])
 
-  // 計算需要的討伐次數 (帶插槽)
-  const calculateWithSlotHuntCounts = useMemo(() => {
-    if (!totalWithSlotDenominator || !selectedMonster) return null
-
-    const monster = MonsterData.Monster[selectedMonster]
-    const base = MonsterData.Base // 任務額外獎勵：每次討伐怪物後額外獲得 1-3 個護石
-    if (!monster || !base) return null
-
-    // 總護石數 = 怪物護石 + Base 護石
-    const totalMin = monster.MIN + base.MIN
-    const totalMax = monster.MAX + base.MAX
-    const totalAvg = (monster.MAX + monster.MIN) / 2 + (base.MAX + base.MIN) / 2
-
-    const minHunts = Math.ceil(totalWithSlotDenominator / totalMax)
-    const maxHunts = Math.ceil(totalWithSlotDenominator / totalMin)
-    const avgHunts = Math.ceil(totalWithSlotDenominator / totalAvg)
-
-    return { minHunts, maxHunts, avgHunts, monster }
-  }, [totalWithSlotDenominator, selectedMonster])
-
   // 計算總時間(小時) - 無插槽
   const calculateTotalTime = useMemo(() => {
     if (!calculateHuntCounts) return null
@@ -138,20 +120,6 @@ export default function HuntTimeCalculator({ AvlCharms }) {
       avgTime: (avgHunts * totalTimePerHunt) / 60,
     }
   }, [calculateHuntCounts, huntTime, restTime])
-
-  // 計算總時間(小時) - 帶插槽
-  const calculateWithSlotTotalTime = useMemo(() => {
-    if (!calculateWithSlotHuntCounts) return null
-
-    const { minHunts, maxHunts, avgHunts } = calculateWithSlotHuntCounts
-    const totalTimePerHunt = huntTime + restTime // 分鐘
-
-    return {
-      minTime: (minHunts * totalTimePerHunt) / 60, // 轉換為小時
-      maxTime: (maxHunts * totalTimePerHunt) / 60,
-      avgTime: (avgHunts * totalTimePerHunt) / 60,
-    }
-  }, [calculateWithSlotHuntCounts, huntTime, restTime])
 
   // 計算插槽組合的狩獵次數
   const calculateSlotCombinationHuntCounts = useMemo(() => {
@@ -434,7 +402,7 @@ export default function HuntTimeCalculator({ AvlCharms }) {
               </div>
             </div>
 
-            <div className='w-full overflow-x-auto bg-white border border-gray-200 shadow-sm rounded-2xl'>
+            <div className='w-full overflow-x-auto overflow-y-hidden bg-white border border-gray-200 shadow-sm rounded-2xl'>
               <table className='min-w-[500px] divide-y divide-gray-100 w-full'>
                 <thead className='bg-gray-50'>
                   <tr>
@@ -476,121 +444,125 @@ export default function HuntTimeCalculator({ AvlCharms }) {
                     </tr>
                   )}
 
-                  {/* 技能+插槽 出現機率 */}
-                  {calculateWithSlotHuntCounts && calculateWithSlotTotalTime && (
-                    <tr className='hover:bg-gray-50/60'>
-                      <td className='px-4 py-3 text-sm font-semibold text-indigo-700'>
-                        {t("huntTimeCalculator.skillWithSlotOdds", "技能+插槽")}
-                        <span className='ml-2 font-bold'>1/{totalWithSlotDenominator.toLocaleString()}</span>
-                      </td>
-                      <td className='px-4 py-3 font-semibold text-emerald-600'>
-                        {calculateWithSlotHuntCounts.minHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
-                        <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateWithSlotTotalTime.minTime)}</div>
-                      </td>
-                      <td className='px-4 py-3 font-semibold text-amber-600'>
-                        {calculateWithSlotHuntCounts.avgHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
-                        <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateWithSlotTotalTime.avgTime)}</div>
-                      </td>
-                      <td className='px-4 py-3 font-semibold text-rose-600'>
-                        {calculateWithSlotHuntCounts.maxHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
-                        <div className='text-xs text-gray-500'>{formatHoursWithDays(calculateWithSlotTotalTime.maxTime)}</div>
-                      </td>
-                    </tr>
-                  )}
-
-                  {/* 插槽組合 出現機率 */}
-                  {Object.keys(slotCombinationProbabilities).map((slotKey) => {
-                    const denominator = slotCombinationProbabilities[slotKey]
-                    const huntCounts = calculateSlotCombinationHuntCounts[slotKey]
-                    const totalTime = calculateSlotCombinationTotalTime[slotKey]
-
-                    if (!denominator || !huntCounts || !totalTime) return null
-
-                    const parsedSlotKey = JSON.parse(slotKey)
-                    let displaySlotKey = ""
-                    let slotImages = []
-
-                    if (Array.isArray(parsedSlotKey)) {
-                      if (parsedSlotKey[0] === "W1") {
-                        // W1 格式的顯示
-                        slotImages.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
-                        if (parsedSlotKey.length === 1) {
-                          displaySlotKey = "W1"
-                        } else if (parsedSlotKey.length === 2) {
-                          displaySlotKey = `W1, ${parsedSlotKey[1]}`
-                          slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey[1]}.png`)
-                        } else if (parsedSlotKey.length === 3) {
-                          displaySlotKey = `W1, ${parsedSlotKey[1]}, ${parsedSlotKey[2]}`
-                          slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey[1]}.png`)
-                          slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey[2]}.png`)
-                        }
-                      } else {
-                        // 標準格式
-                        displaySlotKey = parsedSlotKey.join(", ")
-                        parsedSlotKey.forEach((slot) => {
-                          slotImages.push(`${import.meta.env.BASE_URL}image/slot/${slot}.png`)
-                        })
-                      }
-                    } else {
-                      displaySlotKey = parsedSlotKey
-                      slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey}.png`)
-                    }
-
-                    return (
-                      <tr key={slotKey} className='hover:bg-gray-50/60'>
-                        <td className='px-4 py-3 text-sm font-semibold text-purple-700'>
-                          <div className='flex flex-col gap-1 md:flex-row md:items-center md:gap-1'>
-                            <div className='md:flex md:items-center md:gap-1'>
-                              <div>{t("huntTimeCalculator.skillWithSlotOdds", "技能+插槽")}</div>
-                              <span className='font-bold'>[{displaySlotKey}]</span>
-                            </div>
-                            <div className='items-center hidden gap-1 md:flex'>
-                              {slotImages.map((imgSrc, index) => (
-                                <img
-                                  key={index}
-                                  src={imgSrc}
-                                  alt={`slot-${index}`}
-                                  className='object-contain w-4 h-4'
-                                  onError={(e) => {
-                                    e.currentTarget.style.display = "none"
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            <span className='font-bold md:ml-2'>1/{denominator.toLocaleString()}</span>
-                          </div>
-                        </td>
-                        <td className='px-4 py-3 font-semibold text-emerald-600'>
-                          {huntCounts.minHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
-                          <div className='text-xs text-gray-500'>{formatHoursWithDays(totalTime.minTime)}</div>
-                        </td>
-                        <td className='px-4 py-3 font-semibold text-amber-600'>
-                          {huntCounts.avgHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
-                          <div className='text-xs text-gray-500'>{formatHoursWithDays(totalTime.avgTime)}</div>
-                        </td>
-                        <td className='px-4 py-3 font-semibold text-rose-600'>
-                          {huntCounts.maxHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
-                          <div className='text-xs text-gray-500'>{formatHoursWithDays(totalTime.maxTime)}</div>
+                  {/* 插槽組合 展開/摺疊 */}
+                  {Object.keys(slotCombinationProbabilities).length > 0 && (
+                    <>
+                      <tr>
+                        <td colSpan='4' className='px-0 py-0'>
+                          <Collapsible open={isSlotOpen} onOpenChange={setIsSlotOpen}>
+                            <CollapsibleTrigger asChild>
+                              <button className='flex items-center justify-between w-full px-4 py-3 text-left transition-colors border-t border-gray-200 bg-gray-50 hover:bg-gray-100'>
+                                <span className='text-sm font-medium text-gray-700'>插槽組合詳細資料</span>
+                                <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isSlotOpen ? "rotate-180" : ""}`} />
+                              </button>
+                            </CollapsibleTrigger>
+                          </Collapsible>
                         </td>
                       </tr>
-                    )
-                  })}
+                      <tr>
+                        <td colSpan='4' className='px-0 py-0'>
+                          <Collapsible open={isSlotOpen} onOpenChange={setIsSlotOpen}>
+                            <CollapsibleContent className='w-full'>
+                              <div className='w-full overflow-x-auto'>
+                                <table className='min-w-[500px] w-full divide-y divide-gray-100'>
+                                  <tbody>
+                                    {/* 插槽組合 出現機率 */}
+                                    {Object.keys(slotCombinationProbabilities).map((slotKey) => {
+                                      const denominator = slotCombinationProbabilities[slotKey]
+                                      const huntCounts = calculateSlotCombinationHuntCounts[slotKey]
+                                      const totalTime = calculateSlotCombinationTotalTime[slotKey]
+
+                                      if (!denominator || !huntCounts || !totalTime) return null
+
+                                      const parsedSlotKey = JSON.parse(slotKey)
+                                      let displaySlotKey = ""
+                                      let slotImages = []
+
+                                      if (Array.isArray(parsedSlotKey)) {
+                                        if (parsedSlotKey[0] === "W1") {
+                                          // W1 格式的顯示
+                                          slotImages.push(`${import.meta.env.BASE_URL}image/slot/W1.png`)
+                                          if (parsedSlotKey.length === 1) {
+                                            displaySlotKey = "W1"
+                                          } else if (parsedSlotKey.length === 2) {
+                                            displaySlotKey = `W1, ${parsedSlotKey[1]}`
+                                            slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey[1]}.png`)
+                                          } else if (parsedSlotKey.length === 3) {
+                                            displaySlotKey = `W1, ${parsedSlotKey[1]}, ${parsedSlotKey[2]}`
+                                            slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey[1]}.png`)
+                                            slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey[2]}.png`)
+                                          }
+                                        } else {
+                                          // 標準格式
+                                          displaySlotKey = parsedSlotKey.join(", ")
+                                          parsedSlotKey.forEach((slot) => {
+                                            slotImages.push(`${import.meta.env.BASE_URL}image/slot/${slot}.png`)
+                                          })
+                                        }
+                                      } else {
+                                        displaySlotKey = parsedSlotKey
+                                        slotImages.push(`${import.meta.env.BASE_URL}image/slot/${parsedSlotKey}.png`)
+                                      }
+
+                                      return (
+                                        <tr key={slotKey} className='border-t border-gray-200 hover:bg-gray-50/60'>
+                                          <td className='px-4 py-3 text-sm font-semibold text-purple-700'>
+                                            <div className='flex flex-col gap-1 md:flex-row md:items-center md:gap-1'>
+                                              <div className='md:flex md:items-center md:gap-1'>
+                                                <div>{t("huntTimeCalculator.skillWithSlotOdds", "技能+插槽")}</div>
+                                                <span className='font-bold'>[{displaySlotKey}]</span>
+                                              </div>
+                                              <div className='items-center hidden gap-1 md:flex'>
+                                                {slotImages.map((imgSrc, index) => (
+                                                  <img
+                                                    key={index}
+                                                    src={imgSrc}
+                                                    alt={`slot-${index}`}
+                                                    className='object-contain w-4 h-4'
+                                                    onError={(e) => {
+                                                      e.currentTarget.style.display = "none"
+                                                    }}
+                                                  />
+                                                ))}
+                                              </div>
+                                              <span className='font-bold md:ml-2'>1/{denominator.toLocaleString()}</span>
+                                            </div>
+                                          </td>
+                                          <td className='px-4 py-3 font-semibold text-emerald-600'>
+                                            {huntCounts.minHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
+                                            <div className='text-xs text-gray-500'>{formatHoursWithDays(totalTime.minTime)}</div>
+                                          </td>
+                                          <td className='px-4 py-3 font-semibold text-amber-600'>
+                                            {huntCounts.avgHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
+                                            <div className='text-xs text-gray-500'>{formatHoursWithDays(totalTime.avgTime)}</div>
+                                          </td>
+                                          <td className='px-4 py-3 font-semibold text-rose-600'>
+                                            {huntCounts.maxHunts.toLocaleString()} {t("huntTimeCalculator.hunts", "hunts")}
+                                            <div className='text-xs text-gray-500'>{formatHoursWithDays(totalTime.maxTime)}</div>
+                                          </td>
+                                        </tr>
+                                      )
+                                    })}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </CollapsibleContent>
+                          </Collapsible>
+                        </td>
+                      </tr>
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
 
             {/* 說明文字 */}
-            <div className='text-sm text-gray-600'>
-              <p>
-                {t("huntTimeCalculator.note", "Note")}:{" "}
-                {t(
-                  "huntTimeCalculator.explanation",
-                  "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods."
-                )}
-              </p>
+            <div className='mt-4 text-sm text-gray-600'>
               <p className='mt-2'>
                 {t("huntTimeCalculator.baseRewardNote", "任務額外獎勵：每次討伐怪物後額外獲得 1-3 個護石，已計入總護石數量計算中。")}
               </p>
+
+              <p>{t("huntTimeCalculator.disclaimer", "此計算器僅供參考，推算幾乎出於推估的出現機率。")}</p>
             </div>
           </div>
         ) : (

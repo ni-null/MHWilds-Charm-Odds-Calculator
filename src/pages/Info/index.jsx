@@ -74,9 +74,6 @@ const InfoPage = () => {
                       className='block w-full px-4 py-2 mb-3 text-xs font-medium text-center text-white break-all bg-gray-800 rounded sm:text-sm hover:bg-gray-900'>
                       https://github.com/ni-null/MHWilds-Charm-Odds-Calculator
                     </a>
-                    <div className='mt-4 text-xs text-gray-500 sm:text-sm'>
-                      {t("info.project.encourage") || "如果你覺得這個專案有幫助，歡迎在 GitHub 上給個星星 ⭐️，這會是很大的鼓勵！"}
-                    </div>
                   </div>
                 </div>
               </div>

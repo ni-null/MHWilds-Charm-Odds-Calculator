@@ -4,11 +4,13 @@
   "skills": "技能",
   "navigation": {
     "home": "首頁",
+    "mhwSearch": "護石搜尋器",
     "mhwCalculator": "護石計算器",
     "skillGroups": "技能群組",
     "charmTypes": "護石種類",
     "languageLabel": "語言 / Language",
-    "info": "資訊"
+    "info": "資訊",
+    "favorites": "收藏護石"
   },
   "info": {
     "title": "資訊",
@@ -84,6 +86,7 @@
     "note": "註解",
     "explanation": "計算基於怪物的獲取範圍及選擇的時間設定。時間包括狩獵和休息時間。",
     "baseRewardNote": "任務額外獎勵：每次討伐怪物後額外獲得 1-3 個護石，已計入總護石數量計算中。",
+    "disclaimer": "此計算器僅供參考，推算幾乎出於推估的出現機率。",
     "noData": "無保存資料。請先選擇技能。"
   },
   "monsters": {
@@ -142,7 +145,8 @@
   "common": {
     "none": "無",
     "level": "Lv.",
-    "probability": "機率"
+    "probability": "機率",
+    "skillProbability": "技能機率"
   },
   "charmTypes": {
     "title": "護石種類",
@@ -315,5 +319,22 @@
   "version": {
     "logic": "邏輯版本",
     "data": "資料版本"
+  },
+  "amuletList": {
+    "addAllToFavorites": "全部加收藏",
+    "removeAllFromFavorites": "全部移除收藏",
+    "list": "護石列表",
+    "probability": "總機率",
+    "showAll": "顯示全部",
+    "showSimple": "簡化顯示"
+  },
+  "MHWildsCharmOddsCalculator": {
+    "title": "護石搜尋器"
+  },
+  "favorites": {
+    "title": "收藏護石",
+    "emptyTitle": "收藏清單為空",
+    "emptyDescription": "您還沒有收藏任何護石。前往主頁探索並收藏您喜歡的護石吧！",
+    "goToCalculator": "前往護石計算器"
   }
 }

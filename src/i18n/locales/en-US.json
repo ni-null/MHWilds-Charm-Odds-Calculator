@@ -1,11 +1,13 @@
 {
   "navigation": {
     "home": "Home",
+    "mhwSearch": "Charm Searcher",
     "mhwCalculator": "Charm Calculator",
     "skillGroups": "Skill Groups",
     "charmTypes": "Charm Types",
     "languageLabel": "Language",
-    "info": "Info"
+    "info": "Info",
+    "favorites": "Favorite Charms"
   },
   "info": {
     "title": "Info",
@@ -84,6 +86,7 @@
     "note": "Note",
     "explanation": "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods.",
     "baseRewardNote": "Quest bonus: Additional 1-3 charms received after each monster hunt, already included in total charm count calculation.",
+    "disclaimer": "This calculator is for reference only, and the probability estimates are based on approximations.",
     "noData": "No charm data available. Please select skills first."
   },
   "monsters": {
@@ -141,7 +144,8 @@
   "common": {
     "none": "None",
     "level": "Lv.",
-    "probability": "Probability"
+    "probability": "Probability",
+    "skillProbability": "Skill Probability"
   },
   "charmTypes": {
     "title": "Charm Types",
@@ -313,5 +317,22 @@
   "version": {
     "logic": "Logic Version",
     "data": "Data Version"
+  },
+  "amuletList": {
+    "addAllToFavorites": "Add All to Favorites",
+    "removeAllFromFavorites": "Remove All from Favorites",
+    "list": "Charm List",
+    "probability": "Total Probability",
+    "showAll": "Show All",
+    "showSimple": "Simple View"
+  },
+  "MHWildsCharmOddsCalculator": {
+    "title": "Charm Searcher"
+  },
+  "favorites": {
+    "title": "Favorite Charms",
+    "emptyTitle": "Favorites List is Empty",
+    "emptyDescription": "You haven't favorited any charms yet. Go to the main page to explore and favorite charms you like!",
+    "goToCalculator": "Go to Charm Calculator"
   }
 }

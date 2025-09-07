@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
+import { Calculator, Grid3x3, Diamond, Star, Info } from "lucide-react"
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const location = useLocation()
@@ -22,11 +23,11 @@ const Sidebar = ({ isOpen, onToggle }) => {
     : null
 
   const navs = [
-    { to: "/", label: t("navigation.mhwCalculator") },
-    { to: "/skill-groups", label: t("navigation.skillGroups") },
-    { to: "/charm-types", label: t("navigation.charmTypes") },
-    { to: "/favorites", label: t("navigation.favorites", "收藏護石") },
-    { to: "/info", label: t("navigation.info") },
+    { to: "/", label: t("navigation.mhwSearch"), icon: Calculator },
+    { to: "/skill-groups", label: t("navigation.skillGroups"), icon: Grid3x3 },
+    { to: "/charm-types", label: t("navigation.charmTypes"), icon: Diamond },
+    { to: "/favorites", label: t("navigation.favorites", "收藏護石"), icon: Star },
+    { to: "/info", label: t("navigation.info"), icon: Info },
   ]
 
   return (
@@ -56,7 +57,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         }}>
         <div className='flex items-center justify-center h-20 border-b border-yellow-500/30 bg-black/30'>
           <div className='flex flex-col items-center'>
-            <span className='text-xl font-bold tracking-wider text-yellow-400 drop-shadow-lg'>MHWildsCharm</span>
+            <span className='text-xl font-bold tracking-wider text-yellow-400 drop-shadow-lg'>MH Wilds Charm</span>
             <span className='text-sm font-medium tracking-widest text-yellow-300/80'>ODDS CALCULATOR</span>
           </div>
         </div>
@@ -89,9 +90,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                   }`}
                 />
                 <span className='relative z-10 flex items-center'>
-                  <div className='flex-shrink-0 w-2 h-2 mr-3 rounded-full'>
-                    {isActive && <div className='w-full h-full bg-yellow-400 rounded-full shadow-sm animate-pulse' />}
-                  </div>
+                  <nav.icon className={`flex-shrink-0 w-5 h-5 mr-3 ${isActive ? "text-yellow-400" : "text-yellow-100/70"}`} />
                   {nav.label}
                 </span>
               </Link>

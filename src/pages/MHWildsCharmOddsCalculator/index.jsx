@@ -33,7 +33,7 @@ export default function MHWPage() {
           <div className='container mx-auto max-w-9xl'>
             {/* 頁面標題 */}
             <div className='mb-8'>
-              <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 xl:block'>{t("title")}</h1>
+              <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 xl:block'>{t("MHWildsCharmOddsCalculator.title")}</h1>
             </div>
 
             <SkillSelector />

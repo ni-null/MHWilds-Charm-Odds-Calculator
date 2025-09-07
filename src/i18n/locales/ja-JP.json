@@ -1,11 +1,13 @@
 {
   "navigation": {
     "home": "ホーム",
+    "mhwSearch": "護石検索器",
     "mhwCalculator": "護石計算機",
     "skillGroups": "スキルグループ",
     "charmTypes": "護石タイプ",
     "languageLabel": "言語",
-    "info": "情報"
+    "info": "情報",
+    "favorites": "お気に入り護石"
   },
   "info": {
     "title": "情報",
@@ -61,6 +63,43 @@
     "groupProb": "グループ確率",
     "slotProb": "スロット確率"
   },
+  "amuletDetailsExtra": {
+    "groupLineWithCounts": "グループ {{group}}: {{counts}}",
+    "excludedLabel": "除外: {{items}}",
+    "matchedLabel": "一致: {{items}}",
+    "matchedLabel2": "個スキル"
+  },
+  "huntTimeCalculator": {
+    "title": "時間計算器",
+    "description": "狩猟時間と護石確率を計算",
+    "skillOdds": "スキル 出現確率",
+    "skillWithSlotOdds": "スキル+スロット 出現確率",
+    "selectMonster": "モンスターを選択",
+    "monsters": "モンスター",
+    "huntTime": "狩猟時間 (分)",
+    "restTime": "休憩時間 (分)",
+    "Min": "最小",
+    "Avg": "平均",
+    "Max": "最大",
+    "hunts": "狩猟回数",
+    "hours": "時間",
+    "note": "注意",
+    "explanation": "モンスターの報酬範囲と選択された時間設定に基づく計算。時間には狩猟と休憩の両方が含まれます。",
+    "baseRewardNote": "クエストボーナス：モンスター討伐ごとに追加で1-3個の護石を獲得、総護石数計算に既に含まれています。",
+    "disclaimer": "この計算機は参考のみで、確率の推定は概算に基づいています。",
+    "noData": "護石データがありません。まずスキルを選択してください。"
+  },
+  "monsters": {
+    "Uth Duna": "波衣竜",
+    "Rey Dau": "煌雷竜",
+    "Arkveld": "鎖刃竜",
+    "Nu Udra": "獄焔蛸",
+    "Mizutsune": "泡狐竜",
+    "Seregios": "千刃竜",
+    "Jin Dahaad": "凍峰竜",
+    "Gore Magala": "黒蝕竜",
+    "Lagiacrus": "海竜"
+  },
   "probability": {
     "calculation": {
       "title": "計算方法：",
@@ -105,7 +144,8 @@
   "common": {
     "none": "なし",
     "level": "Lv.",
-    "probability": "確率"
+    "probability": "確率",
+    "skillProbability": "スキル確率"
   },
   "charmTypes": {
     "title": "護石タイプ",
@@ -160,6 +200,7 @@
     "noResults": "検索条件に一致するスキルグループはありません",
     "clearSearch": "検索をクリア"
   },
+  "slotLabels": {},
   "skillTranslations": {
     "Artillery": "砲術",
     "Attack Boost": "攻撃",
@@ -197,36 +238,6 @@
     "Stamina Thief": "スタミナ奪取",
     "Tetrad Shot": "第四射撃",
     "Thunder Attack": "雷属性攻撃",
-    "huntTimeCalculator": {
-      "title": "時間計算器",
-      "description": "Calculate hunting time and charm probability",
-      "skillOdds": "スキル 出現確率",
-      "skillWithSlotOdds": "スキル+スロット 出現確率",
-      "selectMonster": "Select Monster",
-      "monsters": "Monsters",
-      "huntTime": "Hunt Time (minutes)",
-      "restTime": "Rest Time (minutes)",
-      "Min": "Min",
-      "Avg": "Avg",
-      "Max": "Max",
-      "hunts": "hunts",
-      "hours": "hours",
-      "note": "Note",
-      "explanation": "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods.",
-      "baseRewardNote": "クエストボーナス：モンスター討伐ごとに追加で1-3個の護石を獲得、総護石数計算に既に含まれています。",
-      "noData": "No charm data available. Please select skills first."
-    },
-    "monsters": {
-      "Uth Duna": "波衣竜",
-      "Rey Dau": "煌雷竜",
-      "Arkveld": "鎖刃竜",
-      "Nu Udra": "獄焔蛸",
-      "Mizutsune": "泡狐竜",
-      "Seregios": "千刃竜",
-      "Jin Dahaad": "凍峰竜",
-      "Gore Magala": "黒蝕竜",
-      "Lagiacrus": "海竜"
-    },
     "Water Attack": "水属性攻撃",
     "Airborne": "飛燕",
     "Blast Functionality": "爆破瓶追加",
@@ -307,5 +318,22 @@
   "version": {
     "logic": "ロジックバージョン",
     "data": "データバージョン"
+  },
+  "amuletList": {
+    "addAllToFavorites": "すべてをお気に入りに追加",
+    "removeAllFromFavorites": "すべてのお気に入りから削除",
+    "list": "護石リスト",
+    "probability": "総確率",
+    "showAll": "すべて表示",
+    "showSimple": "簡易表示"
+  },
+  "MHWildsCharmOddsCalculator": {
+    "title": "護石検索器"
+  },
+  "favorites": {
+    "title": "お気に入り護石",
+    "emptyTitle": "お気に入りリストが空です",
+    "emptyDescription": "まだお気に入りの護石がありません。メインページで護石を探して、お気に入りに追加しましょう！",
+    "goToCalculator": "護石計算機へ"
   }
 }
