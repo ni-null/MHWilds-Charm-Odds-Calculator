@@ -63,7 +63,7 @@ export default function FavoriteCharmsPage() {
                   {t("favorites.emptyDescription", "您還沒有收藏任何護石。前往主頁探索並收藏您喜歡的護石吧！")}
                 </p>
                 <div className='flex gap-4'>
-                  <Button onClick={() => navigate("/charm-types")} variant='outline' size='sm' className='flex items-center gap-2'>
+                  <Button onClick={() => navigate("/")} variant='outline' size='sm' className='flex items-center gap-2'>
                     <Calculator className='w-4 h-4' />
                     {t("favorites.goToCalculator", "前往護石計算器")}
                   </Button>
