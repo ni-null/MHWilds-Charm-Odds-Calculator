@@ -191,7 +191,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                           <div className='flex items-center justify-around mb-2 sm:justify-start'>
                             <CharmDisplay charm={charm} groups={Array.isArray(charm.groups) ? charm.groups : []} t={t} mode={amuletListShowMode} />
                             <SkillSelector
-                              className='flex flex-col ml-10'
+                              className='flex flex-col sm:ml-2 md:ml-10'
                               groups={Array.isArray(charm.groups) ? charm.groups : []}
                               matchingSkills={Array.isArray(charm.matchingSkills) ? charm.matchingSkills : []}
                               t={t}
