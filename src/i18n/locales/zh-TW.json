@@ -87,7 +87,8 @@
     "explanation": "計算基於怪物的獲取範圍及選擇的時間設定。時間包括狩獵和休息時間。",
     "baseRewardNote": "任務額外獎勵：每次討伐怪物後額外獲得 1-3 個護石，已計入總護石數量計算中。",
     "disclaimer": "此計算器僅供參考，推算幾乎出於推估的出現機率。",
-    "noData": "無保存資料。請先選擇技能。"
+    "noData": "無保存資料。請先選擇技能。",
+    "slotCombinationDetails": "插槽組合詳細資料"
   },
   "monsters": {
     "Uth Duna": "波衣龍",
@@ -326,7 +327,8 @@
     "list": "護石列表",
     "probability": "總機率",
     "showAll": "顯示全部",
-    "showSimple": "簡化顯示"
+    "showSimple": "簡化顯示",
+    "selectSkillsFirst": "請先選擇技能以查看總機率統計"
   },
   "MHWildsCharmOddsCalculator": {
     "title": "護石搜尋器"
@@ -335,6 +337,32 @@
     "title": "收藏護石",
     "emptyTitle": "收藏清單為空",
     "emptyDescription": "您還沒有收藏任何護石。前往主頁探索並收藏您喜歡的護石吧！",
-    "goToCalculator": "前往護石計算器"
+    "goToCalculator": "前往護石計算器",
+    "backupNotice": "護石資料僅儲存在本地瀏覽器，請定期匯出備份以防資料遺失。"
+  },
+  "charmExportImport": {
+    "exportButton": "匯出收藏",
+    "importButton": "匯入收藏",
+    "clearButton": "清空收藏",
+    "okButton": "確定",
+    "cancelButton": "取消",
+    "confirmClearButton": "確認清空",
+    "clearDialogTitle": "確認清空",
+    "clearDialogDescription": "您確定要清空所有收藏護石嗎？此操作無法復原。",
+    "exportSuccessTitle": "匯出成功",
+    "exportFailedTitle": "匯出失敗",
+    "importSuccessTitle": "匯入成功",
+    "importFailedTitle": "匯入失敗",
+    "hint": "提示",
+    "clearSuccess": "清空成功",
+    "clearMessage": "已清空所有收藏護石",
+    "alreadyEmpty": "收藏清單已經是空的了",
+    "noFavoritesToExport": "沒有收藏可以匯出",
+    "exportSuccess": "收藏匯出成功！",
+    "exportFailed": "匯出失敗",
+    "noFileSelected": "沒有選擇檔案",
+    "invalidFormat": "匯入的資料格式不正確",
+    "importSuccess": "收藏匯入成功！",
+    "parseError": "解析 JSON 檔案失敗"
   }
 }

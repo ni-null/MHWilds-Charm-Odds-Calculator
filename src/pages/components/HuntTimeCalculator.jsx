@@ -452,7 +452,9 @@ export default function HuntTimeCalculator({ AvlCharms }) {
                           <Collapsible open={isSlotOpen} onOpenChange={setIsSlotOpen}>
                             <CollapsibleTrigger asChild>
                               <button className='flex items-center justify-between w-full px-4 py-3 text-left transition-colors border-t border-gray-200 bg-gray-50 hover:bg-gray-100'>
-                                <span className='text-sm font-medium text-gray-700'>插槽組合詳細資料</span>
+                                <span className='text-sm font-medium text-gray-700'>
+                                  {t("huntTimeCalculator.slotCombinationDetails", "插槽組合詳細資料")}
+                                </span>
                                 <ChevronDown className={`w-4 h-4 text-gray-600 transition-transform ${isSlotOpen ? "rotate-180" : ""}`} />
                               </button>
                             </CollapsibleTrigger>

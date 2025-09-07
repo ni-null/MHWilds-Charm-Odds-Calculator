@@ -1,6 +1,6 @@
 import React from "react"
 
-const Header = ({ onMenuToggle, title = "MHWilds Calculator" }) => (
+const Header = ({ onMenuToggle, title = "MH Wilds Calculator" }) => (
   <header className='sticky top-0 z-10 border-b bg-white/80 backdrop-blur-md border-slate-200/60 xl:hidden'>
     <div className='px-4 py-3'>
       <div className='flex items-center justify-between'>

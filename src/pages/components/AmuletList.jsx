@@ -152,7 +152,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
         </div>
         <div className=''>
           <motion.ul
-            className={amuletListShowMode === "simple" ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4" : ""}
+            className={amuletListShowMode === "simple" ? "grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4" : ""}
             variants={containerVariants}
             initial='hidden'
             whileInView='visible'
@@ -273,7 +273,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
     if (!charms || charms.length === 0) {
       return (
         <div>
-          <div className='p-6 text-center text-gray-500'>請先選擇技能以查看總機率統計</div>
+          <div className='p-6 text-center text-gray-500'>{t("amuletList.selectSkillsFirst", "請先選擇技能以查看總機率統計")}</div>
         </div>
       )
     }
@@ -375,7 +375,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
   return (
     <Tabs defaultValue='list' className='w-full p-5 bg-white rounded-md'>
       <div class='p-2 md:p-6 '>
-        <h2 class='text-2xl font-bold mb-5 text-gray-800'>護石列表</h2>
+        <h2 class='text-2xl font-bold mb-5 text-gray-800'>{t("amuletList.list", "護石列表")}</h2>
 
         <TabsList className='grid w-full grid-cols-2'>
           <TabsTrigger value='list'>{t("amuletList.list", "護石列表")}</TabsTrigger>

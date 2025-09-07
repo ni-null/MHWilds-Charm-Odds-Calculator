@@ -124,7 +124,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* 版本資訊區域 */}
         <div className='px-4 py-2 text-xs border-t text-yellow-400/60 border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <div className='space-y-1 text-center'>
-            <div className='text-yellow-400/60'>{t("version.logic")} 1.5</div>
+            <div className='text-yellow-400/60'>{t("version.logic")} 2.1</div>
             <div className='text-yellow-400/60'>{t("version.data")} 2025.08.20</div>
             <div className='text-yellow-400/60'>
               {buildLabel}: {buildTime ?? unknownLabel}

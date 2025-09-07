@@ -87,7 +87,8 @@
     "explanation": "モンスターの報酬範囲と選択された時間設定に基づく計算。時間には狩猟と休憩の両方が含まれます。",
     "baseRewardNote": "クエストボーナス：モンスター討伐ごとに追加で1-3個の護石を獲得、総護石数計算に既に含まれています。",
     "disclaimer": "この計算機は参考のみで、確率の推定は概算に基づいています。",
-    "noData": "護石データがありません。まずスキルを選択してください。"
+    "noData": "護石データがありません。まずスキルを選択してください。",
+    "slotCombinationDetails": "スロット組み合わせ詳細"
   },
   "monsters": {
     "Uth Duna": "波衣竜",
@@ -325,7 +326,8 @@
     "list": "護石リスト",
     "probability": "総確率",
     "showAll": "すべて表示",
-    "showSimple": "簡易表示"
+    "showSimple": "簡易表示",
+    "selectSkillsFirst": "まずスキルを選択して総確率統計を表示してください"
   },
   "MHWildsCharmOddsCalculator": {
     "title": "護石検索器"
@@ -334,6 +336,32 @@
     "title": "お気に入り護石",
     "emptyTitle": "お気に入りリストが空です",
     "emptyDescription": "まだお気に入りの護石がありません。メインページで護石を探して、お気に入りに追加しましょう！",
-    "goToCalculator": "護石計算機へ"
+    "goToCalculator": "護石計算機へ",
+    "backupNotice": "護石データはローカルブラウザにのみ保存されます。データ損失を防ぐため、定期的にエクスポートしてバックアップしてください。"
+  },
+  "charmExportImport": {
+    "exportButton": "エクスポート",
+    "importButton": "インポート",
+    "clearButton": "お気に入りをクリア",
+    "okButton": "確定",
+    "cancelButton": "キャンセル",
+    "confirmClearButton": "クリアを確認",
+    "clearDialogTitle": "クリアの確認",
+    "clearDialogDescription": "すべての保護石をお気に入りから削除してもよろしいですか？この操作は元に戻せません。",
+    "exportSuccessTitle": "エクスポート成功",
+    "exportFailedTitle": "エクスポート失敗",
+    "importSuccessTitle": "インポート成功",
+    "importFailedTitle": "インポート失敗",
+    "hint": "ヒント",
+    "clearSuccess": "クリア成功",
+    "clearMessage": "すべての保護石をお気に入りから削除しました",
+    "alreadyEmpty": "お気に入りリストは既に空です",
+    "noFavoritesToExport": "エクスポートするお気に入りがありません",
+    "exportSuccess": "お気に入りのエクスポートに成功しました！",
+    "exportFailed": "エクスポートに失敗しました",
+    "noFileSelected": "ファイルが選択されていません",
+    "invalidFormat": "インポートするデータの形式が無効です",
+    "importSuccess": "お気に入りのインポートに成功しました！",
+    "parseError": "JSONファイルの解析に失敗しました"
   }
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Calculator } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import AmuletList from "../components/AmuletList"
@@ -33,7 +33,15 @@ export default function FavoriteCharmsPage() {
             {favoriteCharms.length > 0 && (
               <div className='mb-8'>
                 <h1 className='hidden mb-4 text-4xl font-bold text-gray-800 xl:block'>{t("favorites.title", "收藏護石")}</h1>
-                <CharmExportImportControls />
+                <div className='p-6 bg-white rounded-md'>
+                  <CharmExportImportControls />
+                  <div className='flex items-start gap-3 p-4 mt-4 rounded-lg '>
+                    <AlertTriangle className='w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0' />
+                    <p className='text-sm leading-relaxed text-amber-800'>
+                      {t("favorites.backupNotice", "護石資料僅儲存在本地瀏覽器，請定期匯出備份以防資料遺失。")}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
 

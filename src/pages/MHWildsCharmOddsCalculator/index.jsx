@@ -8,7 +8,6 @@ import SkillSelector from "./SkillSelector"
 import AmuletList from "../components/AmuletList"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import ProbabilityExplanation from "./ProbabilityExplanation"
-import TotalProbability from "./components/TotalProbability"
 import HuntTimeCalculator from "../components/HuntTimeCalculator"
 import useMhwStore from "../../store/mhwStore"
 
@@ -28,7 +27,7 @@ export default function MHWPage() {
     <div className='flex min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50'>
       <Sidebar isOpen={isSidebarOpen} onToggle={handleSidebarToggle} />
       <div className={`flex flex-col flex-1 xl:ml-64 w-full ${isSidebarOpen ? "ml-64" : ""}`}>
-        <Header onMenuToggle={handleSidebarToggle} title={t("title")} />
+        <Header onMenuToggle={handleSidebarToggle} title={t("MHWildsCharmOddsCalculator.title")} />
         <main className='flex-1 p-2 md:p-6'>
           <div className='container mx-auto max-w-9xl'>
             {/* 頁面標題 */}
