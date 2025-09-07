@@ -28,7 +28,7 @@ export default function FavoriteCharmsPage() {
       <div className={`flex flex-col flex-1 xl:ml-64 w-full ${isSidebarOpen ? "ml-64" : ""}`}>
         <Header onMenuToggle={handleSidebarToggle} title={t("favorites.title", "收藏護石")} />
         <main className='flex-1 p-2 md:p-6'>
-          <div className='container mx-auto mt-72 max-w-9xl'>
+          <div className='container mx-auto mb-72 max-w-9xl'>
             {/* 頁面標題 */}
             {favoriteCharms.length > 0 && (
               <div className='mb-8'>
