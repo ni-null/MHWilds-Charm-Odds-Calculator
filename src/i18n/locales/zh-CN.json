@@ -320,12 +320,12 @@
     "data": "数据版本"
   },
   "amuletList": {
-    "addAllToFavorites": "全部加收藏",
-    "removeAllFromFavorites": "全部移除收藏",
+    "addAllToFavorites": "全部收藏",
+    "removeAllFromFavorites": "移除收藏",
     "list": "护石列表",
     "probability": "总机率",
-    "showAll": "显示全部",
-    "showSimple": "简化显示",
+    "showAll": "全部",
+    "showSimple": "简化",
     "selectSkillsFirst": "请先选择技能以查看总机率统计"
   },
   "MHWildsCharmOddsCalculator": {

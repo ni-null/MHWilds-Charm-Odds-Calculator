@@ -114,8 +114,8 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                   })
                   setFavoriteCharms(newFavorites)
                 }}>
-                <Star className='w-4 h-4 mr-2' />
-                {t("amuletList.addAllToFavorites", "全部加入最愛")}
+                <Star className='w-4 h-4 md:mr-2' />
+                {t("amuletList.addAllToFavorites", "全部收藏")}
               </Button>
             )}
             {hasFavorited && (
@@ -137,8 +137,8 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                     )
                   )
                 }}>
-                <Trash2 className='w-4 h-4 mr-2' />
-                {t("amuletList.removeAllFromFavorites", "全部移除最愛")}
+                <Trash2 className='w-4 h-4 md:mr-2' />
+                {t("amuletList.removeAllFromFavorites", "移除收藏")}
               </Button>
             )}
           </div>

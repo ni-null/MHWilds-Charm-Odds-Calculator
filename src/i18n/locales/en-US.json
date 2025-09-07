@@ -320,12 +320,12 @@
     "data": "Data Version"
   },
   "amuletList": {
-    "addAllToFavorites": "Add All to Favorites",
-    "removeAllFromFavorites": "Remove All from Favorites",
+    "addAllToFavorites": "Add All",
+    "removeAllFromFavorites": "Remove All",
     "list": "Charm List",
     "probability": "Total Probability",
-    "showAll": "Show All",
-    "showSimple": "Simple View",
+    "showAll": "All",
+    "showSimple": "Simple",
     "selectSkillsFirst": "Please select skills first to view total probability statistics"
   },
   "MHWildsCharmOddsCalculator": {

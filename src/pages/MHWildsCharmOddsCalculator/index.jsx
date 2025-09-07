@@ -37,7 +37,7 @@ export default function MHWPage() {
 
             <SkillSelector />
 
-            <div className='w-full p-6 mb-8 bg-white rounded-xl'>
+            <div className='w-full p-5 mb-8 bg-white md:p-10 rounded-xl'>
               {/* 怪物討伐需要時間計算 */}
               <HuntTimeCalculator AvlCharms={AvlCharms} />
             </div>

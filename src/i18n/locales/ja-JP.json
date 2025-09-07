@@ -321,12 +321,12 @@
     "data": "データバージョン"
   },
   "amuletList": {
-    "addAllToFavorites": "すべてをお気に入りに追加",
-    "removeAllFromFavorites": "すべてのお気に入りから削除",
+    "addAllToFavorites": "すべて追加",
+    "removeAllFromFavorites": "すべて削除",
     "list": "護石リスト",
     "probability": "総確率",
-    "showAll": "すべて表示",
-    "showSimple": "簡易表示",
+    "showAll": "すべて",
+    "showSimple": "簡易",
     "selectSkillsFirst": "まずスキルを選択して総確率統計を表示してください"
   },
   "MHWildsCharmOddsCalculator": {
