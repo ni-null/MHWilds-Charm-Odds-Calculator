@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { AlertTriangle } from "lucide-react"
+import { AlertTriangle, Calculator } from "lucide-react"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import AmuletList from "../components/AmuletList"
