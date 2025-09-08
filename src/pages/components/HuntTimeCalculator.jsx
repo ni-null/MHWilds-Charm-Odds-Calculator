@@ -271,7 +271,7 @@ export default function HuntTimeCalculator({ AvlCharms }) {
                             src={`${import.meta.env.BASE_URL}image/Monsters/${encodeURIComponent(selectedMonster)}.webp`}
                             alt={selectedMonster}
                             loading='lazy'
-                            className='object-contain w-8 h-8 rounded md:w-10 md:h-10'
+                            className='object-contain w-8 h-8 rounded md:w-10 md:h-10 flex-shrink-0'
                             onError={(e) => {
                               try {
                                 if (!e || !e.currentTarget) return
@@ -281,13 +281,15 @@ export default function HuntTimeCalculator({ AvlCharms }) {
                               }
                             }}
                           />
-                          <span className='text-xl font-bold truncate'>{t(`monsters.${selectedMonster}`, selectedMonster)}</span>
-                          {MonsterData.Monster[selectedMonster] && MonsterData.Base && (
-                            <span className='text-base text-gray-500'>
-                              ({MonsterData.Monster[selectedMonster].MIN + MonsterData.Base.MIN}-
-                              {MonsterData.Monster[selectedMonster].MAX + MonsterData.Base.MAX} {t("amulet.unit", "護石")})
-                            </span>
-                          )}
+                          <div className='flex-1 min-w-0'>
+                            <span className='text-xl font-bold truncate'>{t(`monsters.${selectedMonster}`, selectedMonster)}</span>
+                            {MonsterData.Monster[selectedMonster] && MonsterData.Base && (
+                              <span className='text-base text-gray-500 truncate'>
+                                ({MonsterData.Monster[selectedMonster].MIN + MonsterData.Base.MIN}-
+                                {MonsterData.Monster[selectedMonster].MAX + MonsterData.Base.MAX} {t("amulet.unit", "護石")})
+                              </span>
+                            )}
+                          </div>
                         </div>
                       ) : (
                         <span className='text-sm'>{t("huntTimeCalculator.selectMonster", "Select Monster")}</span>
