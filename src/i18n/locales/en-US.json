@@ -86,7 +86,7 @@
     "note": "Note",
     "explanation": "Calculations based on monster reward range and selected time settings. Times include both hunting and rest periods.",
     "baseRewardNote": "Quest bonus: Additional 1-3 charms received after each monster hunt, already included in total charm count calculation.",
-    "disclaimer": "This calculator is for reference only, and the probability estimates are based on approximations.",
+    "disclaimer": "Time calculation is for reference only, as it needs to be based on average probability as the foundation.",
     "noData": "No charm data available. Please select skills first.",
     "slotCombinationDetails": "Slot Combination Details"
   },

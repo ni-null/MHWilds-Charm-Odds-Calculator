@@ -566,7 +566,7 @@ export default function HuntTimeCalculator({ AvlCharms }) {
                 {t("huntTimeCalculator.baseRewardNote", "任務額外獎勵：每次討伐怪物後額外獲得 1-3 個護石，已計入總護石數量計算中。")}
               </p>
 
-              <p>{t("huntTimeCalculator.disclaimer", "此計算器僅供參考，推算幾乎出於推估的出現機率。")}</p>
+              <p>{t("huntTimeCalculator.disclaimer", "時間計算僅供參考，因需基於平均機率為基礎上計算")}</p>
             </div>
           </div>
         ) : (
