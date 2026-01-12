@@ -112,7 +112,7 @@
         {
           "SkillName": "Opening Shot",
           "SkillLevel": 1,
-          "SkillMax": 1
+          "SkillMax": 3
         },
         {
           "SkillName": "Paralysis Attack",
@@ -323,7 +323,7 @@
         {
           "SkillName": "Opening Shot",
           "SkillLevel": 2,
-          "SkillMax": 1
+          "SkillMax": 3
         },
         {
           "SkillName": "Paralysis Attack",
@@ -524,7 +524,7 @@
         {
           "SkillName": "Opening Shot",
           "SkillLevel": 3,
-          "SkillMax": 1
+          "SkillMax": 3
         },
         {
           "SkillName": "Para Functionality",
@@ -685,7 +685,7 @@
         {
           "SkillName": "Opening Shot",
           "SkillLevel": 2,
-          "SkillMax": 1
+          "SkillMax": 3
         },
         {
           "SkillName": "Paralysis Attack",
