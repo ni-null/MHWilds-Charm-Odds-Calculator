@@ -114,7 +114,8 @@
     "none": "无",
     "level": "Lv.",
     "probability": "概率",
-    "skillProbability": "技能概率"
+    "skillProbability": "技能概率",
+    "empty": "空"
   },
   "charmTypes": {
     "title": "护石种类",

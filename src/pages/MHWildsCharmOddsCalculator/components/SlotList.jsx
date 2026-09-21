@@ -1,4 +1,3 @@
-import React from "react"
 import RarityData from "../../../data/Rarity.json"
 import { decimalToFraction } from "../../../lib/fractionUtils"
 

@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from "react"
+import React, { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 // Amulet data migrated into RarityBaseProbability.json (Group + combinationCount)
-import Sidebar from "../../components/Sidebar"
-import Header from "../../components/Header"
-import { useLanguageSync } from "../../hooks/useLanguageSync"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog"
-import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
-import skillGroupsData from "../../data/SkillGroups.json"
-import rarityProbabilities from "../../data/Rarity.json"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import * as Tooltip from "@radix-ui/react-tooltip"
+import Header from "../../components/Header"
+import Sidebar from "../../components/Sidebar"
+import rarityProbabilities from "../../data/Rarity.json"
+import skillGroupsData from "../../data/SkillGroups.json"
+import { useLanguageSync } from "../../hooks/useLanguageSync"
+import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
 const CharmTypePage = () => {
   const { t } = useTranslation()
   useLanguageSync() // 同步語言設置
@@ -218,7 +218,7 @@ const CharmTypePage = () => {
                       <div className='flex justify-center mb-5'>
                         <div className='flex items-center'>
                           <img
-                            src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(rarity)}.png`}
+                            src={`${import.meta.env.BASE_URL}image/charms/${encodeURIComponent(rarity)}.png`}
                             alt={rarity}
                             style={{ width: 40, height: 40, objectFit: "contain" }}
                             className='mr-2 rounded'
@@ -244,7 +244,7 @@ const CharmTypePage = () => {
                         <div className='mt-2 text-sm text-gray-700'>
                           <div className='mb-1'>
                             {t("charmTypes.header.defaultNormalSlot") &&
-                            t("charmTypes.header.defaultNormalSlot") !== "charmTypes.header.defaultNormalSlot"
+                              t("charmTypes.header.defaultNormalSlot") !== "charmTypes.header.defaultNormalSlot"
                               ? t("charmTypes.header.defaultNormalSlot")
                               : "Default normal slots"}
                             :
@@ -258,14 +258,14 @@ const CharmTypePage = () => {
                                       <div className='flex items-center mr-2'>
                                         {e.icons && e.icons.length > 0
                                           ? e.icons.map((ic, idx) => (
-                                              <img
-                                                key={idx}
-                                                src={`${import.meta.env.BASE_URL}image/slot/${encodeURIComponent(ic)}`}
-                                                alt={e.label}
-                                                style={{ width: 20, height: 20 }}
-                                                className={idx < e.icons.length - 1 ? "mr-1" : ""}
-                                              />
-                                            ))
+                                            <img
+                                              key={idx}
+                                              src={`${import.meta.env.BASE_URL}image/slot/${encodeURIComponent(ic)}`}
+                                              alt={e.label}
+                                              style={{ width: 20, height: 20 }}
+                                              className={idx < e.icons.length - 1 ? "mr-1" : ""}
+                                            />
+                                          ))
                                           : null}
                                       </div>
                                       <div className='text-xs text-gray-600'>
@@ -344,7 +344,7 @@ const CharmTypePage = () => {
                                     {[charm.Skill1Group, charm.Skill2Group, charm.Skill3Group]
                                       .filter((g) => g !== null)
                                       .map((g, idx) => {
-                                        const groupKey = typeof g === "number" ? `Group${g}` : `${g}`
+                                        const groupKey = g
                                         const gd = (skillGroupsData.SkillGroups && skillGroupsData.SkillGroups[groupKey]) || {}
 
                                         return (
@@ -374,14 +374,14 @@ const CharmTypePage = () => {
                                                 <div className='inline-flex items-center px-2 py-1 rounded cursor-default bg-gray-50'>
                                                   {cs.icons && cs.icons.length > 0
                                                     ? cs.icons.map((ic, idx) => (
-                                                        <img
-                                                          key={idx}
-                                                          src={`${import.meta.env.BASE_URL}image/slot/${encodeURIComponent(ic)}`}
-                                                          alt={cs.label}
-                                                          style={{ width: 18, height: 18 }}
-                                                          className={idx < cs.icons.length - 1 ? "mr-1" : ""}
-                                                        />
-                                                      ))
+                                                      <img
+                                                        key={idx}
+                                                        src={`${import.meta.env.BASE_URL}image/slot/${encodeURIComponent(ic)}`}
+                                                        alt={cs.label}
+                                                        style={{ width: 18, height: 18 }}
+                                                        className={idx < cs.icons.length - 1 ? "mr-1" : ""}
+                                                      />
+                                                    ))
                                                     : null}
                                                   <span className='ml-1 text-xs text-gray-600'>{cs.label}</span>
                                                 </div>

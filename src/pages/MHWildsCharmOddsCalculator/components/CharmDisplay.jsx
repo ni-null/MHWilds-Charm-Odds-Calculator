@@ -1,14 +1,13 @@
-import React from "react"
 import clsx from "clsx"
-import SkillGroupsData from "../../../data/SkillGroups.json"
 import { Ban } from "lucide-react"
+import SkillGroupsData from "../../../data/SkillGroups.json"
 
 export default function CharmDisplay({ charm, groups, t, mode }) {
   return (
     <div className='flex flex-col'>
       <div className='flex flex-col items-center justify-center'>
         <img
-          src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(charm.rarity || "unknown")}.png`}
+          src={`${import.meta.env.BASE_URL}image/charms/${encodeURIComponent(charm.rarity || "unknown")}.png`}
           alt={charm.rarity}
           style={{ width: 56, height: 56, objectFit: "contain" }}
           className='rounded'
@@ -27,7 +26,7 @@ export default function CharmDisplay({ charm, groups, t, mode }) {
 
       <div className={clsx("flex gap-1 w-28", mode !== "simple" && "md:gap-2 md:mt-3 md:w-52")}>
         {groups.map((g, i) => {
-          const groupKey = `Group${g}`
+          const groupKey = g
           const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
           const bg = gd.bgColor || "#374151"
           const text = gd.color || "#ffffff"
@@ -51,7 +50,7 @@ export default function CharmDisplay({ charm, groups, t, mode }) {
               key={i}
               className='inline-flex items-center justify-center w-16 gap-1 px-1 py-1 text-sm text-center rounded'
               style={{ backgroundColor: hexToRgba(text, 0.5), color: bg }}>
-              {mode !== "simple" && <span className='hidden font-semibold md:block'>{t("amulet.group", "群組")}</span>}
+              {mode !== "simple" && <span className='hidden font-semibold md:block'>{t("skillSelector.groupInfo", "群組")}</span>}
               <span>{g}</span>
             </div>
           )

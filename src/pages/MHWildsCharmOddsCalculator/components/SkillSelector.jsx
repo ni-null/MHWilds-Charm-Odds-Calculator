@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
-import clsx from "clsx"
-import SkillGroupsData from "../../../data/SkillGroups.json"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import clsx from "clsx"
+import { useEffect, useState } from "react"
+import SkillGroupsData from "../../../data/SkillGroups.json"
 
 export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHOLDER_SVG, className }) {
   // 每個群組的選擇狀態（如果 matchingSkills 沒有對應項目，使用下拉選單選擇）
@@ -58,8 +58,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
         <span className='text-sm text-gray-500'>{t("common.none", "無")}</span>
       ) : (
         Array.from({ length: groups.length }).map((_, gi) => {
-          const groupId = groups[gi]
-          const groupKey = `Group${groupId}`
+          const groupKey = groups[gi]
           const gd = (SkillGroupsData.SkillGroups && SkillGroupsData.SkillGroups[groupKey]) || {}
           const allOptions = (gd.data && Array.isArray(gd.data) ? gd.data : []).map((d) => d.SkillName)
 
@@ -225,7 +224,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                         })
                       }}>
                       <SelectTrigger className='px-2 py-1 text-sm text-white bg-gray-800 border-none rounded h-7'>
-                        <SelectValue placeholder={`-- ${t("amulet.selectSkill", "選擇技能")} --`}>
+                        <SelectValue placeholder={t("skillSelector.selectSkill", "-- 選擇技能 --")}>
                           {selected ? t(`skillTranslations.${selected}`, selected) : null}
                           {levelChoice > 0 ? ` Lv.${levelChoice}` : null}
                         </SelectValue>
@@ -238,9 +237,9 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                         avoidCollisions={false}>
                         <SelectGroup>
                           <SelectLabel>
-                            {t("amulet.group", "群組")} {groupId}
+                            {t("skillSelector.groupInfo", "群組")} {groupKey}
                             <span className='ml-3 text-xs text-gray-400'>
-                              {availableOptions.length} {t("common.skills", "技能")}
+                              {availableOptions.length} {t("skills", "技能")}
                             </span>
                           </SelectLabel>
                           {availableOptions.length === 0 ? (
@@ -356,7 +355,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                       })
                     }}
                     className='px-2 py-1 text-sm text-white bg-gray-800 rounded'>
-                    <option value=''>-- {t("amulet.selectSkill", "選擇技能")} --</option>
+                    <option value=''>{t("skillSelector.selectSkill", "-- 選擇技能 --")}</option>
                     {availableOptions.map((opt) => (
                       <option key={opt} value={opt}>
                         {t(`skillTranslations.${opt}`, opt)}

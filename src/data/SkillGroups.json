@@ -1,6 +1,6 @@
 {
   "SkillGroups": {
-    "Group1": {
+    "1": {
       "color": "#6A9855",
       "bgColor": "#D9EAD3",
       "data": [
@@ -191,7 +191,7 @@
         }
       ]
     },
-    "Group2": {
+    "2": {
       "color": "#D94040",
       "bgColor": "#F4CCCC",
       "data": [
@@ -412,7 +412,7 @@
         }
       ]
     },
-    "Group3": {
+    "3": {
       "color": "#8D7ABD",
       "bgColor": "#D9D2E9",
       "data": [
@@ -618,7 +618,7 @@
         }
       ]
     },
-    "Group4": {
+    "4": {
       "color": "#a58d43",
       "bgColor": "#FFF2CC",
       "data": [
@@ -729,7 +729,7 @@
         }
       ]
     },
-    "Group5": {
+    "5": {
       "color": "#3e6067",
       "bgColor": "#D0E0E3",
       "data": [
@@ -920,7 +920,7 @@
         }
       ]
     },
-    "Group6": {
+    "6": {
       "color": "#b17e49",
       "bgColor": "#FCE5CD",
       "data": [
@@ -1111,7 +1111,7 @@
         }
       ]
     },
-    "Group7": {
+    "7": {
       "color": "#844B40",
       "bgColor": "#E6B8AF",
       "data": [
@@ -1287,7 +1287,7 @@
         }
       ]
     },
-    "Group8": {
+    "8": {
       "color": "#597d9f",
       "bgColor": "#CFE2F3",
       "data": [
@@ -1368,7 +1368,7 @@
         }
       ]
     },
-    "Group9": {
+    "9": {
       "color": "#8f5875",
       "bgColor": "#EAD1DC",
       "data": [
@@ -1449,7 +1449,7 @@
         }
       ]
     },
-    "Group10": {
+    "10": {
       "color": "#4D80D9",
       "bgColor": "#C9DAF8",
       "data": [

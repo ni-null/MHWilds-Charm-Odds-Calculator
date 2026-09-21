@@ -114,7 +114,8 @@
     "none": "なし",
     "level": "Lv.",
     "probability": "確率",
-    "skillProbability": "スキル確率"
+    "skillProbability": "スキル確率",
+    "empty": "空"
   },
   "charmTypes": {
     "title": "護石タイプ",

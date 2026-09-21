@@ -1,18 +1,16 @@
+import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
+import { motion as Motion } from "framer-motion"
+import { Star, Trash2 } from "lucide-react"
 import React, { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import { motion } from "framer-motion"
-// ensure `motion` is referenced so some linters that don't detect JSX usage won't report it as unused
-void motion
-import { Star, Trash2 } from "lucide-react"
+import rarityBaseProbability from "../../data/Rarity.json"
+import { decimalToFraction } from "../../lib/fractionUtils"
 import useMhwStore from "../../store/mhwStore"
 import AmuletDetails from "../MHWildsCharmOddsCalculator/components/AmuletDetails"
 import CharmDisplay from "../MHWildsCharmOddsCalculator/components/CharmDisplay"
 import SkillSelector from "../MHWildsCharmOddsCalculator/components/SkillSelector"
 import SlotList from "../MHWildsCharmOddsCalculator/components/SlotList"
-import { decimalToFraction } from "../../lib/fractionUtils"
-import rarityBaseProbability from "../../data/Rarity.json"
-import { Switch } from "@/components/ui/switch"
-import { Button } from "@/components/ui/button"
 
 export default function AmuletList({ charms: propCharms, favoriteCharms: propFavoriteCharms }) {
   const { amuletListShowMode, setFavoriteCharms, setAmuletListShowMode } = useMhwStore()
@@ -24,9 +22,9 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
     "data:image/svg+xml;utf8," +
     encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'>" +
-        "<rect fill='%23efefef' width='100%' height='100%'/>" +
-        "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='14' fill='%23999'>?" +
-        "</text></svg>"
+      "<rect fill='%23efefef' width='100%' height='100%'/>" +
+      "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='14' fill='%23999'>?" +
+      "</text></svg>"
     )
 
   const { t } = useTranslation()
@@ -150,7 +148,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
           </div>
         </div>
         <div className=''>
-          <motion.ul
+          <Motion.ul
             className={amuletListShowMode === "simple" ? "grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4" : ""}
             variants={containerVariants}
             initial='hidden'
@@ -169,7 +167,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
 
               return (
                 <React.Fragment key={key}>
-                  <motion.li
+                  <Motion.li
                     variants={itemVariants}
                     initial='hidden'
                     whileInView='visible'
@@ -258,84 +256,72 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                     </div>
 
                     {amuletListShowMode !== "simple" && <AmuletDetails charm={charm} t={t} />}
-                  </motion.li>
+                  </Motion.li>
                 </React.Fragment>
               )
             })}
-          </motion.ul>
+          </Motion.ul>
         </div>
       </div>
     )
   }
 
   function TotalProbabilityView() {
-    if (!charms || charms.length === 0) {
-      return (
-        <div>
-          <div className='p-6 text-center text-gray-500'>{t("amuletList.selectSkillsFirst", "請先選擇技能以查看總機率統計")}</div>
-        </div>
-      )
+    if (charms.length === 0) {
+      return <div className='p-6 text-center text-gray-500'>{t("amuletList.selectSkillsFirst", "請先選擇技能以查看總機率統計")}</div>
     }
 
+    const probabilitiesByRarity = {}
+    charms.forEach((charm) => {
+      const rarity = charm.rarity || "Unknown"
+      if (!probabilitiesByRarity[rarity]) {
+        probabilitiesByRarity[rarity] = { noSlot: 0, withSlot: 0 }
+      }
+
+      const computed = charm.computed || {}
+      probabilitiesByRarity[rarity].noSlot += computed.finalNoSlot || 0
+      probabilitiesByRarity[rarity].withSlot += computed.finalWithSlot || 0
+    })
+
     return (
-      <div>
-        <div className='flex flex-col'>
-          {/* 使用 charms 的資料統計個別 rarity 組別顯示組別的總機率 */}
-          <div className='border border-gray-200 rounded-lg '>
-            <table className='w-full min-w-[32rem] text-left'>
-              <thead className='bg-gray-100'>
-                <tr>
-                  <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("rarity", "稀有度")}</th>
-                  <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("skill", "技能機率")}</th>
-                  <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("totalProbability.withSlot", "技能+插槽")}</th>
-                </tr>
-              </thead>
-              <tbody className='bg-white divide-y divide-gray-200'>
-                {(() => {
-                  const per = {}
-                  charms.forEach((c) => {
-                    const r = c.rarity || "Unknown"
-                    if (!per[r]) per[r] = { noSlot: 0, withSlot: 0 }
-                    const comp = c.computed || {}
-                    per[r].noSlot += comp.finalNoSlot || 0
-                    per[r].withSlot += comp.finalWithSlot || 0
-                  })
-
-                  return Object.keys(per)
-                    .sort()
-                    .map((r, idx) => {
-                      const entry = per[r]
-
-                      return (
-                        <motion.tr
-                          key={`${r}-${charms.length}`}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, delay: idx * 0.15, ease: "easeOut" }}
-                          className='hover:bg-gray-50'>
-                          <td className='px-4 py-3'>
-                            <div className='flex items-center gap-3'>
-                              <img
-                                src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(r || "unknown")}.png`}
-                                alt={r}
-                                className='object-contain w-8 h-8 rounded'
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none"
-                                }}
-                              />
-                              <span className='font-medium'>{r}</span>
-                            </div>
-                          </td>
-                          <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(entry.noSlot)}</td>
-                          <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(entry.withSlot)}</td>
-                        </motion.tr>
-                      )
-                    })
-                })()}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div className='overflow-x-auto rounded-lg border border-gray-200'>
+        <table className='w-full min-w-[32rem] text-left'>
+          <thead className='bg-gray-100'>
+            <tr>
+              <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("rarity", "稀有度")}</th>
+              <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("skill", "技能機率")}</th>
+              <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("totalProbability.withSlot", "技能+插槽")}</th>
+            </tr>
+          </thead>
+          <tbody className='bg-white divide-y divide-gray-200'>
+            {Object.entries(probabilitiesByRarity)
+              .sort(([rarityA], [rarityB]) => rarityA.localeCompare(rarityB))
+              .map(([rarity, probability], index) => (
+                <Motion.tr
+                  key={`${rarity}-${charms.length}`}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.15, ease: "easeOut" }}
+                  className='hover:bg-gray-50'>
+                  <td className='px-4 py-3'>
+                    <div className='flex items-center gap-3'>
+                      <img
+                        src={`${import.meta.env.BASE_URL}image/charms/${encodeURIComponent(rarity)}.png`}
+                        alt={rarity}
+                        className='object-contain w-8 h-8 rounded'
+                        onError={(event) => {
+                          event.currentTarget.style.display = "none"
+                        }}
+                      />
+                      <span className='font-medium'>{rarity}</span>
+                    </div>
+                  </td>
+                  <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.noSlot)}</td>
+                  <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.withSlot)}</td>
+                </Motion.tr>
+              ))}
+          </tbody>
+        </table>
       </div>
     )
   }

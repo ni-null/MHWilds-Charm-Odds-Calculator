@@ -1,7 +1,6 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { computeCharmProb } from "../lib/amuletProb"
-import rarityBaseProbability from "../data/Rarity.json"
 
 const useMhwStore = create(
   persist(
@@ -61,7 +60,7 @@ const useMhwStore = create(
       favoriteCharms: [],
 
       setFavoriteCharms: (charms) => {
-        console.log(charms)
+        // console.log(charms)
         const filteredCharms = Array.isArray(charms)
           ? charms.filter(
               (charm, index, self) =>

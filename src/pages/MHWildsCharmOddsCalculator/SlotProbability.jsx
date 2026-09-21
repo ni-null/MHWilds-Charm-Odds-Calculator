@@ -1,7 +1,6 @@
-import React from "react"
 import { useTranslation } from "react-i18next"
-import useMhwStore from "../../store/mhwStore"
 import RarityBaseProbabilityData from "../../data/Rarity.json"
+import useMhwStore from "../../store/mhwStore"
 
 export default function SlotProbability() {
   const { t } = useTranslation()
@@ -100,7 +99,7 @@ export default function SlotProbability() {
               <div className='flex items-center justify-between mb-3'>
                 <span className='text-lg font-medium text-gray-700'>{rarity}</span>
                 <img
-                  src={`${import.meta.env.BASE_URL}image/Charm/${rarity}.png`}
+                  src={`${import.meta.env.BASE_URL}image/charms/${rarity}.png`}
                   alt={rarity}
                   className='object-contain w-12 h-12'
                   onError={(e) => {

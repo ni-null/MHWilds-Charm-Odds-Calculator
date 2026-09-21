@@ -1,12 +1,12 @@
-import React, { useMemo, useEffect, useCallback } from "react"
+import React, { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import useMhwStore from "../../store/mhwStore"
 import rarityBaseProbability from "../../data/Rarity.json"
 import SkillGroupsData from "../../data/SkillGroups.json"
+import useMhwStore from "../../store/mhwStore"
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function SkillSelector() {
   const { t, i18n } = useTranslation()
@@ -15,9 +15,9 @@ export default function SkillSelector() {
     "data:image/svg+xml;utf8," +
     encodeURIComponent(
       "<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>" +
-        "<rect fill='%23efefef' width='100%' height='100%'/>" +
-        "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23999'>?" +
-        "</text></svg>"
+      "<rect fill='%23efefef' width='100%' height='100%'/>" +
+      "<text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='12' fill='%23999'>?" +
+      "</text></svg>"
     )
   // Per-slot search inputs are local to each Select to avoid parent re-renders
   // remounting the Input in the SelectContent and causing focus loss.
@@ -180,7 +180,7 @@ export default function SkillSelector() {
   const skillToGroupMap = useMemo(() => {
     const map = {}
     Object.keys(SkillGroupsData.SkillGroups).forEach((groupKey) => {
-      const groupNumber = parseInt(groupKey.replace("Group", ""))
+      const groupNumber = parseInt(groupKey)
       SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
         const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
         if (!map[skillKey]) map[skillKey] = []
@@ -442,7 +442,7 @@ export default function SkillSelector() {
         matchingAmulets.forEach((amulet) => {
           const amuletGroups = [amulet.Skill1Group, amulet.Skill2Group, amulet.Skill3Group].filter((g) => g !== null)
           amuletGroups.forEach((groupNumber) => {
-            const groupKey = `Group${groupNumber}`
+            const groupKey = groupNumber
             if (SkillGroupsData.SkillGroups[groupKey]) {
               SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
                 possible.add(`${skill.SkillName} Lv.${skill.SkillLevel}`)
@@ -536,7 +536,7 @@ export default function SkillSelector() {
           for (let gi = 0; gi < amuletGroups.length; gi++) {
             if (assignment.used.has(gi)) continue
             const groupNumber = amuletGroups[gi]
-            const groupKey = `Group${groupNumber}`
+            const groupKey = groupNumber
             if (SkillGroupsData.SkillGroups[groupKey]) {
               SkillGroupsData.SkillGroups[groupKey].data.forEach((skill) => {
                 const skillKey = `${skill.SkillName} Lv.${skill.SkillLevel}`
@@ -566,7 +566,7 @@ export default function SkillSelector() {
             }
             const groupIdx = remIdxs[ri]
             const groupNumber = amuletGroups[groupIdx]
-            const groupKey = `Group${groupNumber}`
+            const groupKey = groupNumber
             if (!SkillGroupsData.SkillGroups[groupKey]) return
             const data = SkillGroupsData.SkillGroups[groupKey].data
             for (let si = 0; si < data.length; si++) {
@@ -674,7 +674,7 @@ export default function SkillSelector() {
                   {t("skillSelector.skillSlot", "技能")} {i + 1} ({t("skillSelector.multiSelect", "多選")})
                 </label>
                 <div className='flex items-center gap-2'>
-                  <Select value={""} onValueChange={() => {}}>
+                  <Select value={""} onValueChange={() => { }}>
                     <SelectTrigger className='w-full h-auto min-h-[40px] px-3 text-base md:min-h-[56px] md:px-4 md:text-lg'>
                       <div className='flex items-center w-full'>
                         {/* When nothing selected show the placeholder SelectValue; otherwise show badges */}
@@ -803,9 +803,8 @@ export default function SkillSelector() {
                               <button
                                 key={`custom-${skillKey}`}
                                 type='button'
-                                className={`px-2 py-1 text-left rounded hover:bg-gray-100 flex items-center justify-between ${
-                                  isSelected ? "bg-blue-50" : ""
-                                }`}
+                                className={`px-2 py-1 text-left rounded hover:bg-gray-100 flex items-center justify-between ${isSelected ? "bg-blue-50" : ""
+                                  }`}
                                 onPointerDown={(e) => e.preventDefault()} /* prevent blur */
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={(e) => {

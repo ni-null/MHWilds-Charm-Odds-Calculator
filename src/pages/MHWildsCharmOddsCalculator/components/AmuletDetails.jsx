@@ -1,5 +1,5 @@
-import React, { useState } from "react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { useState } from "react"
 import SlotList from "./SlotList"
 export default function AmuletDetails({ charm, t, className = "" }) {
   const [isExpanded, setIsExpanded] = useState(false)
@@ -87,11 +87,11 @@ export default function AmuletDetails({ charm, t, className = "" }) {
                   const matchedNames =
                     d.matched && d.matched.length > 0
                       ? d.matched
-                          .map((full) => {
-                            const base = full.split(" Lv.")[0]
-                            return t(`skillTranslations.${base}`, { defaultValue: base })
-                          })
-                          .join(", ")
+                        .map((full) => {
+                          const base = full.split(" Lv.")[0]
+                          return t(`skillTranslations.${base}`, { defaultValue: base })
+                        })
+                        .join(", ")
                       : null
                   return (
                     <div key={d.key} className='mb-1'>
@@ -111,7 +111,7 @@ export default function AmuletDetails({ charm, t, className = "" }) {
       </div>
 
       <div className='items-center gap-2 text-xs sm:text-sm'>
-        <span className='font-semibold text-gray-400 text-nowrap'>技能機率</span>{" "}
+        <span className='font-semibold text-gray-400 text-nowrap'>{t("common.skillProbability", "技能機率")}</span>{" "}
         <span className='font-bold text-yellow-500'>{fmt(computed.finalNoSlot)}</span>
         <div>
           <span className='font-mono text-xs text-gray-400 break-words'>

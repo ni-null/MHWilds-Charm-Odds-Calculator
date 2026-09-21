@@ -1,5 +1,5 @@
-import SkillGroupsData from "../data/SkillGroups.json"
 import RarityData from "../data/Rarity.json"
+import SkillGroupsData from "../data/SkillGroups.json"
 
 export const charmKey = (charm) => {
   try {
@@ -34,7 +34,7 @@ const buildPerSlotCombinations = (perSlotArrays) => {
 }
 
 const getGroupSkillCountForRarity = (groupNumber, rarity) => {
-  const groupKey = `Group${groupNumber}`
+  const groupKey = groupNumber
   const totalGroupSkills = SkillGroupsData.SkillGroups[groupKey] ? SkillGroupsData.SkillGroups[groupKey].data.length : 1
   const rarityGroups = (RarityData[rarity] && RarityData[rarity].Group) || []
   const hasGroupInRarity = rarityGroups.some((g) => Array.isArray(g.skills) && g.skills.includes(groupNumber))
@@ -199,7 +199,7 @@ export function computeCharmProb(charm, selectedSkills = [], selectedSlot = "") 
     if (assignedPos === -1) return
 
     const groupNumber = amuletGroups[assignedPos]
-    const groupKey = `Group${groupNumber}`
+    const groupKey = groupNumber
     const totalSkillCount = getGroupSkillCountForRarity(groupNumber, charm.rarity)
 
     const excludedBaseNames = new Set()
