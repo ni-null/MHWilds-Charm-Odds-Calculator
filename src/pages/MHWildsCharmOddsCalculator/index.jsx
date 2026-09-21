@@ -8,7 +8,6 @@ import SkillSelector from "./SkillSelector"
 import AmuletList from "../components/AmuletList"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import ProbabilityExplanation from "./ProbabilityExplanation"
-import HuntTimeCalculator from "../components/HuntTimeCalculator"
 import useMhwStore from "../../store/mhwStore"
 
 export default function MHWPage() {
@@ -36,11 +35,6 @@ export default function MHWPage() {
             </div>
 
             <SkillSelector />
-
-            <div className='w-full p-5 mb-8 bg-white md:p-10 rounded-xl'>
-              {/* 怪物討伐需要時間計算 */}
-              <HuntTimeCalculator AvlCharms={AvlCharms} />
-            </div>
 
             <AmuletList charms={AvlCharms} favoriteCharms={favoriteCharms} />
             {/* 機率計算說明（從 AmuletList 提出，集中顯示於頁面） */}

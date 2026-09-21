@@ -12,7 +12,6 @@ import SlotList from "../MHWildsCharmOddsCalculator/components/SlotList"
 import { decimalToFraction } from "../../lib/fractionUtils"
 import rarityBaseProbability from "../../data/Rarity.json"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 
 export default function AmuletList({ charms: propCharms, favoriteCharms: propFavoriteCharms }) {
@@ -282,88 +281,59 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
       <div>
         <div className='flex flex-col'>
           {/* 使用 charms 的資料統計個別 rarity 組別顯示組別的總機率 */}
-          <div className='pt-2 mt-2 '>
-            <div className='grid grid-cols-1 gap-2 md:grid-cols-2 2xl:grid-cols-4'>
-              {(() => {
-                // aggregate per rarity
-                const per = {}
-                charms.forEach((c) => {
-                  const r = c.rarity || "Unknown"
-                  if (!per[r]) per[r] = { noSlot: 0, withSlot: 0, count: 0, slotSamples: new Set() }
-                  const comp = c.computed || {}
-                  per[r].noSlot += comp.finalNoSlot || 0
-                  per[r].withSlot += comp.finalWithSlot || 0
-                  per[r].count += 1
-                  if (Array.isArray(c.slotKeys)) c.slotKeys.slice(0, 3).forEach((s) => per[r].slotSamples.add(s))
-                })
-
-                // render sorted by rarity key
-                return Object.keys(per)
-                  .sort()
-                  .map((r, idx) => {
-                    const entry = per[r]
-                    const pNo = entry.noSlot
-                    const pWith = entry.withSlot
-
-                    // pct and frac values are formatted inline using helpers when rendered
-                    return (
-                      // make each rarity item full-width on small screens and row-aligned on md+
-                      <motion.div
-                        key={`${r}-${charms.length}`}
-                        className='w-full p-2 rounded'
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: idx * 0.15,
-                          ease: "easeOut",
-                        }}>
-                        <div
-                          className='flex justify-center w-full p-4 rounded-lg md:flex-row md:items-center md:p-10 bg-gray-50'
-                          style={{ minHeight: 64 }}>
-                          <div className='flex flex-col items-center min-w-0 gap-1 pr-5'>
-                            {/* 稀有度圖示 - 參考 AmuletMainContent.jsx 的路徑與 onError 行為 */}
-                            <img
-                              src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(r || "unknown")}.png`}
-                              alt={r}
-                              // keep objectFit inline because Tailwind doesn't provide a direct "object-contain" that maps exactly to style here in this project setup
-                              style={{ objectFit: "contain" }}
-                              // responsive sizing: smaller on mobile (w-8 h-8 -> 32px), larger on md+ (w-12 h-12 -> 48px)
-                              className='flex-shrink-0 w-8 h-8 rounded md:w-12 md:h-12'
-                              onError={(e) => {
-                                try {
-                                  if (!e || !e.currentTarget) return
-                                  e.currentTarget.style.display = "none"
-                                } catch (err) {
-                                  console.debug("rarity img onError hide failed", err)
-                                }
-                              }}
-                            />
-                            <div className='font-medium truncate max-w-[12rem] text-sm md:text-base'>{r}</div>
-                          </div>
-
-                          <div className='flex items-center justify-center'>
-                            <div className='text-right md:mt-0'>
-                              <div className='flex flex-row md:flex-col'>
-                                <div className='text-sm text-gray-600'>
-                                  {t("skill")} <span className='text-xs text-gray-400'></span>:
-                                </div>
-                                <div className='font-semibold text-indigo-600'>{decimalToFraction(pNo)}</div>
-                              </div>
-                              <div className='flex flex-row md:flex-col '>
-                                <div className='mt-1 text-sm text-gray-600'>
-                                  {t("totalProbability.withSlot")} <span className='text-xs text-gray-400'></span>:
-                                </div>
-                                <div className='font-semibold text-indigo-600 xl:whitespace-nowrap'>{decimalToFraction(pWith)}</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )
+          <div className='border border-gray-200 rounded-lg '>
+            <table className='w-full min-w-[32rem] text-left'>
+              <thead className='bg-gray-100'>
+                <tr>
+                  <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("rarity", "稀有度")}</th>
+                  <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("skill", "技能機率")}</th>
+                  <th className='px-4 py-3 text-sm font-semibold text-gray-700'>{t("totalProbability.withSlot", "技能+插槽")}</th>
+                </tr>
+              </thead>
+              <tbody className='bg-white divide-y divide-gray-200'>
+                {(() => {
+                  const per = {}
+                  charms.forEach((c) => {
+                    const r = c.rarity || "Unknown"
+                    if (!per[r]) per[r] = { noSlot: 0, withSlot: 0 }
+                    const comp = c.computed || {}
+                    per[r].noSlot += comp.finalNoSlot || 0
+                    per[r].withSlot += comp.finalWithSlot || 0
                   })
-              })()}
-            </div>
+
+                  return Object.keys(per)
+                    .sort()
+                    .map((r, idx) => {
+                      const entry = per[r]
+
+                      return (
+                        <motion.tr
+                          key={`${r}-${charms.length}`}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: idx * 0.15, ease: "easeOut" }}
+                          className='hover:bg-gray-50'>
+                          <td className='px-4 py-3'>
+                            <div className='flex items-center gap-3'>
+                              <img
+                                src={`${import.meta.env.BASE_URL}image/Charm/${encodeURIComponent(r || "unknown")}.png`}
+                                alt={r}
+                                className='object-contain w-8 h-8 rounded'
+                                onError={(e) => {
+                                  e.currentTarget.style.display = "none"
+                                }}
+                              />
+                              <span className='font-medium'>{r}</span>
+                            </div>
+                          </td>
+                          <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(entry.noSlot)}</td>
+                          <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(entry.withSlot)}</td>
+                        </motion.tr>
+                      )
+                    })
+                })()}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -373,21 +343,14 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
   if (!charms || charms.length === 0) return null
 
   return (
-    <Tabs defaultValue='list' className='w-full p-5 bg-white rounded-md'>
-      <div class='p-2 md:p-6 '>
-        <h2 class='text-2xl font-bold mb-5 text-gray-800'>{t("amuletList.list", "護石列表")}</h2>
+    <div className='w-full p-5 bg-white rounded-md'>
+      <div className='p-2 md:p-6'>
+        <h2 className='mb-5 text-2xl font-bold text-gray-800'>{t("totalProbability.title", "總機率")}</h2>
+        <TotalProbabilityView />
 
-        <TabsList className='grid w-full grid-cols-2'>
-          <TabsTrigger value='list'>{t("amuletList.list", "護石列表")}</TabsTrigger>
-          <TabsTrigger value='probability'>{t("totalProbability.title", "總機率")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value='list'>
-          <AmuletListView />
-        </TabsContent>
-        <TabsContent value='probability'>
-          <TotalProbabilityView />
-        </TabsContent>
+        <h2 className='mt-8 mb-5 text-2xl font-bold text-gray-800'>{t("amuletList.list", "護石列表")}</h2>
+        <AmuletListView />
       </div>
-    </Tabs>
+    </div>
   )
 }

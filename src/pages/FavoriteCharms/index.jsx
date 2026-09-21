@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import AmuletList from "../components/AmuletList"
-import HuntTimeCalculator from "../components/HuntTimeCalculator"
 import { useLanguageSync } from "../../hooks/useLanguageSync"
 import useMhwStore from "../../store/mhwStore"
 import { Button } from "@/components/ui/button"
@@ -49,10 +48,6 @@ export default function FavoriteCharmsPage() {
 
             {favoriteCharms.length > 0 ? (
               <>
-                <div className='px-2 mb-5 bg-white rounded-md md:px-6'>
-                  <HuntTimeCalculator AvlCharms={favoriteCharms} />
-                </div>
-
                 <AmuletList charms={favoriteCharms} favoriteCharms={favoriteCharms} />
               </>
             ) : (
