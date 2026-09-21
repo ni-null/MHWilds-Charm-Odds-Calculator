@@ -118,6 +118,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
             <option value='jaJP' className='bg-gray-800'>
               日本語
             </option>
+            <option value='koKR' className='bg-gray-800'>
+              한국어
+            </option>
           </select>
         </div>
 

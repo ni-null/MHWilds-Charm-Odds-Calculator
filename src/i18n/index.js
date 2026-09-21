@@ -5,6 +5,7 @@ import zhTW from "./locales/zh-TW.json"
 import zhCN from "./locales/zh-CN.json"
 import enUS from "./locales/en-US.json"
 import jaJP from "./locales/ja-JP.json"
+import koKR from "./locales/ko-KR.json"
 
 i18n
   .use(LanguageDetector)
@@ -22,6 +23,9 @@ i18n
       },
       jaJP: {
         translation: jaJP,
+      },
+      koKR: {
+        translation: koKR,
       },
     },
     fallbackLng: "enUS", // 預設回退語言為英文
@@ -51,6 +55,9 @@ i18n
         if (lng.startsWith("en")) {
           // en, en-US, en-GB 等都映射到 enUS
           return "enUS"
+        }
+        if (lng.startsWith("ko")) {
+          return "koKR"
         }
         // 其他語言回退到英文
         return "enUS"

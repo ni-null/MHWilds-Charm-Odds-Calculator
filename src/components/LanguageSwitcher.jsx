@@ -13,6 +13,7 @@ const LanguageSwitcher = ({ className = "" }) => {
     { code: "zhCN", name: "简体中文" },
     { code: "enUS", name: "English" },
     { code: "jaJP", name: "日本語" },
+    { code: "koKR", name: "한국어" },
   ]
 
   return (
