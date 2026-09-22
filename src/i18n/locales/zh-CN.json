@@ -175,6 +175,15 @@
     "noResults": "找不到符合搜索条件的技能组",
     "clearSearch": "清除搜索"
   },
+  "skillNames": {
+    "title": "技能名称",
+    "description": "技能名称由网络社区资料整理而来，仍可能存在错误。如发现名称或翻译不正确，请协助反馈。",
+    "reportIssue": "前往 GitHub 反馈名称或翻译问题",
+    "search": "搜索任一语言的技能名称...",
+    "count": "共 {{count}} 个技能",
+    "icon": "图标",
+    "sourceName": "原始名称"
+  },
   "skillTranslations": {
     "Artillery": "炮术",
     "Attack Boost": "攻击",

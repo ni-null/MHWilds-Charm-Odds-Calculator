@@ -175,6 +175,15 @@
     "noResults": "検索条件に一致するスキルグループはありません",
     "clearSearch": "検索をクリア"
   },
+  "skillNames": {
+    "title": "スキル名",
+    "description": "スキル名はオンラインのコミュニティ資料から収集したもので、誤りが含まれる可能性があります。名称または翻訳の誤りを見つけた場合は報告してください。",
+    "reportIssue": "GitHub で名称・翻訳の問題を報告",
+    "search": "任意の言語でスキル名を検索...",
+    "count": "{{count}} 件のスキル",
+    "icon": "アイコン",
+    "sourceName": "原語名"
+  },
   "slotLabels": {},
   "skillTranslations": {
     "Artillery": "砲術",

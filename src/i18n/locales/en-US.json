@@ -175,6 +175,15 @@
     "noResults": "No skill groups match your search criteria",
     "clearSearch": "Clear Search"
   },
+  "skillNames": {
+    "title": "Skill Names",
+    "description": "Skill names were collected from online community sources and may contain errors. Please report any incorrect name or translation you find.",
+    "reportIssue": "Report a name or translation issue on GitHub",
+    "search": "Search skill names in any language...",
+    "count": "{{count}} skills",
+    "icon": "Icon",
+    "sourceName": "Source name"
+  },
   "skillTranslations": {
     "Artillery": "Artillery",
     "Attack Boost": "Attack Boost",
