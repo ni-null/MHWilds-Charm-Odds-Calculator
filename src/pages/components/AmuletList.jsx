@@ -27,7 +27,8 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
       "</text></svg>"
     )
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const languageCode = i18n.resolvedLanguage || i18n.language
 
   // 動畫變體設定
   const containerVariants = {
@@ -199,7 +200,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                         {/* 右邊：插槽 */}
                         {amuletListShowMode !== "simple" && (
                           <div className='hidden sm:block'>
-                            <SlotList charm={charm} t={t} />
+                            <SlotList charm={charm} t={t} languageCode={languageCode} />
                           </div>
                         )}
                       </div>
@@ -211,7 +212,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                             const chance = Number(raw)
                             return (
                               <div>
-                                {t("common.skillProbability", "技能機率")}: {chance > 0 ? decimalToFraction(chance) : "1/∞"}
+                                {t("common.skillProbability", "技能機率")}: {chance > 0 ? decimalToFraction(chance, 100000000, languageCode) : "1/∞"}
                               </div>
                             )
                           })()}
@@ -255,7 +256,7 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                       </div>
                     </div>
 
-                    {amuletListShowMode !== "simple" && <AmuletDetails charm={charm} t={t} />}
+                    {amuletListShowMode !== "simple" && <AmuletDetails charm={charm} t={t} languageCode={languageCode} />}
                   </Motion.li>
                 </React.Fragment>
               )
@@ -316,8 +317,8 @@ export default function AmuletList({ charms: propCharms, favoriteCharms: propFav
                       <span className='font-medium'>{rarity}</span>
                     </div>
                   </td>
-                  <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.noSlot)}</td>
-                  <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.withSlot)}</td>
+                  <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.noSlot, 100000000, languageCode)}</td>
+                  <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.withSlot, 100000000, languageCode)}</td>
                 </Motion.tr>
               ))}
           </tbody>

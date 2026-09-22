@@ -8,18 +8,16 @@ import Header from "../../components/Header"
 import Sidebar from "../../components/Sidebar"
 import rarityProbabilities from "../../data/Rarity.json"
 import skillGroupsData from "../../data/SkillGroups.json"
-import { useLanguageSync } from "../../hooks/useLanguageSync"
+import { formatNumber, translateSkillName } from "../../i18n/formatters.js"
 import CharmSkillsDialogContent from "./CharmSkillsDialogContent"
 const CharmTypePage = () => {
-  const { t } = useTranslation()
-  useLanguageSync() // 同步語言設置
+  const { t, i18n } = useTranslation()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   // 翻譯技能名稱的函數（複用 SkillGroups 頁面的邏輯）
   const getSkillTranslation = React.useCallback(
     (skillName) => {
-      const translation = t(`skillTranslations.${skillName}`)
-      return translation !== `skillTranslations.${skillName}` ? translation : skillName
+      return translateSkillName(t, skillName)
     },
     [t]
   )
@@ -27,8 +25,7 @@ const CharmTypePage = () => {
   const getGroupTranslation = React.useCallback(
     (groupKey) => {
       const groupNumber = groupKey.toLowerCase()
-      const translation = t(`skillGroups.${groupNumber}`)
-      return translation !== `skillGroups.${groupNumber}` ? translation : groupKey
+      return t(`skillGroups.${groupNumber}`, { defaultValue: groupKey })
     },
     [t]
   )
@@ -120,7 +117,7 @@ const CharmTypePage = () => {
       const totalCombos = charms.reduce((s, c) => s + (c.combinationCount || 0), 0)
       const probEntry = rarityProbabilities[rarity]
       const prob = probEntry && typeof probEntry === "object" ? probEntry.probability : probEntry
-      const formattedTotalCombos = (totalCombos || 0).toLocaleString()
+      const formattedTotalCombos = formatNumber(totalCombos || 0, i18n.resolvedLanguage || i18n.language)
       const formattedProbPct = typeof prob !== "undefined" && prob !== null ? `${Math.round(Number(prob) * 100)}%` : null
 
       return {
@@ -243,10 +240,7 @@ const CharmTypePage = () => {
                       {normalslotEntries && normalslotEntries.length > 0 && (
                         <div className='mt-2 text-sm text-gray-700'>
                           <div className='mb-1'>
-                            {t("charmTypes.header.defaultNormalSlot") &&
-                              t("charmTypes.header.defaultNormalSlot") !== "charmTypes.header.defaultNormalSlot"
-                              ? t("charmTypes.header.defaultNormalSlot")
-                              : "Default normal slots"}
+                            {t("charmTypes.header.defaultNormalSlot", { defaultValue: "Default normal slots" })}
                             :
                           </div>
                           <div className='flex flex-wrap items-center gap-2'>
@@ -275,9 +269,7 @@ const CharmTypePage = () => {
                                   </Tooltip.Trigger>
                                   <Tooltip.Portal>
                                     <Tooltip.Content side='top' align='center' className='px-2 py-1 text-xs text-white bg-gray-800 rounded'>
-                                      {t(`slotLabels.${e.key}`) && t(`slotLabels.${e.key}`) !== `slotLabels.${e.key}`
-                                        ? t(`slotLabels.${e.key}`)
-                                        : e.label}
+                                      {t(`slotLabels.${e.key}`, { defaultValue: e.label })}
                                       <Tooltip.Arrow className='text-gray-800 fill-current' />
                                     </Tooltip.Content>
                                   </Tooltip.Portal>
@@ -292,7 +284,7 @@ const CharmTypePage = () => {
                       <div className='space-y-2'>
                         {charms.map((charm, index) => {
                           const comboCount = charm.combinationCount
-                          const formattedComboCount = (comboCount || 0).toLocaleString()
+                          const formattedComboCount = formatNumber(comboCount || 0, i18n.resolvedLanguage || i18n.language)
 
                           // prepare slot combinations display for this charm and icons for each combination
                           const charmSlotsArr = charm.slotCombinations || []
@@ -363,9 +355,7 @@ const CharmTypePage = () => {
                                   </div>
                                   {showCharmSlot && charmSlotTuples && charmSlotTuples.length > 0 && (
                                     <div className='mt-1 text-sm text-gray-600'>
-                                      {t("charmTypes.header.slotCombinations")
-                                        ? t("charmTypes.header.slotCombinations") + ": "
-                                        : "Slot combinations: "}
+                                      {t("charmTypes.header.slotCombinations", { defaultValue: "Slot combinations" })}:
                                       <div className='flex flex-wrap items-center gap-2 mt-1'>
                                         {charmSlotTuples.map((cs, ci) => (
                                           <Tooltip.Provider key={`${ci}-${cs.label}`}>
@@ -396,8 +386,8 @@ const CharmTypePage = () => {
                                                     const candidates = cs.rawKeyCandidates || []
                                                     for (let i = 0; i < candidates.length; i++) {
                                                       const key = candidates[i]
-                                                      const trans = t(`slotLabels.${key}`)
-                                                      if (trans && trans !== `slotLabels.${key}`) return trans
+                                                      const trans = t(`slotLabels.${key}`, { defaultValue: "" })
+                                                      if (trans) return trans
                                                     }
                                                     return cs.label
                                                   })()}
@@ -416,14 +406,10 @@ const CharmTypePage = () => {
                               <DialogContent className='w-full max-w-4xl'>
                                 <DialogHeader>
                                   <DialogTitle>
-                                    {t("charmTypes.dialog.title") !== "charmTypes.dialog.title"
-                                      ? t("charmTypes.dialog.title")
-                                      : getSkillTranslation("Select skills")}
+                                    {t("charmTypes.dialog.title", { defaultValue: "Select skills" })}
                                   </DialogTitle>
                                   <DialogDescription>
-                                    {t("charmTypes.dialog.description") !== "charmTypes.dialog.description"
-                                      ? t("charmTypes.dialog.description")
-                                      : getSkillTranslation("Choose one skill per group for this charm")}
+                                    {t("charmTypes.dialog.description", { defaultValue: "Choose one skill per group for this charm" })}
                                   </DialogDescription>
                                 </DialogHeader>
 
@@ -438,7 +424,7 @@ const CharmTypePage = () => {
 
                                 <DialogFooter>
                                   <DialogClose asChild>
-                                    <Button className=''>{t("actions.close") !== "actions.close" ? t("actions.close") : "Close"}</Button>
+                                    <Button className=''>{t("actions.close", { defaultValue: "Close" })}</Button>
                                   </DialogClose>
                                 </DialogFooter>
                               </DialogContent>

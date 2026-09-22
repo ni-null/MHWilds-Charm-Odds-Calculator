@@ -4,13 +4,15 @@
  *
  * @param {number} x - 要轉換的小數值
  * @param {number} maxDen - 分母的最大值，默認為100000000
+ * @param {string} languageCode - i18next language code used for number separators
  * @returns {string} 格式化的分數字符串
  */
-export function decimalToFraction(x, maxDen = 100000000) {
+export function decimalToFraction(x, maxDen = 100000000, languageCode) {
+  const locale = languageCode ? getIntlLocale(languageCode) : undefined
   // 輔助函數：格式化整數，添加千位分隔符
   const formatInt = (n) => {
     try {
-      return new Intl.NumberFormat(undefined).format(n)
+      return new Intl.NumberFormat(locale).format(n)
     } catch {
       return String(n)
     }
@@ -104,7 +106,7 @@ export function decimalToFraction(x, maxDen = 100000000) {
 
   // 使用千位分隔符格式化分母以提高可讀性
   try {
-    const denFormatted = new Intl.NumberFormat(undefined).format(den)
+    const denFormatted = new Intl.NumberFormat(locale).format(den)
     return `${num}/${denFormatted}`
   } catch (err) {
     try {
@@ -115,3 +117,4 @@ export function decimalToFraction(x, maxDen = 100000000) {
     return `${num}/${den}`
   }
 }
+import { getIntlLocale } from "../i18n/languages.js"

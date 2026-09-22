@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import rarityBaseProbability from "../../data/Rarity.json"
 import SkillGroupsData from "../../data/SkillGroups.json"
+import { formatSkillLabel } from "../../i18n/formatters.js"
 import useMhwStore from "../../store/mhwStore"
 
 import { Button } from "@/components/ui/button"
@@ -9,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function SkillSelector() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   // inline placeholder SVG used when skill icon fails to load
   const SKILL_PLACEHOLDER_SVG =
     "data:image/svg+xml;utf8," +
@@ -616,7 +617,7 @@ export default function SkillSelector() {
 
   const getSkillGroupInfo = (skillKey) => {
     const groups = skillToGroupMap[skillKey]
-    return groups ? groups.join(", ") : "Unknown"
+    return groups ? groups.join(", ") : t("version.unknown")
   }
 
   const selected0 = selectedSkills[0]
@@ -684,12 +685,8 @@ export default function SkillSelector() {
                           <div className='flex flex-wrap items-center w-full max-w-full gap-2 overflow-hidden'>
                             {selectedArray.map((sel) => {
                               const selName = sel.split(" Lv.")[0]
-                              const selLevel = sel.split(" Lv.")[1] || ""
-                              const translatedSel = t(`skillTranslations.${selName}`, selName)
-
-                              const useFullwidthParens = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
+                              const nameNode = formatSkillLabel(t, sel)
                               const imgSrc = `${import.meta.env.BASE_URL}image/skills/${encodeURIComponent(selName.replace(/\//g, "-"))}.png`
-                              const nameNode = useFullwidthParens ? `${translatedSel} ${t("common.level")}${selLevel}` : sel
                               return (
                                 <div key={sel} className='flex items-center gap-2 px-2 py-1 bg-gray-100 rounded'>
                                   <img
@@ -784,8 +781,7 @@ export default function SkillSelector() {
                       <div className='flex flex-col gap-1 p-1 overflow-auto max-h-48 md:max-h-96'>
                         {getAvailableSkills(i)
                           .filter((skillKey) => {
-                            const skillName = skillKey.split(" Lv.")[0]
-                            const translatedName = t(`skillTranslations.${skillName}`, skillName)
+                            const translatedName = formatSkillLabel(t, skillKey)
                             return (
                               skillKey.toLowerCase().includes(localSearch.toLowerCase()) ||
                               translatedName.toLowerCase().includes(localSearch.toLowerCase())
@@ -793,10 +789,7 @@ export default function SkillSelector() {
                           })
                           .map((skillKey) => {
                             const skillName = skillKey.split(" Lv.")[0]
-                            const skillLevel = skillKey.split(" Lv.")[1]
-                            const translatedName = t(`skillTranslations.${skillName}`, skillName)
-                            const useFullwidth = i18n.language && (i18n.language.startsWith("zh") || i18n.language === "jaJP")
-                            const displayName = useFullwidth ? `${translatedName} ${t("common.level")}${skillLevel}` : skillKey
+                            const displayName = formatSkillLabel(t, skillKey)
                             const groupInfo = getSkillGroupInfo(skillKey)
                             const isSelected = selectedArray.includes(skillKey)
                             return (

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useTranslation } from "react-i18next"
+import { formatNumber, formatSkillLabel } from "../../i18n/formatters.js"
 import useMhwStore from "../../store/mhwStore"
 import {
   buildWikiDbExport,
@@ -18,10 +19,10 @@ import {
 
 const getSlotSelectionValue = (slotKey) => (slotKey === null || slotKey === undefined ? WIKI_DB_NO_SLOT : String(slotKey))
 
-const formatByteSize = (byteLength) => {
-  if (byteLength < 1024) return `${byteLength} B`
-  if (byteLength < 1024 * 1024) return `${(byteLength / 1024).toFixed(1)} KB`
-  return `${(byteLength / (1024 * 1024)).toFixed(2)} MB`
+const formatByteSize = (byteLength, languageCode) => {
+  if (byteLength < 1024) return `${formatNumber(byteLength, languageCode)} B`
+  if (byteLength < 1024 * 1024) return `${formatNumber(byteLength / 1024, languageCode, { maximumFractionDigits: 1 })} KB`
+  return `${formatNumber(byteLength / (1024 * 1024), languageCode, { maximumFractionDigits: 2 })} MB`
 }
 
 /**
@@ -90,6 +91,7 @@ function importFavoriteCharms(t) {
 
 export default function CharmExportImportControls() {
   const { t, i18n } = useTranslation()
+  const languageCode = i18n.resolvedLanguage || i18n.language
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogMessage, setDialogMessage] = useState("")
   const [dialogTitle, setDialogTitle] = useState("")
@@ -199,7 +201,7 @@ export default function CharmExportImportControls() {
           expandUnspecifiedSkills: wikiDbExpandUnspecified,
           maxRows: MAX_EXPORT_ROWS,
           slotSelections: selectedWikiDbSlotSelections,
-          locale: i18n.language,
+          locale: languageCode,
         })
       : { rowCount: 0, textByteLength: 0, truncated: false }
 
@@ -214,7 +216,7 @@ export default function CharmExportImportControls() {
         expandUnspecifiedSkills: wikiDbExpandUnspecified,
         maxRows: MAX_EXPORT_ROWS,
         slotSelections: selectedWikiDbSlotSelections,
-        locale: i18n.language,
+        locale: languageCode,
       })
 
       if (!result.text) {
@@ -403,12 +405,13 @@ export default function CharmExportImportControls() {
                 const selectedSlots = getSelectedWikiDbSlots(index, slotKeys)
                 const slotValues = slotKeys.map(getSlotSelectionValue)
                 const allSlotsSelected = slotValues.length > 0 && slotValues.every((value) => selectedSlots.includes(value))
+                const rarityLabel = charm.rarity || t("version.unknown")
 
                 return (
                   <tr key={`${charm.rarity || "unknown"}-${index}`} className='border-t hover:bg-gray-50'>
                     <td className='px-3 py-3 align-top'>
                       <Checkbox
-                        aria-label={`選取 ${charm.rarity || "Unknown"}`}
+                        aria-label={t("charmExportImport.wikiDbSelectCharm", { rarity: rarityLabel })}
                         checked={wikiDbSelectedIndexes.includes(index)}
                         onCheckedChange={() => toggleWikiDbCharm(index)}
                         className='mt-1'
@@ -418,14 +421,14 @@ export default function CharmExportImportControls() {
                       <div className='flex items-center gap-2'>
                         <img
                           src={`${import.meta.env.BASE_URL}image/charms/${encodeURIComponent(charm.rarity || "unknown")}.png`}
-                          alt={charm.rarity || "Unknown"}
+                          alt={rarityLabel}
                           loading='lazy'
                           className='object-contain w-8 h-8 rounded'
                           onError={(event) => {
                             event.currentTarget.style.display = "none"
                           }}
                         />
-                        <span>{charm.rarity || "Unknown"}</span>
+                        <span>{rarityLabel}</span>
                       </div>
                     </td>
                     <td className='max-w-xl px-3 py-3 text-gray-600 break-words align-top'>
@@ -434,8 +437,6 @@ export default function CharmExportImportControls() {
                           {selectedSkillKeys.map((skillKey, skillIndex) => {
                             const skillName = String(skillKey).split(" Lv.")[0]
                             const skillImageName = skillName.replace(/\//g, "-")
-                            const translatedSkillName = t(`skillTranslations.${skillName}`, skillName)
-                            const skillLevel = String(skillKey).slice(skillName.length)
 
                             return (
                               <span key={`${skillKey}-${skillIndex}`} className='inline-flex items-center gap-1.5 px-2 py-1 bg-gray-100 rounded-md'>
@@ -448,13 +449,13 @@ export default function CharmExportImportControls() {
                                     event.currentTarget.style.display = "none"
                                   }}
                                 />
-                                <span>{translatedSkillName}{skillLevel}</span>
+                                <span>{formatSkillLabel(t, skillKey)}</span>
                               </span>
                             )
                           })}
                         </div>
                       ) : (
-                        <span className='text-gray-500'>未指定技能</span>
+                        <span className='text-gray-500'>{t("charmExportImport.wikiDbUnspecifiedSkills")}</span>
                       )}
                     </td>
                     {Array.from({ length: wikiDbAnySkillColumnCount }, (_, anySkillIndex) => (
@@ -469,7 +470,7 @@ export default function CharmExportImportControls() {
                             id={`wiki-db-charm-${index}-all-slots`}
                             checked={allSlotsSelected}
                             onCheckedChange={() => toggleAllWikiDbSlotsForCharm(index, slotKeys)}
-                            aria-label={`全選 ${charm.rarity || "Unknown"} 的槽位`}
+                            aria-label={t("charmExportImport.wikiDbSelectAllSlotsForCharm", { rarity: rarityLabel })}
                           />
                           <label htmlFor={`wiki-db-charm-${index}-all-slots`}>{t("charmExportImport.wikiDbSelectAllSlots", "全選")}</label>
                         </div>
@@ -481,9 +482,12 @@ export default function CharmExportImportControls() {
                                 id={`wiki-db-charm-${index}-slot-${slotIndex}`}
                                 checked={selectedSlots.includes(value)}
                                 onCheckedChange={() => toggleWikiDbSlot(index, value, slotKeys)}
-                                aria-label={`選擇 ${charm.rarity || "Unknown"} ${formatWikiDbSlotKey(slotKey)}`}
+                                aria-label={t("charmExportImport.wikiDbSelectSlot", {
+                                  rarity: rarityLabel,
+                                  slot: formatWikiDbSlotKey(slotKey, t("common.noSlot")),
+                                })}
                               />
-                              <label htmlFor={`wiki-db-charm-${index}-slot-${slotIndex}`}>{formatWikiDbSlotKey(slotKey)}</label>
+                              <label htmlFor={`wiki-db-charm-${index}-slot-${slotIndex}`}>{formatWikiDbSlotKey(slotKey, t("common.noSlot"))}</label>
                             </div>
                           )
                         })}
@@ -520,12 +524,12 @@ export default function CharmExportImportControls() {
                 <span>
                   {t("charmExportImport.wikiDbCurrentExportCount", "目前勾選 {{count}} 筆護石，預計匯出 {{exportCount}} 筆資料。", {
                     count: selectedWikiDbCharms.length,
-                    exportCount: `${wikiDbExportSummary.rowCount.toLocaleString()}${wikiDbExportSummary.truncated ? "+" : ""}`,
+                    exportCount: `${formatNumber(wikiDbExportSummary.rowCount, languageCode)}${wikiDbExportSummary.truncated ? "+" : ""}`,
                   })}
                 </span>
                 <span className='text-gray-500'>
                   {t("charmExportImport.wikiDbEstimatedTextSize", "預估文字大小：{{size}}", {
-                    size: formatByteSize(wikiDbExportSummary.textByteLength),
+                    size: formatByteSize(wikiDbExportSummary.textByteLength, languageCode),
                   })}
                 </span>
               </div>
@@ -536,7 +540,7 @@ export default function CharmExportImportControls() {
                     {t(
                       "charmExportImport.wikiDbTextSizeWarning",
                       "預估文字大小已達 {{size}} ，wiki-db 上限大概位於120kb，需要進行分批匯入。",
-                      { size: formatByteSize(wikiDbExportSummary.textByteLength) }
+                      { size: formatByteSize(wikiDbExportSummary.textByteLength, languageCode) }
                     )}
                   </span>
                 </div>

@@ -1,34 +1,14 @@
-import rarityData from "../data/Rarity.json"
-import skillGroupsData from "../data/SkillGroups.json"
-import enUsLocale from "../i18n/locales/en-US.json"
-import jaJpLocale from "../i18n/locales/ja-JP.json"
-import koKrLocale from "../i18n/locales/ko-KR.json"
-import zhCnLocale from "../i18n/locales/zh-CN.json"
-import zhTwLocale from "../i18n/locales/zh-TW.json"
+import rarityData from "../data/Rarity.json" with { type: "json" }
+import skillGroupsData from "../data/SkillGroups.json" with { type: "json" }
+import { DEFAULT_LANGUAGE } from "../i18n/languages.js"
+import { getTranslationResource } from "../i18n/resources.js"
 
 const MAX_WIKI_DB_ROWS = 100000
 export const WIKI_DB_TEXT_WARNING_BYTES = 120 * 1024
 export const WIKI_DB_ALL_SLOTS = "__all__"
 export const WIKI_DB_NO_SLOT = "__none__"
 
-const skillTranslationsByLocale = {
-  enUS: enUsLocale.skillTranslations,
-  jaJP: jaJpLocale.skillTranslations,
-  koKR: koKrLocale.skillTranslations,
-  zhCN: zhCnLocale.skillTranslations,
-  zhTW: zhTwLocale.skillTranslations,
-}
-
-const normalizeLocale = (locale) => {
-  const value = String(locale || "zhTW").toLowerCase().replace(/[-_]/g, "")
-  if (value.includes("zhcn") || value.includes("hans")) return "zhCN"
-  if (value.includes("jajp") || value === "ja") return "jaJP"
-  if (value.includes("kokr") || value === "ko") return "koKR"
-  if (value.includes("enus") || value === "en") return "enUS"
-  return "zhTW"
-}
-
-export const getWikiDbSkillTranslations = (locale) => skillTranslationsByLocale[normalizeLocale(locale)] || zhTwLocale.skillTranslations
+export const getWikiDbSkillTranslations = (locale) => getTranslationResource(locale).skillTranslations || {}
 
 const getSkillBaseName = (skillKey) => String(skillKey || "").split(" Lv.")[0]
 
@@ -189,8 +169,8 @@ export const getWikiDbSlotKeys = (charm) => {
   return groupKeys.length > 0 ? groupKeys : [null]
 }
 
-export const formatWikiDbSlotKey = (slotKey) => {
-  if (slotKey === null || slotKey === undefined) return "無槽位"
+export const formatWikiDbSlotKey = (slotKey, noSlotLabel = "No slots") => {
+  if (slotKey === null || slotKey === undefined) return noSlotLabel
 
   try {
     const parsed = typeof slotKey === "string" ? JSON.parse(slotKey) : slotKey
@@ -219,7 +199,7 @@ const getUtf8ByteLength = (value, encoder) => (encoder ? encoder.encode(value).l
 
 export const getWikiDbExportSummary = (
   favoriteCharms,
-  { expandUnspecifiedSkills = true, maxRows = MAX_WIKI_DB_ROWS, slotSelections = [], locale = "zhTW", skillTranslations } = {}
+  { expandUnspecifiedSkills = true, maxRows = MAX_WIKI_DB_ROWS, slotSelections = [], locale = DEFAULT_LANGUAGE, skillTranslations } = {}
 ) => {
   let rowCount = 0
   let textByteLength = 0
@@ -258,7 +238,7 @@ export const getWikiDbExportRowCount = (favoriteCharms, options = {}) => {
 
 const translateSkillName = (skillName, skillTranslations) => skillTranslations?.[skillName] || skillName
 
-export const serializeWikiDbCharm = (skills, slotKey, skillTranslations = zhTwLocale.skillTranslations) => {
+export const serializeWikiDbCharm = (skills, slotKey, skillTranslations = getWikiDbSkillTranslations()) => {
   const skillFields = Array.from({ length: 3 }, (_, index) => {
     const skill = skills[index]
     if (!skill) return ["", 0]
@@ -272,7 +252,7 @@ export const serializeWikiDbCharm = (skills, slotKey, skillTranslations = zhTwLo
 
 export const buildWikiDbExport = (
   favoriteCharms,
-  { expandUnspecifiedSkills = true, maxRows = MAX_WIKI_DB_ROWS, slotSelections = [], locale = "zhTW", skillTranslations } = {}
+  { expandUnspecifiedSkills = true, maxRows = MAX_WIKI_DB_ROWS, slotSelections = [], locale = DEFAULT_LANGUAGE, skillTranslations } = {}
 ) => {
   let text = ""
   let rowCount = 0

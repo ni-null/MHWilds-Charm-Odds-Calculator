@@ -82,7 +82,7 @@ const CharmSkillsDialogContent = ({ charm, getSkillTranslation, getGroupTranslat
                     />
                     <div className='flex-1 min-w-0'>
                       <span className='inline-block truncate align-middle'>{getSkillTranslation(skill.SkillName)}</span>
-                      <span className='ml-1 text-[10px] text-gray-500'>Lv.{skill.SkillLevel}</span>
+                      <span className='ml-1 text-[10px] text-gray-500'>{t("common.level")}{skill.SkillLevel}</span>
                     </div>
                   </button>
                 ))}

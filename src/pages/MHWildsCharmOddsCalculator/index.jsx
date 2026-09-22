@@ -6,13 +6,11 @@ import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import SkillSelector from "./SkillSelector"
 import AmuletList from "../components/AmuletList"
-import { useLanguageSync } from "../../hooks/useLanguageSync"
 import ProbabilityExplanation from "./ProbabilityExplanation"
 import useMhwStore from "../../store/mhwStore"
 
 export default function MHWPage() {
   const { t } = useTranslation()
-  useLanguageSync() // 同步語言設置
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 

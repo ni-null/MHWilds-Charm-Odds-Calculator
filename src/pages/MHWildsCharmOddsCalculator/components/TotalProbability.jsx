@@ -5,7 +5,8 @@ import { decimalToFraction } from "../../../lib/fractionUtils"
 import useMhwStore from "../../../store/mhwStore"
 
 export default function TotalProbability() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const languageCode = i18n.resolvedLanguage || i18n.language
   const { AvlCharms = [] } = useMhwStore()
   const charms = useMemo(() => (Array.isArray(AvlCharms) ? AvlCharms : []), [AvlCharms])
 
@@ -113,8 +114,8 @@ export default function TotalProbability() {
                         <span className='font-medium'>{rarity}</span>
                       </div>
                     </td>
-                    <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.noSlot)}</td>
-                    <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.withSlot)}</td>
+                    <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.noSlot, 100000000, languageCode)}</td>
+                    <td className='px-4 py-3 font-semibold text-indigo-600'>{decimalToFraction(probability.withSlot, 100000000, languageCode)}</td>
                   </Motion.tr>
                 )
               })}

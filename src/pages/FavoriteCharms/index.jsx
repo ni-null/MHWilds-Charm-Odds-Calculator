@@ -5,14 +5,12 @@ import { useNavigate } from "react-router-dom"
 import Sidebar from "../../components/Sidebar"
 import Header from "../../components/Header"
 import AmuletList from "../components/AmuletList"
-import { useLanguageSync } from "../../hooks/useLanguageSync"
 import useMhwStore from "../../store/mhwStore"
 import { Button } from "@/components/ui/button"
 import CharmExportImportControls from "./CharmExportImportControls"
 
 export default function FavoriteCharmsPage() {
   const { t } = useTranslation()
-  useLanguageSync() // 同步語言設置
   const navigate = useNavigate()
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)

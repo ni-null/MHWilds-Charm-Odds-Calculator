@@ -1,7 +1,7 @@
 import RarityData from "../../../data/Rarity.json"
 import { decimalToFraction } from "../../../lib/fractionUtils"
 
-export default function SlotList({ charm, t }) {
+export default function SlotList({ charm, t, languageCode }) {
   return (
     <div className='flex flex-col w-full gap-2 mx-auto mt-5 md:w-auto'>
       {Array.isArray(charm.AllslotKey) && charm.AllslotKey.length > 0 ? (
@@ -66,7 +66,7 @@ export default function SlotList({ charm, t }) {
                   key={idx}
                   src={src}
                   loading='lazy'
-                  alt='slot'
+                  alt={t("slotProbability.slot")}
                   className='object-contain w-8 h-8'
                   onError={(e) => {
                     e.currentTarget.style.display = "none"
@@ -84,7 +84,7 @@ export default function SlotList({ charm, t }) {
                       if (combined > 0)
                         return (
                           <span className='text-sm text-gray-300' title={`combined: ${combined}`}>
-                            &nbsp;•&nbsp;{decimalToFraction(combined)}
+                            &nbsp;•&nbsp;{decimalToFraction(combined, 100000000, languageCode)}
                           </span>
                         )
                     }

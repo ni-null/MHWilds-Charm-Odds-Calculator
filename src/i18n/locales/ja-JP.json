@@ -7,7 +7,8 @@
     "charmTypes": "護石タイプ",
     "languageLabel": "言語",
     "info": "情報",
-    "favorites": "お気に入り護石"
+    "favorites": "お気に入り護石",
+    "openMenu": "メニューを開く"
   },
   "info": {
     "title": "情報",
@@ -49,7 +50,8 @@
     "slotFilter": "スロットフィルター",
     "slotFilterSingle": "スロットフィルター（単一選択）",
     "slotAny": "-- 任意スロット --",
-    "clearSlot": "スロットをクリア"
+    "clearSlot": "スロットをクリア",
+    "removeSelected": "選択したスキルを削除"
   },
   "amulet": {
     "finalOdds": "最終確率: {{pct}}% (1/{{odds}})",
@@ -115,7 +117,10 @@
     "level": "Lv.",
     "probability": "確率",
     "skillProbability": "スキル確率",
-    "empty": "空"
+    "empty": "空",
+    "hideDetails": "詳細を隠す",
+    "showDetails": "詳細を表示",
+    "noSlot": "スロットなし"
   },
   "charmTypes": {
     "title": "護石タイプ",
@@ -287,7 +292,9 @@
   },
   "version": {
     "logic": "ロジックバージョン",
-    "data": "データバージョン"
+    "data": "データバージョン",
+    "buildTime": "ビルド時刻",
+    "unknown": "不明"
   },
   "amuletList": {
     "addAllToFavorites": "すべて追加",
@@ -349,6 +356,10 @@
     "wikiDbAnySkillColumn": "任意スキル{{index}}",
     "wikiDbSlotsColumn": "スロット選択",
     "wikiDbSelectAllSlots": "すべて選択",
+    "wikiDbSelectCharm": "{{rarity}}を選択",
+    "wikiDbSelectAllSlotsForCharm": "{{rarity}}のスロットをすべて選択",
+    "wikiDbSelectSlot": "{{rarity}}の{{slot}}を選択",
+    "wikiDbUnspecifiedSkills": "未指定スキル",
     "wikiDbExpandUnspecified": "未指定スキルを展開",
     "wikiDbExpandUnspecifiedDescription": "無効にすると未指定のスキル欄を空欄で出力します。有効にすると可能な組み合わせをすべて生成します。",
     "wikiDbSelectedCount": "件選択中",

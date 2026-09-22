@@ -1,34 +1,15 @@
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
-import zhTW from "./locales/zh-TW.json"
-import zhCN from "./locales/zh-CN.json"
-import enUS from "./locales/en-US.json"
-import jaJP from "./locales/ja-JP.json"
-import koKR from "./locales/ko-KR.json"
+import { DEFAULT_LANGUAGE, resolveLanguageCode } from "./languages.js"
+import { I18N_RESOURCES } from "./resources.js"
 
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources: {
-      zhTW: {
-        translation: zhTW,
-      },
-      zhCN: {
-        translation: zhCN,
-      },
-      enUS: {
-        translation: enUS,
-      },
-      jaJP: {
-        translation: jaJP,
-      },
-      koKR: {
-        translation: koKR,
-      },
-    },
-    fallbackLng: "enUS", // 預設回退語言為英文
+    resources: I18N_RESOURCES,
+    fallbackLng: DEFAULT_LANGUAGE,
 
     // 語言檢測配置
     detection: {
@@ -41,27 +22,7 @@ i18n
       // 語言對應映射
       lookupFromPathIndex: 0,
       lookupFromSubdomainIndex: 0,
-      // 將瀏覽器語言映射到我們的語言代碼
-      convertDetectedLanguage: (lng) => {
-        // 處理瀏覽器語言代碼到我們的語言代碼的映射
-        if (lng.startsWith("zh")) {
-          // 根據子語言判斷簡繁：包含 cn 或 hans 視為簡體（zhCN），包含 tw/hk 或 hant 視為繁體（zhTW）
-          const lower = lng.toLowerCase()
-          if (lower.includes("cn") || lower.includes("hans")) return "zhCN"
-          if (lower.includes("tw") || lower.includes("hk") || lower.includes("hant")) return "zhTW"
-          // 預設回退到繁體 (維持既有預設行為)
-          return "zhTW"
-        }
-        if (lng.startsWith("en")) {
-          // en, en-US, en-GB 等都映射到 enUS
-          return "enUS"
-        }
-        if (lng.startsWith("ko")) {
-          return "koKR"
-        }
-        // 其他語言回退到英文
-        return "enUS"
-      },
+      convertDetectedLanguage: resolveLanguageCode,
     },
 
     interpolation: {

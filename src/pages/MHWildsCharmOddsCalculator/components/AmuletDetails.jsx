@@ -1,7 +1,7 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useState } from "react"
 import SlotList from "./SlotList"
-export default function AmuletDetails({ charm, t, className = "" }) {
+export default function AmuletDetails({ charm, t, languageCode, className = "" }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   // safe access to computed values
@@ -138,7 +138,7 @@ export default function AmuletDetails({ charm, t, className = "" }) {
             </svg>
           </CollapsibleTrigger>
           <CollapsibleContent className='mt-4'>
-            <SlotList charm={charm} t={t} />
+            <SlotList charm={charm} t={t} languageCode={languageCode} />
             <div className='w-full p-3 bg-black rounded-md shadow-sm sm:p-4 xl:w-auto 2xl:w-80'>
               <DetailsContent />
             </div>

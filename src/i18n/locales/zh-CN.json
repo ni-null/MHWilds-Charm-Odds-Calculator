@@ -7,7 +7,8 @@
     "charmTypes": "护石种类",
     "languageLabel": "语言 / Language",
     "info": "信息",
-    "favorites": "收藏护石"
+    "favorites": "收藏护石",
+    "openMenu": "打开菜单"
   },
   "info": {
     "title": "信息",
@@ -49,7 +50,8 @@
     "slotFilter": "插槽筛选",
     "slotFilterSingle": "插槽筛选（单选）",
     "slotAny": "-- 任意插槽 --",
-    "clearSlot": "清除插槽"
+    "clearSlot": "清除插槽",
+    "removeSelected": "移除已选技能"
   },
   "amulet": {
     "finalOdds": "最终概率: {{pct}}% (1/{{odds}})",
@@ -115,7 +117,10 @@
     "level": "Lv.",
     "probability": "概率",
     "skillProbability": "技能概率",
-    "empty": "空"
+    "empty": "空",
+    "hideDetails": "隐藏详情",
+    "showDetails": "显示详情",
+    "noSlot": "无插槽"
   },
   "charmTypes": {
     "title": "护石种类",
@@ -286,7 +291,9 @@
   },
   "version": {
     "logic": "逻辑版本",
-    "data": "数据版本"
+    "data": "数据版本",
+    "buildTime": "构建时间",
+    "unknown": "未知"
   },
   "amuletList": {
     "addAllToFavorites": "全部收藏",
@@ -348,6 +355,10 @@
     "wikiDbAnySkillColumn": "任意技能 {{index}}",
     "wikiDbSlotsColumn": "槽位选择",
     "wikiDbSelectAllSlots": "全选",
+    "wikiDbSelectCharm": "选择 {{rarity}}",
+    "wikiDbSelectAllSlotsForCharm": "全选 {{rarity}} 的插槽",
+    "wikiDbSelectSlot": "选择 {{rarity}} {{slot}}",
+    "wikiDbUnspecifiedSkills": "未指定技能",
     "wikiDbExpandUnspecified": "展开未指定技能",
     "wikiDbExpandUnspecifiedDescription": "关闭时，未指定的技能栏位会以空白导出；开启时会生成所有可能组合。",
     "wikiDbSelectedCount": "笔已选取",

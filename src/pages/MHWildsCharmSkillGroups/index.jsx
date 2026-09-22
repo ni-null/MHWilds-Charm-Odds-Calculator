@@ -3,11 +3,10 @@ import { useTranslation } from "react-i18next"
 import Header from "../../components/Header"
 import Sidebar from "../../components/Sidebar"
 import skillGroupsData from "../../data/SkillGroups.json"
-import { useLanguageSync } from "../../hooks/useLanguageSync"
+import { translateSkillName } from "../../i18n/formatters.js"
 
 const SkillGroupsPage = () => {
   const { t } = useTranslation()
-  useLanguageSync() // 同步語言設置
   const [searchTerm, setSearchTerm] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
@@ -30,9 +29,7 @@ const SkillGroupsPage = () => {
   // 翻譯技能名稱的函數
   const getSkillTranslation = useCallback(
     (skillName) => {
-      const translation = t(`skillTranslations.${skillName}`)
-      // 如果翻譯存在且不等於鍵值，返回翻譯；否則返回原始名稱
-      return translation !== `skillTranslations.${skillName}` ? translation : skillName
+      return translateSkillName(t, skillName)
     },
     [t]
   )
@@ -185,7 +182,7 @@ const SkillGroupsPage = () => {
                           <span
                             className='text-sm font-bold px-2 py-0.5 rounded-full opacity-60 text-white flex-shrink-0 ml-2'
                             style={{ backgroundColor: groupData.color }}>
-                            Lv.{skill.SkillLevel}
+                            {t("common.level")}{skill.SkillLevel}
                           </span>
                         </div>
                       ))}

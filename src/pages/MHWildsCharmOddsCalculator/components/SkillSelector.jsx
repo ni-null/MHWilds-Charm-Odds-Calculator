@@ -2,6 +2,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import clsx from "clsx"
 import { useEffect, useState } from "react"
 import SkillGroupsData from "../../../data/SkillGroups.json"
+import { formatSkillLabel } from "../../../i18n/formatters.js"
 
 export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHOLDER_SVG, className }) {
   // 每個群組的選擇狀態（如果 matchingSkills 沒有對應項目，使用下拉選單選擇）
@@ -133,8 +134,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                 />
                 <div className='flex-1 min-w-0'>
                   <div className='text-base font-medium truncate' title={skillBase}>
-                    {t(`skillTranslations.${skillBase}`, skillBase)}
-                    {skillLevel > 0 ? ` Lv.${skillLevel}` : null}
+                    {formatSkillLabel(t, skillLevel > 0 ? `${skillBase} Lv.${skillLevel}` : skillBase)}
                   </div>
                   <div className='flex items-center mt-1' aria-hidden>
                     {Array.from({ length: maxSlots }).map((_, i2) => {
@@ -225,8 +225,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                       }}>
                       <SelectTrigger className='px-2 py-1 text-sm text-white bg-gray-800 border-none rounded h-7'>
                         <SelectValue placeholder={t("skillSelector.selectSkill", "-- 選擇技能 --")}>
-                          {selected ? t(`skillTranslations.${selected}`, selected) : null}
-                          {levelChoice > 0 ? ` Lv.${levelChoice}` : null}
+                          {selected ? formatSkillLabel(t, levelChoice > 0 ? `${selected} Lv.${levelChoice}` : selected) : null}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent
@@ -282,8 +281,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                                     />
                                     <div className='flex-1 min-w-0'>
                                       <div className='text-sm truncate'>
-                                        {t(`skillTranslations.${opt}`, opt)}
-                                        {levelOpt > 0 ? ` Lv.${levelOpt}` : null}
+                                        {formatSkillLabel(t, levelOpt > 0 ? `${opt} Lv.${levelOpt}` : opt)}
                                       </div>
                                       <div className='flex items-center mt-1' aria-hidden>
                                         {Array.from({ length: maxSlotsOpt }).map((_, ii) => (
@@ -358,7 +356,7 @@ export default function SkillSelector({ groups, matchingSkills, t, SKILL_PLACEHO
                     <option value=''>{t("skillSelector.selectSkill", "-- 選擇技能 --")}</option>
                     {availableOptions.map((opt) => (
                       <option key={opt} value={opt}>
-                        {t(`skillTranslations.${opt}`, opt)}
+                        {formatSkillLabel(t, opt)}
                       </option>
                     ))}
                   </select>

@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "lint:src": "eslint src",
+    "check:i18n": "node scripts/check-i18n-locales.mjs",
+    "test:i18n": "node scripts/i18n.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

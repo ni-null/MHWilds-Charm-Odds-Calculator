@@ -1,10 +1,13 @@
 import { Link, useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { Calculator, Grid3x3, Diamond, Star, Info } from "lucide-react"
+import { formatDate } from "../i18n/formatters.js"
+import { resolveLanguageCode, SUPPORTED_LANGUAGES } from "../i18n/languages.js"
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const location = useLocation()
   const { t, i18n } = useTranslation()
+  const languageCode = resolveLanguageCode(i18n.resolvedLanguage || i18n.language)
   // 由 Vite 注入的環境變數（在 CI/CD pipeline 裡設定 VITE_BUILD_TIME）
   const buildTimeRaw = import.meta.env.VITE_BUILD_TIME || import.meta.env.VITE_BUILD_TIMESTAMP || null
   const buildLabel = t("version.buildTime", { defaultValue: "Build Time" })
@@ -13,10 +16,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
     ? (() => {
         const parsed = Date.parse(buildTimeRaw)
         if (!isNaN(parsed)) {
-          // 根據目前語言選擇合適的地區顯示
-          if (i18n.language === "zhTW") return new Date(parsed).toLocaleString("zh-TW")
-          if (i18n.language === "zhCN") return new Date(parsed).toLocaleString("zh-CN")
-          return new Date(parsed).toLocaleString("en-US")
+          return formatDate(parsed, languageCode, { dateStyle: "medium", timeStyle: "medium" })
         }
         return buildTimeRaw
       })()
@@ -100,27 +100,17 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* 語言選擇器 */}
         <div className='px-4 py-4 border-t border-yellow-500/20 bg-black/20 backdrop-blur-sm'>
           <label className='block mb-3 text-sm font-semibold tracking-wide text-yellow-300'>
-            {i18n.language && i18n.language.startsWith("zh") ? "語言 / Language" : t("navigation.languageLabel")}
+            {t("navigation.languageLabel")}
           </label>
           <select
-            value={i18n.language}
+            value={languageCode}
             onChange={(e) => i18n.changeLanguage(e.target.value)}
             className='w-full p-3 text-sm text-yellow-200 transition-colors border rounded-lg shadow-inner cursor-pointer bg-gray-800/80 border-yellow-600/40 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-yellow-400 hover:bg-gray-700/80'>
-            <option value='zhTW' className='bg-gray-800'>
-              繁體中文
-            </option>
-            <option value='zhCN' className='bg-gray-800'>
-              简体中文
-            </option>
-            <option value='enUS' className='bg-gray-800'>
-              English
-            </option>
-            <option value='jaJP' className='bg-gray-800'>
-              日本語
-            </option>
-            <option value='koKR' className='bg-gray-800'>
-              한국어
-            </option>
+            {SUPPORTED_LANGUAGES.map((language) => (
+              <option key={language.code} value={language.code} className='bg-gray-800'>
+                {language.nativeName}
+              </option>
+            ))}
           </select>
         </div>
 
